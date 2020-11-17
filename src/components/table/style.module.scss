@@ -1,0 +1,17 @@
+.table {
+  width: 100%;
+  border-spacing: 0;
+  tr:nth-child(even) {
+    background-color: #fafafa;
+  }
+  th {
+    padding: 10px 0;
+    border-bottom: 2px solid #ddd;
+    text-align: left;
+    text-transform: capitalize;
+    background: #fdfdfd;
+  }
+  td {
+    padding: 10px 0;
+  }
+}

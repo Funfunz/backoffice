@@ -1,0 +1,47 @@
+@import '~style/variables';
+@import '~style/mixins';
+
+.brandContainer {
+  position: absolute;
+  width: 250px;
+  display: flex;
+}
+
+.sideMenuSpace {
+  transition: margin-left 0.5s;
+  width: 250px;
+  @include breakpoint(mobile) {
+    display: none;
+  }
+}
+
+.sideMenu {
+  position: fixed;
+  transition: margin-left 0.5s;
+  width: 250px;
+  height: 100vh;
+  background: #1d2332;
+  padding-top: 90px;
+  color: #ddd;
+  & > .menuLabel {
+    padding: 0 15px;
+    font-size: 0.75em;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  & > .menuList {
+    padding: 0 15px;
+    & > a {
+      border-radius: 2px;
+      display: block;
+      padding: 0.5em 0.75em;
+      color: #ddd;
+      text-decoration: none;
+      &:hover,
+      &.active {
+        background-color: #f5f5f5;
+        color: #363636;
+      }
+    }
+  }
+}
