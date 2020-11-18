@@ -1,0 +1,58 @@
+@import './variables.scss';
+
+@mixin color-variants {
+  &.danger {
+    background-color: $danger;
+    color: white;
+  }
+  &.warning {
+    background-color: $warning;
+  }
+  &.info {
+    background-color: $info;
+  }
+  &.success {
+    background-color: $success;
+    color: white;
+  }
+}
+
+@mixin visible {
+  display: none;
+  &.visible {
+    display: block;
+  }
+}
+
+// Responsive breakpoints
+$breakpoints: (
+  xs: 340px,
+  sm: 768px,
+  md: 992px,
+  lg: 1024px,
+  xl: 1200px,
+) !default;
+
+@mixin breakpoint($point) {
+  @if $point == desktop {
+    @media (min-width: 70em) {
+      @content;
+    }
+  } @else if $point == laptop {
+    @media (min-width: 64em) {
+      @content;
+    }
+  } @else if $point == tablet {
+    @media (min-width: 50em) {
+      @content;
+    }
+  } @else if $point == phablet {
+    @media (min-width: 37.5em) {
+      @content;
+    }
+  } @else if $point == mobile {
+    @media (max-width: 37.5em) {
+      @content;
+    }
+  }
+}

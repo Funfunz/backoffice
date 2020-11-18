@@ -1,0 +1,15 @@
+@import '~style/variables.scss';
+@import '~style/mixins.scss';
+
+.button {
+  padding: 0.6em 1em 0.5em 1em;
+  background-color: white;
+  border: $default-border;
+  border-radius: $border-radius;
+  font-size: 1rem;
+  cursor: pointer;
+  @include color-variants;
+  &:hover {
+    border-color: #b5b5b5;
+  }
+}

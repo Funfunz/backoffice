@@ -1,0 +1,9 @@
+@import "~style/variables";
+
+.topMenu {
+  position: fixed;
+  width: 100%;
+  border-bottom: $default-border;
+  height: 70px;
+  background: white;
+}
