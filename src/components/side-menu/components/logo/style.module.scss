@@ -1,0 +1,23 @@
+@import '~style/variables';
+@import '~style/mixins';
+
+.logo {
+  top: 0;
+  left: 0;
+  z-index: 1;
+  position: fixed;
+  width: 250px;
+  height: 70px;
+  background: $info;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  & > img {
+    width: 80px;
+    height: auto;
+    filter: brightness(0) invert(1);
+  }
+  @include breakpoint(mobile) {
+    display: none;
+  }
+}

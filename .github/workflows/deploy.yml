@@ -1,0 +1,29 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  REACT_APP_API_URL: https://funfunz.herokuapp.com
+  PUBLIC_URL: /backoffice/
+  REACT_APP_PUBLIC_URL: /backoffice
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - run: npm install
+    - run: npm run build
+    - run: touch build/.nojekyll
+    - uses: maxheld83/ghpages@v0.2.1
+      env:
+        BUILD_DIR: build
+        GH_PAT: ${{ secrets.GH_PAT }}
