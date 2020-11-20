@@ -3,13 +3,13 @@
 
 .brandContainer {
   position: absolute;
-  width: 250px;
+  width: 280px;
   display: flex;
 }
 
 .sideMenuSpace {
   transition: margin-left 0.5s;
-  width: 250px;
+  width: 280px;
   @include breakpoint(mobile) {
     display: none;
   }
@@ -18,29 +18,38 @@
 .sideMenu {
   position: fixed;
   transition: margin-left 0.5s;
-  width: 250px;
+  width: 280px;
   height: 100vh;
-  background: #1d2332;
-  padding-top: 90px;
+  background: $secondary-light;
+  background: -moz-linear-gradient(180deg, $secondary-light 0%, $secondary-dark 100%);
+  background: -webkit-linear-gradient(180deg, $secondary-light 0%, $secondary-dark 100%);
+  background: linear-gradient(180deg, $secondary-light 0%, $secondary-dark 100%);
+  margin-top: 70px;
   color: #ddd;
   & > .menuLabel {
-    padding: 0 15px;
-    font-size: 0.75em;
+    padding: 30px 30px 0;
+    font-size: 14px;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.2em;
+    margin: 0;
+    font-weight: bold;
   }
   & > .menuList {
-    padding: 0 15px;
+    padding: 0 15px 0 0;
     & > a {
-      border-radius: 2px;
+      border-left: 5px solid transparent;
       display: block;
-      padding: 0.5em 0.75em;
+      padding: .75em 40px;
       color: #ddd;
       text-decoration: none;
+      letter-spacing: 3px;
+      font-size: 14px;
+      text-decoration: none;
+      text-transform: uppercase;
       &:hover,
       &.active {
-        background-color: #f5f5f5;
-        color: #363636;
+        color: $primary;
+        border-left: 5px solid $primary;
       }
     }
   }
