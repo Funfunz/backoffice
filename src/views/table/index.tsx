@@ -19,7 +19,7 @@ const TableView: FC<ITableProps> = () => {
   console.log(useEntryData(tableName, { id: tableData[0]?.id }));
   return (
     <div className={style.tableContainer}>
-      {table.title()}
+      <h1>{table.title()}</h1>
       {!errorTableData &&
         (loadingTableConfig ? (
           <Message loading />
