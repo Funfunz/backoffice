@@ -2,7 +2,7 @@ import { ITable, IColumn } from "services/api/models/table";
 
 export const emptyTableConfig: ITable = {
   name: '',
-  columns: [],
+  properties: [],
   layout: {
     label: '',
   },

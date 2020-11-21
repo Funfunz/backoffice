@@ -36,7 +36,7 @@ export interface IColumn {
 export interface ITable {
   loading?: boolean,
   name: string,
-  columns?: IColumn[],
+  properties?: IColumn[],
   layout: {
     label: string,
   },
@@ -131,8 +131,8 @@ class Table {
       body: JSON.stringify({
         query: `query {
           ${table.name} (skip: ${options.skip || 0}, take: ${options.take || 10}){
-            ${table.columns?.map(
-              (column) => column.visible.list && column.name
+            ${table.properties?.map(
+              (column) => column.visible?.list && column.name
             )}
           }
         }`
@@ -171,7 +171,7 @@ class Table {
       body: JSON.stringify({
         query: `query {
           ${table.name} (filter: ${this.filterByPks(pks)}){
-            ${table.columns?.filter(
+            ${table.properties?.filter(
               (column) => column.visible.detail
             ).map(
               (column) => column.name

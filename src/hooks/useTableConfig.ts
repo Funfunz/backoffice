@@ -10,7 +10,7 @@ export class TableConfig {
 
   constructor(config?: ITable) {
     this.config = config || emptyTableConfig
-    this.fields = this.config.columns || []
+    this.fields = this.config.properties || []
   }
 
   name() {
@@ -60,7 +60,7 @@ export default function useTableConfig(tableName: string) {
   const loadingTables = table ? table.loading : true
 
   useEffect(() => {
-    if (!table?.columns && !loadingTables) {
+    if (!table?.properties && !loadingTables) {
       tableService.config(tableName)
     }
   }, [table, loadingTables, tableName])
