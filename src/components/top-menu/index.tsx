@@ -20,10 +20,10 @@ const TopMenu: FC = () => {
       </div>      
       {showOptions &&
         <div className={style.accountOptions}>
-          <a>
+          <div>
           <span>logout</span>
           <i className="fas fa-power-off"></i>
-          </a>
+          </div>
         </div>
       }
     </nav>      
