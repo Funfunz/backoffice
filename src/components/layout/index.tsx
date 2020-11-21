@@ -18,8 +18,8 @@ const Layout: FC<ILayoutProps> = ({ children, className = '' }) => {
   return (
     <div className={layoutClasses}>
       <SideMenu />
+      <TopMenu />
       <div className={style.main}>
-        <TopMenu />
         <div className={style.children}>{children}</div>
       </div>
     </div>

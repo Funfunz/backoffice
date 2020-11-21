@@ -6,14 +6,14 @@
   left: 0;
   z-index: 1;
   position: fixed;
-  width: 250px;
+  width: 280px;
   height: 70px;
-  background: $info;
+  background: $secondary-light;
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
   & > img {
-    width: 80px;
+    width: 130px;
     height: auto;
     filter: brightness(0) invert(1);
   }
