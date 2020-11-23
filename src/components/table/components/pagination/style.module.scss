@@ -1,0 +1,24 @@
+@import '~style/variables';
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 10px;
+  .pages {
+    display: flex;
+    .item {
+      padding: 0 5px;
+      cursor: pointer;
+      &.active {
+        color: $primary;
+      }
+      &:hover {
+        background-color: grey;
+      }
+    }
+  }
+  .itemsByPage {
+    display: flex;
+    align-items: flex-end;
+  }
+}

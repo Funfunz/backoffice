@@ -11,6 +11,7 @@ export const FETCH_TABLE_REJECTED = 'FETCH_TABLE_REJECTED'
 export const FETCH_TABLE_ENTRIES_PENDING = 'FETCH_TABLE_ENTRIES_PENDING'
 export const FETCH_TABLE_ENTRIES_FULFILLED = 'FETCH_TABLE_ENTRIES_FULFILLED'
 export const FETCH_TABLE_ENTRIES_REJECTED = 'FETCH_TABLE_ENTRIES_REJECTED'
+export const FETCH_TABLE_CHANGE_ITEMS_BY_PAGE = 'FETCH_TABLE_CHANGE_ITEMS_BY_PAGE'
 
 export interface ITableState extends IBaseState {
   tables: ITable[]
@@ -19,6 +20,8 @@ export interface ITableState extends IBaseState {
   errorTableData?: string
   loadingTableData: boolean
   error?: boolean
+  itemsByPage: number
+  page: number
 }
 
 export const initialState: ITableState = {
@@ -26,11 +29,18 @@ export const initialState: ITableState = {
   loadingTables: false,
   loadingTableData: false,
   error: false,
-}
+  itemsByPage: 10,
+  page: 0,
+};
 
 export function tableReducer(state: ITableState, action: IAction) {
-  let tables = state.tables || []
-  switch(action.type) {
+  let tables = state.tables || [];
+  switch (action.type) {
+    case FETCH_TABLE_CHANGE_ITEMS_BY_PAGE:
+      return {
+        ...state,
+        itemsByPage: action.payload,
+      };
     case FETCH_TABLE_ENTRIES_PENDING:
       return {
         ...state,

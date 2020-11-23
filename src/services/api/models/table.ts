@@ -117,6 +117,34 @@ class Table {
     )
   }
 
+  getAllItemsNumber(table: ITable) {
+    return this.api
+      .post('/', {
+        body: JSON.stringify({
+          query: `query {
+          ${table.name}Count
+        }`,
+        }),
+      })
+      .then((body) => {
+        if (body.errors) {
+          throw body.errors;
+        }
+        if (body.data && body.data[`${table.name}Count`]) {
+          const data = body.data[`${table.name}Count`];
+
+          return data;
+        }
+        return [];
+      })
+      .catch((errors) => {
+        dispatch({
+          type: FETCH_TABLE_ENTRIES_REJECTED,
+          payload: errors[0].message,
+        });
+      });
+  }
+
   getTableData(
     table: ITable,
     options: {

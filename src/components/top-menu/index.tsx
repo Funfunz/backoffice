@@ -1,12 +1,12 @@
-import React, { FC, memo, useState } from "react";
+import React, { FC, memo, useCallback, useState } from "react";
 import style from './style.module.scss';
 
 const TopMenu: FC = () => {
   const [showOptions, setShowOptions] = useState(false);
 
-  const toggleShow = () =>{
+  const toggleShow = useCallback(() =>{
     setShowOptions(!showOptions);
-  }
+  }, [showOptions]);
 
   return (
     <nav className={style.topMenu} role="navigation" aria-label="main navigation">
@@ -20,10 +20,10 @@ const TopMenu: FC = () => {
       </div>      
       {showOptions &&
         <div className={style.accountOptions}>
-          <a>
+          <div>
           <span>logout</span>
           <i className="fas fa-power-off"></i>
-          </a>
+          </div>
         </div>
       }
     </nav>      
