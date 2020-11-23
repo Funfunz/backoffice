@@ -33,10 +33,9 @@ const Pagination: FC<IPaginationProps> = () => {
 
   const updateTable = useCallback(
     (take, p) => {
-      const newSkip = p === 0 ? 0 : itemsByPage * p;
       if (tableConfig?.properties) {
         tableService.getTableData(tableConfig, {
-          skip: newSkip,
+          skip: itemsByPage * p,
           take: take,
         });
       }
