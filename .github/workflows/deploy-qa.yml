@@ -1,0 +1,33 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - release/*
+
+env:
+  REACT_APP_API_URL: https://funfunz.herokuapp.com
+  PUBLIC_URL: /backoffice-qa/
+  REACT_APP_PUBLIC_URL: /backoffice-qa
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - run: npm install
+    - run: npm run build
+    - run: touch build/.nojekyll
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@3.7.1
+      with:
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        BRANCH: gh-pages
+        FOLDER: build
+        CLEAN: true
+        REPOSITORY_NAME: Funfunz/backoffice-qa
