@@ -6,9 +6,12 @@ on:
       - release/*
 
 env:
-  REACT_APP_API_URL: https://funfunz.herokuapp.com
+  REACT_APP_API_URL: https://funfunz-qa.herokuapp.com
   PUBLIC_URL: /backoffice-qa/
   REACT_APP_PUBLIC_URL: /backoffice-qa
+  GH_PAT: ${{ secrets.GH_PAT }}
+  GH_USER: ${{ secrets.GH_USER }}
+  GH_EMAIL: ${{ secrets.GH_EMAIL }}
 
 jobs:
   build:
@@ -24,10 +27,13 @@ jobs:
     - run: npm run build
     - run: touch build/.nojekyll
     - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@3.7.1
-      with:
-        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
-        BRANCH: gh-pages
-        FOLDER: build
-        CLEAN: true
-        REPOSITORY_NAME: Funfunz/backoffice-qa
+      run: |
+        cd build/
+        git config --global user.name "$GH_USER"
+        git config --global user.email "$GH_EMAIL"
+        git init
+        git checkout -b gh-pages
+        git remote add origin https://$GH_USER:$GH_PAT@github.com/Funfunz/backoffice-qa.git
+        git add .
+        git commit -m 'gh-pages'
+        git push -f -u origin gh-pages
