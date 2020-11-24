@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { dispatch, useSelector } from 'reducers';
 import { SET_QUANTITY_ITEMS_BY_PAGE } from 'reducers/table';
 import tableService from 'services/api/models/table';
+import { paginationConfig } from 'utils/tableConfig';
 import style from './style.module.scss';
 
 export interface IPaginationProps {}
@@ -90,8 +91,9 @@ const Pagination: FC<IPaginationProps> = () => {
           onChange={handleChangeItemsShown}
           value={itemsByPage}
         >
-          <option value="10">10</option>
-          <option value="20">20</option>
+          {paginationConfig.itemsPerPage.options.map((option) => (
+            <option value={option}>{option}</option>
+          ))}
         </select>
       </div>
     </div>

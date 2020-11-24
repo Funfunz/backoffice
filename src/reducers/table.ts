@@ -1,5 +1,6 @@
 import { IAction, IBaseState } from "recost"
 import { ITable } from "services/api/models/table"
+import { paginationConfig } from "utils/tableConfig"
 import type { TEntry } from "./entry"
 
 export const FETCH_TABLES_PENDING = 'FETCH_TABLES_PENDING'
@@ -31,7 +32,7 @@ export const initialState: ITableState = {
   loadingTables: false,
   loadingTableData: false,
   error: false,
-  itemsByPage: 10,
+  itemsByPage: paginationConfig.itemsPerPage.default,
   page: 0,
   pagination: [],
 };
