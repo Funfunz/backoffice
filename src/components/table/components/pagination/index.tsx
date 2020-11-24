@@ -50,9 +50,9 @@ const Pagination: FC<IPaginationProps> = () => {
     updateTable(itemsByPage, p);
   };
 
-  const isActive = useCallback((selectedPage, currentPage) => {
+  const isActive = (selectedPage: number, currentPage: number) => {
     return selectedPage === currentPage ? style.active : '';
-  }, []);
+  };
 
   return (
     <div className={style.pagination}>
