@@ -27,32 +27,41 @@ const Pagination: FC<IPaginationProps> = () => {
 
 
 
-  const updateTable = (take: number, p: number) => {
-    if (tableConfig?.properties) {
-      tableService.getTableData(tableConfig, {
-        skip: itemsByPage * p,
-        take: take,
+  const updateTable = useCallback(
+    (take, p) => {
+      if (tableConfig?.properties) {
+        tableService.getTableData(tableConfig, {
+          skip: itemsByPage * p,
+          take: take,
+        });
+      }
+    },
+    [itemsByPage, tableConfig]
+  );
+
+  const handleChangeItemsShown = useCallback(
+    (e) => {
+      const value = e.target.value;
+      dispatch({
+        type: SET_QUANTITY_ITEMS_BY_PAGE,
+        payload: parseInt(value),
       });
-    }
-  }
+      updateTable(value, page);
+    },
+    [page, updateTable]
+  );
 
-  const handleChangeItemsShown = (e: any) => {
-    const value = e.target.value;
-    dispatch({
-      type: SET_QUANTITY_ITEMS_BY_PAGE,
-      payload: parseInt(value),
-    });
-    updateTable(value, page);
-  };
+  const handleChangePage = useCallback(
+    (p: number) => () => {
+      setPage(p);
+      updateTable(itemsByPage, p);
+    },
+    [itemsByPage, updateTable]
+  );
 
-  const handleChangePage = (p: number) => () => {
-    setPage(p);
-    updateTable(itemsByPage, p);
-  };
-
-  const isActive = (selectedPage: number, currentPage: number) => {
+  const isActive = useCallback((selectedPage, currentPage) => {
     return selectedPage === currentPage ? style.active : '';
-  };
+  }, []);
 
   return (
     <div className={style.pagination}>
