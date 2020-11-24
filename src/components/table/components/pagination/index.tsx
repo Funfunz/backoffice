@@ -1,7 +1,7 @@
 import React, { FC, memo, useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { dispatch, useSelector } from 'reducers';
-import { FETCH_TABLE_CHANGE_ITEMS_BY_PAGE } from 'reducers/table';
+import { SET_QUANTITY_ITEMS_BY_PAGE } from 'reducers/table';
 import tableService from 'services/api/models/table';
 import style from './style.module.scss';
 
@@ -9,59 +9,45 @@ export interface IPaginationProps {}
 
 const Pagination: FC<IPaginationProps> = () => {
   const { tableName = '' } = useParams<any>();
-  const [numbersPagination, setNumbersPagination] = useState<any>([]);
   const [page, setPage] = useState(0);
-  const { tableConfig, itemsByPage } = useSelector((state) => {
+  const { tableConfig, itemsByPage, pagination } = useSelector((state) => {
     return {
       tableConfig: state.tables.find((table) => table.name === tableName),
       itemsByPage: state.itemsByPage,
+      pagination: state.pagination
     };
   });
 
   useEffect(() => {
     if (tableConfig?.properties) {
-      tableService.getAllItemsNumber(tableConfig).then((items) => {
-        const itemsPagination = items / itemsByPage;
-        let pagination = [];
-        for (let i = 0; i < itemsPagination; i++) {
-          pagination.push(i);
-        }
-        setNumbersPagination(pagination);
-      });
+      tableService.getEntityItemsCount(tableConfig, itemsByPage)
     }
   }, [itemsByPage, tableConfig]);
 
-  const updateTable = useCallback(
-    (take, p) => {
-      if (tableConfig?.properties) {
-        tableService.getTableData(tableConfig, {
-          skip: itemsByPage * p,
-          take: take,
-        });
-      }
-    },
-    [itemsByPage, tableConfig]
-  );
 
-  const handleChangeItemsShown = useCallback(
-    (e) => {
-      const value = e.target.value;
-      dispatch({
-        type: FETCH_TABLE_CHANGE_ITEMS_BY_PAGE,
-        payload: parseInt(value),
+
+  const updateTable = (take: number, p: number) => {
+    if (tableConfig?.properties) {
+      tableService.getTableData(tableConfig, {
+        skip: itemsByPage * p,
+        take: take,
       });
-      updateTable(value, page);
-    },
-    [page, updateTable]
-  );
+    }
+  }
 
-  const handleChangePage = useCallback(
-    (p: number) => () => {
-      setPage(p);
-      updateTable(itemsByPage, p);
-    },
-    [itemsByPage, updateTable]
-  );
+  const handleChangeItemsShown = (e: any) => {
+    const value = e.target.value;
+    dispatch({
+      type: SET_QUANTITY_ITEMS_BY_PAGE,
+      payload: parseInt(value),
+    });
+    updateTable(value, page);
+  };
+
+  const handleChangePage = (p: number) => () => {
+    setPage(p);
+    updateTable(itemsByPage, p);
+  };
 
   const isActive = useCallback((selectedPage, currentPage) => {
     return selectedPage === currentPage ? style.active : '';
@@ -76,7 +62,7 @@ const Pagination: FC<IPaginationProps> = () => {
         <div className={style.item} onClick={handleChangePage(page - 1)}>
           &#60;
         </div>
-        {numbersPagination.map((index: number) => (
+        {pagination.map((index: number) => (
           <div
             className={[style.item, isActive(index, page)].join(' ')}
             key={index}
@@ -91,7 +77,7 @@ const Pagination: FC<IPaginationProps> = () => {
         <div
           className={style.item}
           onClick={handleChangePage(
-            numbersPagination[numbersPagination.length - 1]
+            pagination[pagination.length - 1]
           )}
         >
           &#8811;

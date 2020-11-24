@@ -10,7 +10,8 @@ import {
   FETCH_TABLES_REJECTED,
   FETCH_TABLE_ENTRIES_FULFILLED,
   FETCH_TABLE_ENTRIES_PENDING,
-  FETCH_TABLE_ENTRIES_REJECTED
+  FETCH_TABLE_ENTRIES_REJECTED,
+  SET_QUANTITY_OF_PAGES
 } from 'reducers/table'
 import { FETCH_ENTRY_FULFILLED, FETCH_ENTRY_PENDING, FETCH_ENTRY_REJECTED } from 'reducers/entry'
 
@@ -117,12 +118,13 @@ class Table {
     )
   }
 
-  getAllItemsNumber(table: ITable) {
+  getEntityItemsCount(table: ITable, itemsByPage: number) {
+    const tableName = `${table.name}Count`;
     return this.api
       .post('/', {
         body: JSON.stringify({
           query: `query {
-          ${table.name}Count
+          ${tableName}
         }`,
         }),
       })
@@ -130,10 +132,18 @@ class Table {
         if (body.errors) {
           throw body.errors;
         }
-        if (body.data && body.data[`${table.name}Count`]) {
-          const data = body.data[`${table.name}Count`];
-
-          return data;
+        if (body.data && body.data[tableName]) {
+          const allItems = body.data[tableName];
+          const itemsPagination = allItems / itemsByPage;
+          let pagination = [];
+          for (let i = 0; i < itemsPagination; i++) {
+            pagination.push(i);
+          }
+          dispatch({
+            type: SET_QUANTITY_OF_PAGES,
+            payload: pagination
+          })
+          return pagination;
         }
         return [];
       })
