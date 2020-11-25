@@ -1,17 +1,24 @@
-import React, { FC, memo } from 'react';
+import React, { FC, memo, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import useTables from 'hooks/useTables';
 import Logo from './components/logo';
 import Hamburger from './components/hamburger';
 import style from './style.module.scss';
+import { desktopSize } from 'utils';
 
 export interface ISideMenuProps {}
 
 const SideMenu: FC<ISideMenuProps> = () => {
   const { tables, loading } = useTables();
+  const [toggle, setToggle] = useState(window.innerWidth < desktopSize);
+
+  const handleToggle = () => {
+    setToggle(!toggle);
+  }
+
   return (
     <>
-      <Hamburger />
+      <Hamburger change={handleToggle} value={toggle} />
       <Logo />
       <aside className={style.sideMenuSpace}></aside>
       <aside className={style.sideMenu}>
@@ -33,10 +40,10 @@ const SideMenu: FC<ISideMenuProps> = () => {
             )}
           </ul>
         </div>
-        <a className={style.account}>
+        <div className={style.account}>
           <span>example@gmail.com</span>
           <i className="fas fa-power-off"></i>
-        </a>
+        </div>
       </aside>
     </>
   );

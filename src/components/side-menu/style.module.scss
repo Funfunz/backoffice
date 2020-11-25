@@ -29,8 +29,8 @@
   color: #ddd;
 
   display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  flex-direction: column;
+  justify-content: space-between;
 
   @include breakpoint(desktop) {
     width: 280px;
