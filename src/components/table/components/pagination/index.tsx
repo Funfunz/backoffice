@@ -28,10 +28,10 @@ const Pagination: FC<IPaginationProps> = () => {
 
 
   const updateTable = useCallback(
-    (take, p) => {
+    (take, pageNumber) => {
       if (tableConfig?.properties) {
         tableService.getTableData(tableConfig, {
-          skip: itemsByPage * p,
+          skip: itemsByPage * pageNumber,
           take: take,
         });
       }
@@ -40,8 +40,8 @@ const Pagination: FC<IPaginationProps> = () => {
   );
 
   const handleChangeItemsShown = useCallback(
-    (e) => {
-      const value = e.target.value;
+    (event) => {
+      const value = event.target.value;
       dispatch({
         type: SET_QUANTITY_ITEMS_BY_PAGE,
         payload: parseInt(value),
@@ -52,9 +52,9 @@ const Pagination: FC<IPaginationProps> = () => {
   );
 
   const handleChangePage = useCallback(
-    (p: number) => () => {
-      setPage(p);
-      updateTable(itemsByPage, p);
+    (pageNumber: number) => () => {
+      setPage(pageNumber);
+      updateTable(itemsByPage, pageNumber);
     },
     [itemsByPage, updateTable]
   );
