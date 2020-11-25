@@ -16,36 +16,67 @@
 }
 
 .sideMenu {
+  width: 100vw;
+  height: calc(100vh - 70px);
   position: fixed;
   transition: margin-left 0.5s;
-  width: 280px;
-  height: 100vh;
   background: $secondary-light;
   background: -moz-linear-gradient(180deg, $secondary-light 0%, $secondary-dark 100%);
   background: -webkit-linear-gradient(180deg, $secondary-light 0%, $secondary-dark 100%);
   background: linear-gradient(180deg, $secondary-light 0%, $secondary-dark 100%);
   margin-top: 70px;
   color: #ddd;
-  & > .menuLabel {
-    padding: 30px 30px 0;
+
+  display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+  @include breakpoint(desktop) {
+    width: 280px;
+  }
+
+  .account{
+    display: block;
+    padding: 30px;
+    
+    span{
+      margin-right: 10px;
+    }
+
+    @include breakpoint(desktop) {
+      display: none;
+    }
+  }
+  
+  .menuLabel {
+    padding: 30px 15px 0;
     font-size: 14px;
     text-transform: uppercase;
     letter-spacing: 0.2em;
     margin: 0;
     font-weight: bold;
+
+    @include breakpoint(desktop) {
+      padding: 30px 30px 0;
+    }
   }
-  & > .menuList {
+  .menuList {
     padding: 0 15px 0 0;
     & > a {
       border-left: 5px solid transparent;
       display: block;
-      padding: .75em 40px;
+      padding: .75em 25px;
       color: #ddd;
       text-decoration: none;
       letter-spacing: 3px;
       font-size: 14px;
       text-decoration: none;
       text-transform: uppercase;
+
+      @include breakpoint(desktop) {
+        padding: .75em 40px;
+      }
+
       &:hover,
       &.active {
         color: $primary;
