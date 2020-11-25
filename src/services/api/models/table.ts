@@ -1,6 +1,7 @@
 import api, { API } from 'services/api'
 import { dispatch } from 'reducers'
 import HttpError from '../HttpError'
+import * as gql from 'gql-query-builder'
 import {
   FETCH_TABLES_FULFILLED,
   FETCH_TABLES_PENDING,
@@ -54,14 +55,13 @@ class Table {
 
   list() {
     dispatch({ type : FETCH_TABLES_PENDING })
+    const graphQl = gql.query({
+      operation: 'entities',
+      fields: ['name', 'layout']
+    })
     return this.api.post('/?', {
       body: JSON.stringify({
-        query: `query {
-          entities {
-            name
-            layout
-          }
-        }`,
+        query: graphQl.query,
         variables: null
       })
     }).then(
@@ -87,13 +87,13 @@ class Table {
 
   config(tableName: string) {
     dispatch({ type: FETCH_TABLE_PENDING, payload: tableName })
+    const graphQl = gql.query({
+      operation: 'config',
+      fields: [tableName]
+    })
     return this.api.post('/', {
       body: JSON.stringify({
-        query: `query {
-          config {
-            ${tableName}
-          }
-        }`
+        query: graphQl.query
       })
     }).then(
       (body) => {
@@ -120,12 +120,13 @@ class Table {
 
   getEntityItemsCount(table: ITable, itemsByPage: number) {
     const tableName = `${table.name}Count`;
+    const graphQl = gql.query({
+      operation: tableName,
+    })
     return this.api
       .post('/', {
         body: JSON.stringify({
-          query: `query {
-          ${tableName}
-        }`,
+          query: graphQl.query,
         }),
       })
       .then((body) => {
@@ -165,15 +166,15 @@ class Table {
       take: 10
     }) {
     dispatch({ type: FETCH_TABLE_ENTRIES_PENDING })
+    const graphQl = gql.query({
+      operation: `${table.name} (skip: ${options.skip || 0}, take: ${options.take || 10})`,
+      fields: [`${table.properties?.map(
+        (column) => column.visible?.list && column.name
+      )}`]
+    })
     return this.api.post('/', {
       body: JSON.stringify({
-        query: `query {
-          ${table.name} (skip: ${options.skip || 0}, take: ${options.take || 10}){
-            ${table.properties?.map(
-              (column) => column.visible?.list && column.name
-            )}
-          }
-        }`
+        query: graphQl.query
       })
     }).then(
       (body) => {
@@ -205,17 +206,17 @@ class Table {
     table: ITable,
     pks: PKS) {
     dispatch({ type: FETCH_ENTRY_PENDING })
+    const graphQl = gql.query({
+      operation: `${table.name} (filter: ${this.filterByPks(pks)})`,
+      fields: [`${table.properties?.filter(
+        (column) => column.visible.detail
+      ).map(
+        (column) => column.name
+      )}`]
+    })
     return this.api.post('/', {
       body: JSON.stringify({
-        query: `query {
-          ${table.name} (filter: ${this.filterByPks(pks)}){
-            ${table.properties?.filter(
-              (column) => column.visible.detail
-            ).map(
-              (column) => column.name
-            )}
-          }
-        }`
+        query: graphQl.query
       })
     }).then(
       (body) => {

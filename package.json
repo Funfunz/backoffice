@@ -14,6 +14,7 @@
     "@types/react-dom": "^16.9.9",
     "@types/react-router-dom": "^5.1.6",
     "classnames": "^2.2.6",
+    "gql-query-builder": "^3.5.0",
     "husky": "^4.3.0",
     "lint-staged": "^10.5.1",
     "node-sass": "^4.14.1",

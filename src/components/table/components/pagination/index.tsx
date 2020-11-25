@@ -100,8 +100,8 @@ const Pagination: FC<IPaginationProps> = () => {
           onChange={handleChangeItemsShown}
           value={itemsByPage}
         >
-          {paginationConfig.itemsPerPage.options.map((option) => (
-            <option value={option}>{option}</option>
+          {paginationConfig.itemsPerPage.options.map((option: number, index: number) => (
+            <option key={index} value={option}>{option}</option>
           ))}
         </select>
       </div>
