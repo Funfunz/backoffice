@@ -8,10 +8,11 @@
 }
 
 .sideMenuSpace {
+  display: none;
   transition: margin-left 0.5s;
   width: 280px;
-  @include breakpoint(mobile) {
-    display: none;
+  @include breakpoint(desktop) {
+    display: block;
   }
 }
 
