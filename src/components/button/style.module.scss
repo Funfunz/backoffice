@@ -2,11 +2,10 @@
 @import '~style/mixins.scss';
 
 .button {
-  padding: 0.6em 1em 0.5em 1em;
-  background-color: white;
-  border: $default-border;
-  border-radius: $border-radius;
-  font-size: 1rem;
+  padding: 0.5em 1em;
+  background-color: transparent;
+  border: none;
+  font-size: 1.1rem;
   cursor: pointer;
   @include color-variants;
   &:hover {
