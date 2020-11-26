@@ -16,27 +16,28 @@ export interface IActionButtonProps {
   data: any;
   type: EActionType;
   onClick?: IActionFunction;
+  label?: string;
 }
 
-function getButtonProps(type: EActionType): Partial<IButtonProps> {
+function getButtonProps(type: EActionType, label: string): Partial<IButtonProps> {
   switch (type) {
     case EActionType.edit:
-      return { label: <Icon name="edit" /> };
+      return { prefix: <Icon name="pen" />, label };
     case EActionType.delete:
-      return { label: <Icon name="times" />, color: 'danger' };
+      return { prefix: <Icon name="trash-alt" />, color: 'delete', label };
     case EActionType.view:
     default:
-      return { label: <Icon name="eye" /> };
+      return { prefix: <Icon name="eye" />, label };
   }
 }
 
-const ActionButton: FC<IActionButtonProps> = ({ data, type, onClick }) => {
+const ActionButton: FC<IActionButtonProps> = ({ data, type, onClick, label }) => {
   const handleClick = useCallback(() => {
     if (onClick) {
       onClick(data);
     }
   }, [onClick, data]);
-  return <Button {...getButtonProps(type)} onClick={handleClick} />;
+  return <Button {...getButtonProps(type, label ? label : "")} onClick={handleClick} />;
 };
 
 export default memo(ActionButton);
