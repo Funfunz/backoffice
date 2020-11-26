@@ -1,6 +1,8 @@
 @import "~style/variables";
+@import '~style/mixins';
 
 .topMenu {
+  display: none;
   position: fixed;
   left: 280px;
   width: calc(100% - 310px);
@@ -10,11 +12,14 @@
   background: -moz-linear-gradient(90deg, rgba(77,80,83,1) 0%, rgba(35,37,38,1) 100%);
   background: -webkit-linear-gradient(90deg, rgba(77,80,83,1) 0%, rgba(35,37,38,1) 100%);
   background: linear-gradient(90deg, rgba(77,80,83,1) 0%, rgba(35,37,38,1) 100%);
-  display: flex;
   justify-content: flex-end;
   align-items: center;
   color: #EBEBEB;
   padding-right: 30px;
+
+  @include breakpoint(desktop) {
+    display: flex;
+  }
 
   .account{
     display: flex;
