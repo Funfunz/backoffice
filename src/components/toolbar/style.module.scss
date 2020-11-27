@@ -1,0 +1,26 @@
+@import '~style/variables';
+.toolbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+
+  .inputSearch{
+    display: flex;
+  }
+
+  .inputContainer{
+    background-color: white;
+    padding: 8px 20px;
+    border-radius: 5px;
+    display: flex;
+    color: $secondary-light;
+    margin-right: 50px;
+
+    input{
+      border: none;
+    }
+    ::placeholder {
+      font-size: 10px;
+    }
+  }
+}

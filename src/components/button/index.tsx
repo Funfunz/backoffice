@@ -39,9 +39,9 @@ const Button: FC<IButtonProps> = ({
       style={style}
       disabled={disabled}
     >
-      {prefix ? <span className="prefix">{prefix}</span> : null}
+      {prefix ? <span className={classes.prefix}>{prefix}</span> : null}
       {label ? <span className="label"> {label} </span> : null}
-      {suffix ? <span className="suffix">{suffix}</span> : null}
+      {suffix ? <span className={classes.suffix}>{suffix}</span> : null}
       {children}
     </button>
   );
