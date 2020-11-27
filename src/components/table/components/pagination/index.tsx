@@ -67,10 +67,11 @@ const Pagination: FC<IPaginationProps> = () => {
     <div className={style.pagination}>
       <div className={style.pages}>
         <div className={style.item} onClick={handleChangePage(0)}>
-          &#8810;
+          <i className="fas fa-chevron-left"></i>
+          <i className="fas fa-chevron-left"></i>
         </div>
         <div className={style.item} onClick={handleChangePage(page - 1)}>
-          &#60;
+          <i className="fas fa-chevron-left"></i>
         </div>
         {pagination.map((index: number) => (
           <div
@@ -82,7 +83,7 @@ const Pagination: FC<IPaginationProps> = () => {
           </div>
         ))}
         <div className={style.item} onClick={handleChangePage(page + 1)}>
-          &#62;
+          <i className="fas fa-chevron-right"></i>
         </div>
         <div
           className={style.item}
@@ -90,7 +91,8 @@ const Pagination: FC<IPaginationProps> = () => {
             pagination[pagination.length - 1]
           )}
         >
-          &#8811;
+          <i className="fas fa-chevron-right"></i>
+          <i className="fas fa-chevron-right"></i>
         </div>
       </div>
       <div className={style.itemsByPage}>
