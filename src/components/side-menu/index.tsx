@@ -6,15 +6,17 @@ import Hamburger from './components/hamburger';
 import style from './style.module.scss';
 import { desktopSize } from 'utils';
 
-export interface ISideMenuProps {}
+export interface ISideMenuProps {
+  isSearchable: boolean;
+}
 
-const SideMenu: FC<ISideMenuProps> = () => {
+const SideMenu: FC<ISideMenuProps> = ({isSearchable}) => {
   const { tables, loading } = useTables();
   const [toggle, setToggle] = useState(window.innerWidth < desktopSize);
 
   const handleToggle = () => {
     setToggle(!toggle);
-  }
+  };
 
   return (
     <>
@@ -24,9 +26,14 @@ const SideMenu: FC<ISideMenuProps> = () => {
       <aside className={style.sideMenu}>
         <div className={style.container}>
           <p className={style.menuLabel}>Content Types</p>
+          {isSearchable && <div className={style.search}>
+              <input type="text" placeholder="SEARCH"></input>
+              <i className="fa fa-search"></i>
+            </div>
+          }
           <ul className={style.menuList}>
             {loading ? (
-              <p>Loading...</p>
+              <p className={style.loading}>Loading...</p>
             ) : (
               tables.map((table: any, index: number) => (
                 <NavLink
