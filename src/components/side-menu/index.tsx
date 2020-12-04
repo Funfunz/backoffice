@@ -1,4 +1,4 @@
-import React, { FC, memo, useState } from 'react';
+import React, { FC, memo, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import useTables from 'hooks/useTables';
 import Logo from './components/logo';
@@ -6,17 +6,46 @@ import Hamburger from './components/hamburger';
 import style from './style.module.scss';
 import { desktopSize } from 'utils';
 
+
 export interface ISideMenuProps {
   isSearchable: boolean;
+  visible?: number;
 }
 
-const SideMenu: FC<ISideMenuProps> = ({isSearchable}) => {
+const SideMenu: FC<ISideMenuProps> = ({isSearchable, visible}) => {
   const { tables, loading } = useTables();
   const [toggle, setToggle] = useState(window.innerWidth < desktopSize);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [tablesResult, setTablesResult] = useState<any>([]); 
+  const [v, setV] = useState(visible);
 
   const handleToggle = () => {
     setToggle(!toggle);
   };
+
+  useEffect(() => {
+    setTablesResult(tables);
+  }, [tables])
+
+  const handleOnChangeSearch = (event: any) =>{
+    setSearchTerm(event.target.value);
+    if(event.target.value !== ""){
+      const filteredResult = tablesResult.filter((table: any) =>{
+        return table.layout.label.toLowerCase().includes(searchTerm.toLowerCase())
+      })
+      setTablesResult(filteredResult);
+    }else{
+      setTablesResult(tables);
+    }
+  }
+
+  const showMoreTables = () =>{
+    setV((prevValue) => (prevValue ? prevValue : 0) + (visible ? visible : 0));
+  }
+
+  const showLessTables = () =>{
+    setV(visible);
+  }
 
   return (
     <>
@@ -27,7 +56,7 @@ const SideMenu: FC<ISideMenuProps> = ({isSearchable}) => {
         <div className={style.container}>
           <p className={style.menuLabel}>Content Types</p>
           {isSearchable && <div className={style.search}>
-              <input type="text" placeholder="SEARCH"></input>
+              <input type="text" placeholder="SEARCH" onChange={handleOnChangeSearch}/>
               <i className="fa fa-search"></i>
             </div>
           }
@@ -35,7 +64,7 @@ const SideMenu: FC<ISideMenuProps> = ({isSearchable}) => {
             {loading ? (
               <p className={style.loading}>Loading...</p>
             ) : (
-              tables.map((table: any, index: number) => (
+              tablesResult.slice(0, v).map((table: any, index: number) => (
                 <NavLink
                   key={index}
                   to={`/table/${table.name}`}
@@ -46,6 +75,9 @@ const SideMenu: FC<ISideMenuProps> = ({isSearchable}) => {
               ))
             )}
           </ul>
+          {v && (v < tablesResult.length ?
+            <button className={style.load} onClick={showMoreTables}>Show more</button>
+          : <button className={style.load} onClick={showLessTables}>Show less</button>)}
         </div>
         <div className={style.account}>
           <span>example@gmail.com</span>
