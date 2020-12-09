@@ -17,7 +17,8 @@ const SideMenu: FC<ISideMenuProps> = ({isSearchable, visible}) => {
   const [toggle, setToggle] = useState(window.innerWidth < desktopSize);
   const [searchTerm, setSearchTerm] = useState("");
   const [tablesResult, setTablesResult] = useState<any>([]); 
-  const [v, setV] = useState(visible);
+  const [show, setShow] = useState(visible);
+  const [isSearching, setIsSearching] = useState(false);
 
   const handleToggle = () => {
     setToggle(!toggle);
@@ -34,17 +35,19 @@ const SideMenu: FC<ISideMenuProps> = ({isSearchable, visible}) => {
         return table.layout.label.toLowerCase().includes(searchTerm.toLowerCase())
       })
       setTablesResult(filteredResult);
+      setIsSearching(true);
     }else{
       setTablesResult(tables);
+      setIsSearching(false);
     }
   }
 
   const showMoreTables = () =>{
-    setV((prevValue) => (prevValue ? prevValue : 0) + (visible ? visible : 0));
+    setShow((prevValue) => (prevValue ? prevValue : 0) + (visible ? visible : 0));
   }
 
   const showLessTables = () =>{
-    setV(visible);
+    setShow(visible);
   }
 
   return (
@@ -64,7 +67,7 @@ const SideMenu: FC<ISideMenuProps> = ({isSearchable, visible}) => {
             {loading ? (
               <p className={style.loading}>Loading...</p>
             ) : (
-              tablesResult.slice(0, v).map((table: any, index: number) => (
+              tablesResult.slice(0, !isSearching ? show : tablesResult.length).map((table: any, index: number) => (
                 <NavLink
                   key={index}
                   to={`/table/${table.name}`}
@@ -75,7 +78,7 @@ const SideMenu: FC<ISideMenuProps> = ({isSearchable, visible}) => {
               ))
             )}
           </ul>
-          {v && (v < tablesResult.length ?
+          {show && !isSearching && (show < tablesResult.length ?
             <button className={style.load} onClick={showMoreTables}>Show more</button>
           : <button className={style.load} onClick={showLessTables}>Show less</button>)}
         </div>
