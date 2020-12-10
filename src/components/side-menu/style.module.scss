@@ -37,10 +37,10 @@
   }
 
   .container{
-    overflow-y: auto;
+    height: 100%;
 
     .load{
-      margin-left: 45px;
+      margin-left: 30px;
       border: none;
       background: none;
       text-transform: uppercase;
@@ -49,12 +49,25 @@
       border-bottom: 1px solid white;
       padding: 0;
       cursor: pointer;
+
+      @include breakpoint(desktop) {
+        margin-left: 45px;
+      }
+
+      &:hover{
+        color: $primary;
+        border-color: $primary;
+      }
+
+      &:focus{
+        outline: none;
+      }
     }
   }
 
   .account{
     display: block;
-    padding: 30px;
+    padding: 0px 30px 30px;
     
     span{
       margin-right: 10px;
@@ -93,6 +106,10 @@
       background: none;
       border: none;
       font-size: 12px;
+
+      &:focus{
+        outline: none;
+      }
     }
 
     ::placeholder{
@@ -102,6 +119,8 @@
 
   .menuList {
     padding: 0 15px 0 0;
+    overflow-y: auto;
+    max-height: calc(100% - 170px);
     & > a {
       border-left: 5px solid transparent;
       display: block;

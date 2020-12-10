@@ -43,7 +43,7 @@ const SideMenu: FC<ISideMenuProps> = ({isSearchable, visible}) => {
   }
 
   const showMoreTables = () =>{
-    setShow((prevValue) => (prevValue ? prevValue : 0) + (visible ? visible : 0));
+    setShow(tablesResult.length);
   }
 
   const showLessTables = () =>{
