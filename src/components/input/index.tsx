@@ -1,6 +1,6 @@
 import React, { KeyboardEvent, useCallback } from 'react';
 import classNames from 'classnames';
-import { serialize } from '../helpers/serialize';
+import { serialize } from '../../utils/serialize';
 import style from './style.module.scss';
 
 type InputTypes =
@@ -209,14 +209,14 @@ const Input: React.FC<InputProps> = React.memo<InputProps>(
             <div
               className={classNames(
                 style.column,
-                style.colauto,
+                style.colAuto,
                 style.inputPrefix
               )}
             >
               {prefix}
             </div>
           ) : null}
-          <div className={classNames(style.column, style.colgrow)}>
+          <div className={classNames(style.column, style.colGrow)}>
             {readOnly ? (
               <input type={type} value={serialize(value) || '-'} readOnly />
             ) : (
@@ -238,7 +238,7 @@ const Input: React.FC<InputProps> = React.memo<InputProps>(
             <div
               className={classNames(
                 style.column,
-                style.colauto,
+                style.colAuto,
                 style.inputSuffix
               )}
             >

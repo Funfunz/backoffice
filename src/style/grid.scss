@@ -6,12 +6,12 @@
   flex-wrap: wrap;
   max-width: inherit;
 
-  &.columnsnowrap {
+  &.columnsNoWrap {
     flex-wrap: nowrap;
     overflow-x: auto;
   }
 
-  &.columnsgap1 {
+  &.columnsGap1 {
     $gap: 10px;
 
     margin-left: -$gap;
@@ -37,7 +37,7 @@
       }
     }
 
-    &.colauto {
+    &.colAuto {
       width: auto;
       flex: 0 0 auto;
       flex-grow: 0;
@@ -45,7 +45,7 @@
       flex-basis: auto;
     }
 
-    &.colgrow {
+    &.colGrow {
       width: 0;
       flex: 1 1 auto;
       flex-grow: 1;
