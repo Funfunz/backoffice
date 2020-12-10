@@ -46,9 +46,9 @@ const Home: FC<IHomeProps> = () => {
           { value: '2', description: '2' },
         ]}
       />
-      <Input type="checkbox" name={'aaa'} value={true} />
-      <Input type="switch" />
-      <Input type="text" value={text} prefix="cenas" suffix="cenas" />
+      <Input type="checkbox"  onChange={() => false} name={'aaa'} value={true} />
+      <Input type="switch" onChange={() => false} />
+      <Input type="text"  onChange={() => false} value={text} prefix="cenas" suffix="cenas" />
       <p style={{ marginTop: 1000 }}>Bottom</p>
     </div>
   );

@@ -102,8 +102,8 @@ function getInput({
           value={value}
         >
           {options &&
-            options.map((option) => (
-              <option value={option.value}>{option.description}</option>
+            options.map((option, index) => (
+              <option key={index} value={option.value}>{option.description}</option>
             ))}
         </select>
       );
@@ -113,6 +113,7 @@ function getInput({
           <input
             type="checkbox"
             disabled={disabled}
+            onChange={onChange}
             checked={serialize(value) === 'true'}
           ></input>
           {name && <span className={style.inputLabel}>{name}</span>}
