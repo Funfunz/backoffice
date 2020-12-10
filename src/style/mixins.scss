@@ -36,25 +36,19 @@ $breakpoints: (
   xl: 1200px,
 ) !default;
 
-@mixin breakpoint($point) {
-  @if $point == desktop {
-    @media (min-width: 70em) {
+$size-xs      : map-get($breakpoints, 'xs');
+$size-sm      : map-get($breakpoints, 'sm');
+$size-md      : map-get($breakpoints, 'md');
+$size-lg      : map-get($breakpoints, 'lg');
+$size-xl      : map-get($breakpoints, 'xl');
+
+@mixin screen($size, $type: min, $pixels: map-get($breakpoints, 'sm')) {
+  @if $size != 'custom' {
+    @media screen and ($type + -width: map-get($breakpoints,$size)) {
       @content;
     }
-  } @else if $point == laptop {
-    @media (min-width: 64em) {
-      @content;
-    }
-  } @else if $point == tablet {
-    @media (min-width: 50em) {
-      @content;
-    }
-  } @else if $point == phablet {
-    @media (min-width: 37.5em) {
-      @content;
-    }
-  } @else if $point == mobile {
-    @media (max-width: 37.5em) {
+  } @else {
+    @media screen and ($type + -width: $pixels) {
       @content;
     }
   }

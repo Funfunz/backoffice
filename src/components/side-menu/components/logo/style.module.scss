@@ -13,7 +13,7 @@
   justify-content: center;
   margin-bottom: 20px;
 
-  @include breakpoint(desktop) {
+  @include screen(md) {
     width: 280px;
   }
 

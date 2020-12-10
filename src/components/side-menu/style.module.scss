@@ -11,7 +11,7 @@
   display: none;
   transition: margin-left 0.5s;
   width: 280px;
-  @include breakpoint(desktop) {
+  @include screen(md) {
     display: block;
   }
 }
@@ -32,7 +32,7 @@
   flex-direction: column;
   justify-content: space-between;
 
-  @include breakpoint(desktop) {
+  @include screen(md) {
     width: 280px;
   }
 
@@ -44,7 +44,7 @@
       margin-right: 10px;
     }
 
-    @include breakpoint(desktop) {
+    @include screen(md) {
       display: none;
     }
   }
@@ -57,7 +57,7 @@
     margin: 0;
     font-weight: bold;
 
-    @include breakpoint(desktop) {
+    @include screen(md) {
       padding: 30px 30px 0;
     }
   }
@@ -74,7 +74,7 @@
       text-decoration: none;
       text-transform: uppercase;
 
-      @include breakpoint(desktop) {
+      @include screen(md) {
         padding: .75em 40px;
       }
 

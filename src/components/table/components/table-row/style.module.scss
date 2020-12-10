@@ -7,7 +7,7 @@
   position: relative;
   & > button {
     margin: 0;
-    @include breakpoint(mobile) {
+    @include screen(sm) {
       display: none;
     }
   }
@@ -15,7 +15,7 @@
   .mobileOptions{
     display: none;
 
-    @include breakpoint(mobile) {
+    @include screen(sm) {
       display: block;
     }
   }

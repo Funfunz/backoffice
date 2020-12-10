@@ -1,0 +1,206 @@
+@import '~style/variables.scss';
+@import '~style/mixins';
+@import '~style/grid';
+
+.input {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  font-size: 110%;
+  line-height: 34px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+
+  @include screen(md) {
+    font-size: 100%;
+  }
+
+  &.inputCheckbox,
+  &.inputRadio,
+  &.select,
+  &.inputSwitch {
+    border: 0 none;
+  }
+
+  input {
+    display: inline-block;
+    width: 100%;
+    margin: 0;
+    border: none;
+    outline: none;
+    text-align: left;
+    font-size: inherit;
+    line-height: inherit;
+    background-color: transparent;
+
+    &::placeholder {
+      color: $black;
+      opacity: 0.5;
+    }
+  }
+
+  .containerInput {
+    display: flex;
+    align-items: center;
+  }
+
+ 
+  &.inputCheckbox,
+  &.inputRadio {
+    input {
+      position: relative;
+      height: 20px;
+      width: 20px;
+      appearance: none;
+      outline: none;
+      background-color: transparent;
+      cursor: pointer;
+      padding: 0;
+      border: $default-border;
+      border-color: $neutral-light;
+    }
+
+    .inputLabel {
+      display: inline-block;
+      margin: 0;
+      padding: 8px 3px 8px 8px;
+      font-size: inherit;
+      line-height: 1;
+      max-width: calc(100% - 28px);
+    }
+
+    input::before {
+      display: inline-block;
+      position: absolute;
+      content: '';
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background-color: transparent;
+      color: transparent;
+      transition: transform 0.1s ease-out;
+    }
+
+    input:checked::before {
+      background-color: $primary;
+      transform: translate(-50%, -50%) scale(1);
+      border: $default-border;
+      border-color: $primary;
+      border-radius: $border-radius;
+    }
+  }
+
+  &.inputCheckbox {
+    input {
+      border-radius: 4px;
+    }
+
+    input:checked::before {
+      content: '\2713';
+      text-align: center;
+      color: $white;
+      font-size: 16px;
+      line-height: 18px;
+      height: 18px;
+      width: 18px;
+
+    }
+  }
+
+  &.inputRadio {
+    input {
+      border-radius: 20px;
+      
+    }
+
+    input:checked::before {
+      content: '';
+      border-radius: 5px;
+      height: 10px;
+      width: 10px;
+    }
+  }
+
+  .inputPrefix,
+  .inputSuffix {
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  .inputPrefix {
+    padding-left: 8px;
+    @include screen(md) {
+      padding-left: 12px;
+    }
+  }
+
+  .inputSuffix {
+    padding-right: 8px;
+    @include screen(md) {
+      padding-right: 12px;
+    }
+  }
+
+
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+  }
+  
+  .switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: $primary;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px $primary;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+}
+
+
