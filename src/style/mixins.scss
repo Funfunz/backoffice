@@ -15,6 +15,9 @@
     background-color: $success;
     color: white;
   }
+  &.delete {
+    color: $neutral-dark;
+  }
 }
 
 @mixin visible {

@@ -1,5 +1,6 @@
 import { IAction, IBaseState } from "recost"
 import { ITable } from "services/api/models/table"
+import { paginationConfig } from "utils/tableConfig"
 import type { TEntry } from "./entry"
 
 export const FETCH_TABLES_PENDING = 'FETCH_TABLES_PENDING'
@@ -11,6 +12,8 @@ export const FETCH_TABLE_REJECTED = 'FETCH_TABLE_REJECTED'
 export const FETCH_TABLE_ENTRIES_PENDING = 'FETCH_TABLE_ENTRIES_PENDING'
 export const FETCH_TABLE_ENTRIES_FULFILLED = 'FETCH_TABLE_ENTRIES_FULFILLED'
 export const FETCH_TABLE_ENTRIES_REJECTED = 'FETCH_TABLE_ENTRIES_REJECTED'
+export const SET_QUANTITY_ITEMS_BY_PAGE = 'SET_QUANTITY_ITEMS_BY_PAGE'
+export const SET_QUANTITY_OF_PAGES = 'SET_QUANTITY_OF_PAGES'
 
 export interface ITableState extends IBaseState {
   tables: ITable[]
@@ -19,6 +22,9 @@ export interface ITableState extends IBaseState {
   errorTableData?: string
   loadingTableData: boolean
   error?: boolean
+  itemsByPage: number
+  page: number
+  pagination: []
 }
 
 export const initialState: ITableState = {
@@ -26,11 +32,24 @@ export const initialState: ITableState = {
   loadingTables: false,
   loadingTableData: false,
   error: false,
-}
+  itemsByPage: paginationConfig.itemsPerPage.default,
+  page: 0,
+  pagination: [],
+};
 
 export function tableReducer(state: ITableState, action: IAction) {
-  let tables = state.tables || []
-  switch(action.type) {
+  let tables = state.tables || [];
+  switch (action.type) {
+    case SET_QUANTITY_OF_PAGES:
+      return {
+        ...state,
+        pagination: action.payload
+      }
+    case SET_QUANTITY_ITEMS_BY_PAGE:
+      return {
+        ...state,
+        itemsByPage: action.payload
+      };
     case FETCH_TABLE_ENTRIES_PENDING:
       return {
         ...state,

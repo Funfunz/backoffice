@@ -24,13 +24,13 @@ const TableView: FC<ITableProps> = () => {
     tableName
   );
   return (
-    <div className={style.tableContainer}>
-      <div className={style.titleToolbar}>
+    <div className={style.container}>
+      <div className={style.toolbar}>
         <h1>{table.title()}</h1>
         <Toolbar toggleFilters={toggleFilters}/>
       </div>
       {showFilters && <Filters />}
-      
+      <div className={style.tableContainer}>
       {!errorTableData &&
         (loadingTableConfig ? (
           <Message loading />
@@ -47,6 +47,7 @@ const TableView: FC<ITableProps> = () => {
       {errorTableData && (
         <Message error={!!errorTableData} text={errorTableData} />
       )}
+      </div>
     </div>
   );
 };

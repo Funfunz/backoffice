@@ -4,7 +4,11 @@
 .hamburgerCheckbox {
   display: none;
   &:checked ~ aside {
-    margin-left: -280px;
+    margin-left: -100%;
+
+    @include breakpoint(desktop) {
+      margin-left: -280px;
+    }
   }
 }
 .hamburgerButton {
@@ -20,7 +24,4 @@
   padding: 0 20px 0 30px;
   color: white;
   cursor: pointer;
-  @include breakpoint(mobile) {
-    color: black;
-  }
 }

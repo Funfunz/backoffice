@@ -23,3 +23,10 @@ export const emptyColumnConfig: IColumn = {
     }
   },
 }
+
+export const paginationConfig = {
+  itemsPerPage: {
+    default: 10,
+    options: [ 10, 15, 20, 25, 30 ],
+  },
+}
