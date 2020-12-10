@@ -28,6 +28,13 @@ export class TableConfig {
     }))
   }
 
+  filters() {
+    console.log(this.fields)
+    return this.fields.filter((property) => (
+      property.layout?.entityPage?.filterable
+    ))
+  }
+
   pkColumn(): IColumn {
     return this.fields.find((c) => c.model && c.model.isPk) || emptyColumnConfig
   }

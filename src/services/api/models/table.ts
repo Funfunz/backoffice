@@ -24,13 +24,26 @@ export interface IColumn {
   },
   layout: {
     label?: string,
+    entityPage?: {
+      filterable?: {
+        type: 'boolean',
+        checked: unknown
+        unChecked: unknown
+      } | {
+        type: 'enum',
+        content: {
+          label: string,
+          value: unknown,
+        }[]
+      },
+    },
+    visible: {
+      entityPage: boolean,
+      detail: boolean,
+      relation: boolean
+    },
     [key: string]: unknown
   }
-  visible: {
-    list: boolean,
-    detail: boolean,
-    relation: boolean
-  },
 }
 
 export interface ITable {
@@ -132,7 +145,7 @@ class Table {
         query: `query {
           ${table.name} (skip: ${options.skip || 0}, take: ${options.take || 10}){
             ${table.properties?.map(
-              (column) => column.visible?.list && column.name
+              (column) => column.layout.visible?.entityPage && column.name
             )}
           }
         }`
@@ -172,7 +185,7 @@ class Table {
         query: `query {
           ${table.name} (filter: ${this.filterByPks(pks)}){
             ${table.properties?.filter(
-              (column) => column.visible.detail
+              (column) => column.layout.visible.detail
             ).map(
               (column) => column.name
             )}

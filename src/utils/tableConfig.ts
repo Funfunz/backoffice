@@ -11,14 +11,15 @@ export const emptyTableConfig: ITable = {
 export const emptyColumnConfig: IColumn = {
   name: '',
   searchable: false,
-  visible: {
-    list: false,
-    detail: false,
-    relation: false,
-  },
   model: {
     type: '',
     allowNull: true,
   },
-  layout: {},
+  layout: {
+    visible: {
+      entityPage: false,
+      detail: false,
+      relation: false,
+    }
+  },
 }
