@@ -1,0 +1,49 @@
+@import '~style/variables';
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  padding: 30px 0;
+  position: relative;
+  color: $secondary-light;
+  .pages {
+    display: flex;
+    .item {
+      padding: 0 10px;
+      margin: 0 2px;
+      cursor: pointer;
+      font-weight: bold;
+      border: 2px solid transparent;
+      font-size: 14px;
+      &.active {
+        border-color: $secondary-light;
+        border-radius: 3px;
+      }
+      &:hover {
+        border-color: $secondary-light;
+      }
+    }
+  }
+  .itemsByPage {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: 0;
+
+    span{
+      font-size: 12px;
+      text-transform: uppercase;
+      margin-right: 5px;
+      letter-spacing: 1px;
+    }
+
+    select{
+      background: none;
+      border: none;
+      font-size: 14px;
+      letter-spacing: 1px;
+      
+      color: $secondary-light;
+    }
+  }
+}

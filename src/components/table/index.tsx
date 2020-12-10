@@ -3,6 +3,7 @@ import Message from 'components/message';
 import { TEntry } from 'reducers/entry';
 import TableHead from './components/table-head';
 import TableRow from './components/table-row';
+import Pagination from './components/pagination';
 import style from './style.module.scss';
 
 export interface ITableProps {
@@ -25,27 +26,30 @@ const Table: FC<ITableProps> = ({
   });
 
   return (
-    <table className={style.table}>
-      <TableHead actions={true} columns={columns} />
-      <tbody>
-        {(loadingTableData && (
-          <tr>
-            <td colSpan={columns.length}>
-              <Message loading />
-            </td>
-          </tr>
-        )) ||
-          (!loadingTableData &&
-            tableData.map((data, index) => (
-              <TableRow
-                key={index}
-                actions={actions}
-                fields={fields}
-                data={data}
-              />
-            )))}
-      </tbody>
-    </table>
+    <>
+      <table className={style.table}>
+        <TableHead actions={true} columns={columns} />
+        <tbody>
+          {(loadingTableData && (
+            <tr>
+              <td colSpan={columns.length}>
+                <Message loading />
+              </td>
+            </tr>
+          )) ||
+            (!loadingTableData &&
+              tableData.map((data, index) => (
+                <TableRow
+                  key={index}
+                  actions={actions}
+                  fields={fields}
+                  data={data}
+                />
+              )))}
+        </tbody>
+      </table>
+      <Pagination />
+    </>
   );
 };
 

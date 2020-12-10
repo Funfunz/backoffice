@@ -1,12 +1,12 @@
-import React, { FC, memo, useState } from "react";
+import React, { FC, memo, useCallback, useState } from "react";
 import style from './style.module.scss';
 
 const TopMenu: FC = () => {
   const [showOptions, setShowOptions] = useState(false);
 
-  const toggleShow = () =>{
+  const toggleShow = useCallback(() =>{
     setShowOptions(!showOptions);
-  }
+  }, [showOptions]);
 
   return (
     <nav className={style.topMenu} role="navigation" aria-label="main navigation">
