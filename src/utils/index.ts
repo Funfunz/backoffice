@@ -41,4 +41,18 @@ export function buildGQLFilter(selectedFilters: IFilterState['selectedFilters'])
   }
 }
 
+export function existSelectedFilters(selectedFilters: IFilterState['selectedFilters']): boolean {
+  const filterProperties = Object.keys(selectedFilters)
+  if (filterProperties.length) {
+    return filterProperties.some(
+      (filter) => {
+        return selectedFilters[filter].value !== undefined
+
+      }
+    )
+  } else {
+    return false
+  }
+}
+
 export const desktopSize = 1120

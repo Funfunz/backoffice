@@ -13,7 +13,6 @@ export interface IFiltersProps {
 }
 
 const updateFilters = (property: IColumn, value: unknown) => {
-  console.log(value)
   dispatch({
     type: UPDATE_SELECTED_FILTER,
     payload: {
@@ -59,7 +58,6 @@ const Filters: FC<IFiltersProps> = () => {
     return null
   }
   const filters = table.filters()
-  console.log(selectedFilters)
   return (
     <div className={style.filters}>
       <div className={style.filtersContainer}>

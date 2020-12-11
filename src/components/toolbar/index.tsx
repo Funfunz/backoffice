@@ -1,7 +1,7 @@
-import React, { FC, memo, useState } from "react";
+import React, { FC, memo } from "react"
 import Button from 'components/button'
 
-import style from './style.module.scss';
+import style from './style.module.scss'
 
 export interface IToolbarProps {
   toggleFilters?: any

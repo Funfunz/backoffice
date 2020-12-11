@@ -1,7 +1,7 @@
-import React, { memo, MouseEvent, FC } from 'react';
-import classNames from 'classnames';
+import React, { memo, MouseEvent, FC } from 'react'
+import classNames from 'classnames'
 
-import classes from './style.module.scss';
+import classes from './style.module.scss'
 
 export interface IButtonProps {
   disabled?: boolean;
@@ -29,7 +29,7 @@ const Button: FC<IButtonProps> = ({
     [classes.button]: true,
     [classes[color || '']]: color,
     [classes.rounded]: rounded,
-  });
+  })
 
   return (
     <button
@@ -44,7 +44,7 @@ const Button: FC<IButtonProps> = ({
       {suffix ? <span className={classes.suffix}>{suffix}</span> : null}
       {children}
     </button>
-  );
-};
+  )
+}
 
-export default memo(Button);
+export default memo(Button)

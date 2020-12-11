@@ -1,12 +1,12 @@
-import React, { FC, memo, useCallback, useState } from "react";
-import style from './style.module.scss';
+import React, { FC, memo, useCallback, useState } from "react"
+import style from './style.module.scss'
 
 const TopMenu: FC = () => {
-  const [showOptions, setShowOptions] = useState(false);
+  const [showOptions, setShowOptions] = useState(false)
 
   const toggleShow = useCallback(() =>{
-    setShowOptions(!showOptions);
-  }, [showOptions]);
+    setShowOptions(!showOptions)
+  }, [showOptions])
 
   return (
     <nav className={style.topMenu} role="navigation" aria-label="main navigation">
@@ -30,4 +30,4 @@ const TopMenu: FC = () => {
   )
 }
 
-export default memo(TopMenu);
+export default memo(TopMenu)

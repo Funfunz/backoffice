@@ -10,20 +10,21 @@ export interface IPaginationProps {}
 
 const Pagination: FC<IPaginationProps> = () => {
   const { tableName = '' } = useParams<any>()
-  const { tableConfig, itemsByPage, pagination, page } = useSelector((state) => {
+  const { tableConfig, itemsByPage, pagination, page, selectedFilters } = useSelector((state) => {
     return {
       tableConfig: state.tables.find((table) => table.name === tableName),
       itemsByPage: state.itemsByPage,
       page: state.page,
-      pagination: state.pagination
+      pagination: state.pagination,
+      selectedFilters: state.selectedFilters
     }
   })
 
   useEffect(() => {
     if (tableConfig?.properties) {
-      tableService.getEntityItemsCount(tableConfig, itemsByPage)
+      tableService.getEntityItemsCount(tableConfig, itemsByPage, selectedFilters)
     }
-  }, [itemsByPage, tableConfig])
+  }, [itemsByPage, tableConfig, selectedFilters])
 
   const handleChangeItemsShown = useCallback(
     (event) => {

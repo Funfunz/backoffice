@@ -1,5 +1,5 @@
-import React, { FC, memo } from 'react';
-import classNames from 'classnames';
+import React, { FC, memo } from 'react'
+import classNames from 'classnames'
 
 export interface IIconProps {
   name: string,
@@ -16,6 +16,6 @@ const Icon: FC<IIconProps> = ({ name, fixedWidth = true }) => {
   return (
     <i className={iconClasses}></i>
   )
-};
+}
 
-export default memo(Icon);
+export default memo(Icon)

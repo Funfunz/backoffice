@@ -1,7 +1,7 @@
-import React, { FC, memo } from 'react';
-import Button from 'components/button';
-import Icon from 'components/icon';
-import style from './style.module.scss';
+import React, { FC, memo } from 'react'
+import Button from 'components/button'
+import Icon from 'components/icon'
+import style from './style.module.scss'
 
 export interface IHomeProps {}
 
@@ -17,7 +17,7 @@ const Home: FC<IHomeProps> = () => {
       />
       <p style={{ marginTop: 1000 }}>Bottom</p>
     </div>
-  );
-};
+  )
+}
 
-export default memo(Home);
+export default memo(Home)

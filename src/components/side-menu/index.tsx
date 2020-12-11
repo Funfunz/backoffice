@@ -1,19 +1,19 @@
-import React, { FC, memo, useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import useTables from 'hooks/useTables';
-import Logo from './components/logo';
-import Hamburger from './components/hamburger';
-import style from './style.module.scss';
-import { desktopSize } from 'utils';
+import React, { FC, memo, useState } from 'react'
+import { NavLink } from 'react-router-dom'
+import useTables from 'hooks/useTables'
+import Logo from './components/logo'
+import Hamburger from './components/hamburger'
+import style from './style.module.scss'
+import { desktopSize } from 'utils'
 
 export interface ISideMenuProps {}
 
 const SideMenu: FC<ISideMenuProps> = () => {
-  const { tables, loading } = useTables();
-  const [toggle, setToggle] = useState(window.innerWidth < desktopSize);
+  const { tables, loading } = useTables()
+  const [toggle, setToggle] = useState(window.innerWidth < desktopSize)
 
   const handleToggle = () => {
-    setToggle(!toggle);
+    setToggle(!toggle)
   }
 
   return (
@@ -46,7 +46,7 @@ const SideMenu: FC<ISideMenuProps> = () => {
         </div>
       </aside>
     </>
-  );
-};
+  )
+}
 
-export default memo(SideMenu);
+export default memo(SideMenu)

@@ -1,4 +1,4 @@
-import { ITable, IColumn } from "services/api/models/table";
+import { ITable, IColumn } from "services/api/models/table"
 
 export const emptyTableConfig: ITable = {
   name: '',
@@ -6,7 +6,7 @@ export const emptyTableConfig: ITable = {
   layout: {
     label: '',
   },
-};
+}
 
 export const emptyColumnConfig: IColumn = {
   name: '',

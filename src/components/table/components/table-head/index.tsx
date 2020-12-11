@@ -1,5 +1,5 @@
-import React, { FC, memo, useCallback } from 'react';
-import Checkbox from '../../../checkbox';
+import React, { FC, memo, useCallback } from 'react'
+import Checkbox from '../../../checkbox'
 
 export interface ITableHeadProps {
   columns: Array<{ name: string, label?: string } | string>,
@@ -41,4 +41,4 @@ const TableHead: FC<ITableHeadProps> = ({ columns, onColumnClick, actions = fals
   )
 }
 
-export default memo(TableHead);
+export default memo(TableHead)

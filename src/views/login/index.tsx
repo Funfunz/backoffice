@@ -1,5 +1,5 @@
-import React, { FC, memo } from 'react';
-import style from './style.module.scss';
+import React, { FC, memo } from 'react'
+import style from './style.module.scss'
 
 export interface ILoginProps {};
 
@@ -8,7 +8,7 @@ const Login: FC<ILoginProps> = () => {
     <div className={style.loginContainer}>
       Login view
     </div>
-  );
+  )
 }
 
-export default memo(Login);
+export default memo(Login)

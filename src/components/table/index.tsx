@@ -1,10 +1,10 @@
-import React, { FC, memo } from 'react';
-import Message from 'components/message';
-import { TEntry } from 'reducers/entry';
-import TableHead from './components/table-head';
-import TableRow from './components/table-row';
-import Pagination from './components/pagination';
-import style from './style.module.scss';
+import React, { FC, memo } from 'react'
+import Message from 'components/message'
+import { TEntry } from 'reducers/entry'
+import TableHead from './components/table-head'
+import TableRow from './components/table-row'
+import Pagination from './components/pagination'
+import style from './style.module.scss'
 
 export interface ITableProps {
   columns?: Array<{ name: string; label?: string } | string>;
@@ -20,10 +20,10 @@ const Table: FC<ITableProps> = ({
   const actions = {
     edit: () => undefined,
     delete: () => undefined,
-  };
+  }
   const fields = columns.map((column) => {
-    return typeof column === 'string' ? column : column.name;
-  });
+    return typeof column === 'string' ? column : column.name
+  })
 
   return (
     <>
@@ -50,7 +50,7 @@ const Table: FC<ITableProps> = ({
       </table>
       <Pagination />
     </>
-  );
-};
+  )
+}
 
-export default memo(Table);
+export default memo(Table)

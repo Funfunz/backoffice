@@ -16,7 +16,7 @@ import {
 } from 'reducers/table'
 import { FETCH_ENTRY_FULFILLED, FETCH_ENTRY_PENDING, FETCH_ENTRY_REJECTED } from 'reducers/entry'
 import { IFilterState } from 'reducers/filters'
-import { buildGQLFilter } from 'utils'
+import { buildGQLFilter, existSelectedFilters } from 'utils'
 
 export interface IColumn {
   name: string,
@@ -135,10 +135,15 @@ class Table {
     )
   }
 
-  getEntityItemsCount(table: ITable, itemsByPage: number) {
-    const tableName = `${table.name}Count`
+  getEntityItemsCount(table: ITable, itemsByPage: number, selectedFilters?: IFilterState['selectedFilters']) {
+    console.log(selectedFilters)
+    const queryName = `${table.name}Count`
+    const filters = (selectedFilters && existSelectedFilters(selectedFilters))
+      ? ` (${buildGQLFilter(selectedFilters as IFilterState['selectedFilters'])})`
+      : ''
+    const operation = `${queryName}${filters}`
     const graphQl = gql.query({
-      operation: tableName,
+      operation,
     })
     return this.api
       .post('/', {
@@ -150,8 +155,8 @@ class Table {
         if (body.errors) {
           throw body.errors
         }
-        if (body.data && body.data[tableName]) {
-          const allItems = body.data[tableName]
+        if (body.data && body.data[queryName]) {
+          const allItems = body.data[queryName]
           const itemsPagination = allItems / itemsByPage
           let pagination = []
           for (let i = 0; i < itemsPagination; i++) {

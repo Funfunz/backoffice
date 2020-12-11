@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react'
 
-import style from './style.module.scss';
+import style from './style.module.scss'
 
 export interface IMessageProps {
   success?: boolean,

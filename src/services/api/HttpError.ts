@@ -11,9 +11,9 @@ export default class HttpError extends Error{
   public readonly body?: any;
 
   constructor({status, statusText, body}: IHttpError) {
-    super(statusText);
-    this.status = status;
-    this.statusText = statusText;
-    this.body = body;
+    super(statusText)
+    this.status = status
+    this.statusText = statusText
+    this.body = body
   }
 }
