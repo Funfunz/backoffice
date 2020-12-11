@@ -17,7 +17,7 @@ const updateFilters = (property: IColumn, value: unknown) => {
     type: UPDATE_SELECTED_FILTER,
     payload: {
       propertyName: property.name,
-      valueType: property.layout.entityPage?.filterable?.type,
+      valueType: property.layout?.entityPage?.filterable?.type,
       value
     }
   })
@@ -37,7 +37,7 @@ const Filters: FC<IFiltersProps> = () => {
         updateFilters(property, (event.currentTarget as HTMLSelectElement).selectedOptions[0].value)
       } else {
         updateFilters(property, (event.currentTarget as HTMLInputElement).checked
-          ? (property.layout.entityPage?.filterable as Record<string, unknown>).checked
+          ? (property.layout?.entityPage?.filterable as Record<string, unknown>).checked
           : undefined
         )
       }
@@ -64,13 +64,13 @@ const Filters: FC<IFiltersProps> = () => {
         {filters.map(
           (property) => (
             <div className={style.filter}>
-              <span>{property.layout.label}</span>
-              {property.layout.entityPage?.filterable?.inputType === 'select' && (
+              <span>{property.layout?.label}</span>
+              {property.layout?.entityPage?.filterable?.inputType === 'select' && (
                 <select
                   onChange={(event) => {updateFilterCallback(event, property)}}
                 >
                   <option selected={selectedFilters[property.name]?.value === 'undefined' || selectedFilters[property.name]?.value === undefined} value={'undefined'}>Not selected</option>
-                  {property.layout.entityPage.filterable.content.map(
+                  {property.layout?.entityPage.filterable.content.map(
                     ({label, value}) => (
                       <option
                         value={value as string}
@@ -82,9 +82,9 @@ const Filters: FC<IFiltersProps> = () => {
                   )}
                 </select>
               )}
-              {property.layout.entityPage?.filterable?.inputType === 'checkbox' && (
+              {property.layout?.entityPage?.filterable?.inputType === 'checkbox' && (
                 <input
-                  checked={selectedFilters[property.name]?.value === property.layout.entityPage?.filterable?.checked}
+                  checked={selectedFilters[property.name]?.value === property.layout.entityPage.filterable.checked}
                   onChange={
                     (event) => {
                       updateFilterCallback(event, property)

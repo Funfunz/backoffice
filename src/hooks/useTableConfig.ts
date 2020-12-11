@@ -6,11 +6,11 @@ import { emptyTableConfig, emptyColumnConfig } from 'utils/tableConfig'
 
 export class TableConfig {
   config: ITable
-  private fields: IColumn[]
+  public properties: IColumn[]
 
   constructor(config?: ITable) {
     this.config = config || emptyTableConfig
-    this.fields = this.config.properties || []
+    this.properties = this.config.properties || []
   }
 
   name() {
@@ -21,26 +21,19 @@ export class TableConfig {
     return this.config.layout.label || this.config.name
   }
 
-  columns() {
-    return this.fields.map((column) => ({
-      name: column.name,
-      label: column.layout?.label || column.name,
-    }))
-  }
-
   filters() {
-    console.log(this.fields)
-    return this.fields.filter((property) => (
+    console.log(this.properties)
+    return this.properties.filter((property) => (
       property.layout?.entityPage?.filterable
     ))
   }
 
   pkColumn(): IColumn {
-    return this.fields.find((c) => c.model && c.model.isPk) || emptyColumnConfig
+    return this.properties.find((c) => c.model && c.model.isPk) || emptyColumnConfig
   }
 
   titleColumn() {
-    return this.fields.find((c) => c.layout && c.layout.isTitle) || emptyColumnConfig
+    return this.properties.find((c) => c.layout && c.layout.isTitle) || emptyColumnConfig
   }
 
   itemPK(item: any) {

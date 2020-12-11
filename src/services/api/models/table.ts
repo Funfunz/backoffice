@@ -26,7 +26,7 @@ export interface IColumn {
     type: string,
     allowNull: boolean,
   },
-  layout: {
+  layout?: {
     label?: string,
     entityPage?: {
       filterable?: {
@@ -43,7 +43,7 @@ export interface IColumn {
         }[]
       },
     },
-    visible: {
+    visible?: {
       entityPage: boolean,
       detail: boolean,
       relation: boolean
@@ -198,8 +198,8 @@ class Table {
     const graphQl = gql.query({
       operation: `${table.name} (skip: ${options.skip || 0}, take: ${options.take || 10}${filter ? ', ' + filter : ''})`,
       fields: [`${table.properties?.map(
-        (column) => column.layout.visible?.entityPage && column.name
-      )}`]
+        (property) => property.layout?.visible?.entityPage ? property.name : undefined
+      ).filter(f => f)}`]
     })
     return this.api.post('/', {
       body: JSON.stringify({
@@ -238,9 +238,9 @@ class Table {
     const graphQl = gql.query({
       operation: `${table.name} (filter: ${this.filterByPks(pks)})`,
       fields: [`${table.properties?.filter(
-        (column) => column.layout.visible.detail
+        (property) => property.layout?.visible?.detail
       ).map(
-        (column) => column.name
+        (property) => property.name
       )}`]
     })
     return this.api.post('/', {

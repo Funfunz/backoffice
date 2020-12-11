@@ -40,7 +40,7 @@ const TableView: FC<ITableProps> = () => {
             <Table
               tableData={tableData}
               loadingTableData={loadingTableData}
-              columns={table.columns()}
+              properties={table.properties}
             />
           )
         ))}
