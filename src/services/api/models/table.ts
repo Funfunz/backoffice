@@ -1,5 +1,5 @@
 import api, { API } from 'services/api'
-import { dispatch } from 'reducers'
+import { dispatch,  } from 'reducers'
 import HttpError from '../HttpError'
 import * as gql from 'gql-query-builder'
 import {
@@ -15,6 +15,8 @@ import {
   SET_QUANTITY_OF_PAGES
 } from 'reducers/table'
 import { FETCH_ENTRY_FULFILLED, FETCH_ENTRY_PENDING, FETCH_ENTRY_REJECTED } from 'reducers/entry'
+import { IFilterState } from 'reducers/filters'
+import { buildGQLFilter } from 'utils'
 
 export interface IColumn {
   name: string,
@@ -28,11 +30,13 @@ export interface IColumn {
     label?: string,
     entityPage?: {
       filterable?: {
-        type: 'boolean',
+        type: string,
+        inputType: 'checkbox'
         checked: unknown
         unChecked: unknown
       } | {
-        type: 'enum',
+        type: string,
+        inputType: 'select',
         content: {
           label: string,
           value: unknown,
@@ -132,7 +136,7 @@ class Table {
   }
 
   getEntityItemsCount(table: ITable, itemsByPage: number) {
-    const tableName = `${table.name}Count`;
+    const tableName = `${table.name}Count`
     const graphQl = gql.query({
       operation: tableName,
     })
@@ -144,29 +148,29 @@ class Table {
       })
       .then((body) => {
         if (body.errors) {
-          throw body.errors;
+          throw body.errors
         }
         if (body.data && body.data[tableName]) {
-          const allItems = body.data[tableName];
-          const itemsPagination = allItems / itemsByPage;
-          let pagination = [];
+          const allItems = body.data[tableName]
+          const itemsPagination = allItems / itemsByPage
+          let pagination = []
           for (let i = 0; i < itemsPagination; i++) {
-            pagination.push(i);
+            pagination.push(i)
           }
           dispatch({
             type: SET_QUANTITY_OF_PAGES,
             payload: pagination
           })
-          return pagination;
+          return pagination
         }
-        return [];
+        return []
       })
       .catch((errors) => {
         dispatch({
           type: FETCH_TABLE_ENTRIES_REJECTED,
           payload: errors[0].message,
-        });
-      });
+        })
+      })
   }
 
   getTableData(
@@ -174,13 +178,20 @@ class Table {
     options: {
       skip?: number
       take?: number
+      selectedFilters?: IFilterState['selectedFilters']
     } = {
       skip: 0,
-      take: 10
-    }) {
+      take: 10,
+      selectedFilters: {}
+    }
+  ) {
+    let filter
+    if (options.selectedFilters) {
+      filter = buildGQLFilter(options.selectedFilters)
+    }
     dispatch({ type: FETCH_TABLE_ENTRIES_PENDING })
     const graphQl = gql.query({
-      operation: `${table.name} (skip: ${options.skip || 0}, take: ${options.take || 10})`,
+      operation: `${table.name} (skip: ${options.skip || 0}, take: ${options.take || 10}${filter ? ', ' + filter : ''})`,
       fields: [`${table.properties?.map(
         (column) => column.layout.visible?.entityPage && column.name
       )}`]

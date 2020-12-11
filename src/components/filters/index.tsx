@@ -1,39 +1,56 @@
 import React, { FC, memo, useCallback } from 'react'
 import Button from 'components/button'
 
-import style from './style.module.scss';
-import useTableConfig from 'hooks/useTableConfig';
-import { useParams } from 'react-router-dom';
+import style from './style.module.scss'
+import useTableConfig from 'hooks/useTableConfig'
+import { useParams } from 'react-router-dom'
 
 import { dispatch, useSelector } from '../../reducers/index'
+import { CLEAR_SELECTED_FILTER, UPDATE_SELECTED_FILTER } from 'reducers/filters'
+import { IColumn } from 'services/api/models/table'
 
 export interface IFiltersProps {
 }
 
-const updateFilters = (propertyName: string, value: unknown) => {
+const updateFilters = (property: IColumn, value: unknown) => {
+  console.log(value)
   dispatch({
-    type: 'UPDATE_SELECTED_FILTER',
+    type: UPDATE_SELECTED_FILTER,
     payload: {
-      propertyName,
+      propertyName: property.name,
+      valueType: property.layout.entityPage?.filterable?.type,
       value
     }
   })
 }
 
 const Filters: FC<IFiltersProps> = () => {
-  const { tableName = '' } = useParams<any>();
+  const { tableName = '' } = useParams<any>()
   const {table, loadingTableConfig} = useTableConfig(tableName)
   const selectedFilters = useSelector(
     (state) => {
       return state.selectedFilters
     }
   )
-  const callback = useCallback(
-    (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>, propertyName: string) => {
+  const updateFilterCallback = useCallback(
+    (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>, property: IColumn) => {
       if ((event.currentTarget as HTMLSelectElement).selectedOptions) {
-        updateFilters(propertyName, (event.currentTarget as HTMLSelectElement).selectedOptions[0].value)
+        updateFilters(property, (event.currentTarget as HTMLSelectElement).selectedOptions[0].value)
+      } else {
+        updateFilters(property, (event.currentTarget as HTMLInputElement).checked
+          ? (property.layout.entityPage?.filterable as Record<string, unknown>).checked
+          : undefined
+        )
       }
-      updateFilters(propertyName, (event.currentTarget as HTMLInputElement).checked)
+    },
+    []
+  )
+
+  const clearFiltersCallback = useCallback(
+    () => {
+      dispatch({
+        type: CLEAR_SELECTED_FILTER,
+      })
     },
     []
   )
@@ -42,7 +59,7 @@ const Filters: FC<IFiltersProps> = () => {
     return null
   }
   const filters = table.filters()
-
+  console.log(selectedFilters)
   return (
     <div className={style.filters}>
       <div className={style.filtersContainer}>
@@ -50,11 +67,11 @@ const Filters: FC<IFiltersProps> = () => {
           (property) => (
             <div className={style.filter}>
               <span>{property.layout.label}</span>
-              {property.layout.entityPage?.filterable?.type === 'enum' && (
+              {property.layout.entityPage?.filterable?.inputType === 'select' && (
                 <select
-                  onChange={(event) => {callback(event, property.name)}}
+                  onChange={(event) => {updateFilterCallback(event, property)}}
                 >
-                  <option selected={selectedFilters[property.name] === undefined}>Not selected</option>
+                  <option selected={selectedFilters[property.name]?.value === 'undefined' || selectedFilters[property.name]?.value === undefined} value={'undefined'}>Not selected</option>
                   {property.layout.entityPage.filterable.content.map(
                     ({label, value}) => (
                       <option
@@ -67,12 +84,12 @@ const Filters: FC<IFiltersProps> = () => {
                   )}
                 </select>
               )}
-              {property.layout.entityPage?.filterable?.type === 'boolean' && (
+              {property.layout.entityPage?.filterable?.inputType === 'checkbox' && (
                 <input
-                  checked={selectedFilters[property.name] === property.layout.entityPage?.filterable?.checked}
+                  checked={selectedFilters[property.name]?.value === property.layout.entityPage?.filterable?.checked}
                   onChange={
                     (event) => {
-                      callback(event, property.name)
+                      updateFilterCallback(event, property)
                     }
                   }
                   type='checkbox'
@@ -84,8 +101,8 @@ const Filters: FC<IFiltersProps> = () => {
         )}
       </div>
       <div className={style.actions}>
-        <Button label="CANCEL" onClick={() => {}} style={{backgroundColor: "transparent", fontSize: "12px", color: "#818181", border: 'none', padding: '10px 30px'}}/>
-        <Button label="APPLY" onClick={() => {}} style={{backgroundColor: "#DCA50B", fontSize: "12px", color: "white", border: 'none', padding: '10px 30px'}}/>
+        <Button label="CLEAR FILTERS" onClick={clearFiltersCallback} style={{backgroundColor: "transparent", fontSize: "12px", color: "#818181", border: 'none', padding: '10px 30px'}}/>
+        {/*<Button label="APPLY" onClick={() => {}} style={{backgroundColor: "#DCA50B", fontSize: "12px", color: "white", border: 'none', padding: '10px 30px'}}/>*/}
       </div>
     </div>
   )

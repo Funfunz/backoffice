@@ -39,7 +39,10 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "semi": ["error", "never"]
+    }
   },
   "browserslist": {
     "production": [
@@ -65,6 +68,7 @@
     ]
   },
   "prettier": {
-    "singleQuote": true
+    "singleQuote": true,
+    "comma": false
   }
 }

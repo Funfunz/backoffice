@@ -1,67 +1,54 @@
-import React, { FC, memo, useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { dispatch, useSelector } from 'reducers';
-import { SET_QUANTITY_ITEMS_BY_PAGE } from 'reducers/table';
-import tableService from 'services/api/models/table';
-import { paginationConfig } from 'utils/tableConfig';
-import style from './style.module.scss';
+import React, { FC, memo, useCallback, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
+import { dispatch, useSelector } from 'reducers'
+import { SET_QUANTITY_ITEMS_BY_PAGE, SET_CURRENT_PAGE } from 'reducers/table'
+import tableService from 'services/api/models/table'
+import { paginationConfig } from 'utils/tableConfig'
+import style from './style.module.scss'
 
 export interface IPaginationProps {}
 
 const Pagination: FC<IPaginationProps> = () => {
-  const { tableName = '' } = useParams<any>();
-  const [page, setPage] = useState(0);
-  const { tableConfig, itemsByPage, pagination } = useSelector((state) => {
+  const { tableName = '' } = useParams<any>()
+  const { tableConfig, itemsByPage, pagination, page } = useSelector((state) => {
     return {
       tableConfig: state.tables.find((table) => table.name === tableName),
       itemsByPage: state.itemsByPage,
+      page: state.page,
       pagination: state.pagination
-    };
-  });
+    }
+  })
 
   useEffect(() => {
     if (tableConfig?.properties) {
       tableService.getEntityItemsCount(tableConfig, itemsByPage)
     }
-  }, [itemsByPage, tableConfig]);
-
-
-
-  const updateTable = useCallback(
-    (take, pageNumber) => {
-      if (tableConfig?.properties) {
-        tableService.getTableData(tableConfig, {
-          skip: itemsByPage * pageNumber,
-          take: take,
-        });
-      }
-    },
-    [itemsByPage, tableConfig]
-  );
+  }, [itemsByPage, tableConfig])
 
   const handleChangeItemsShown = useCallback(
     (event) => {
-      const value = event.target.value;
+      const value = event.target.value
       dispatch({
         type: SET_QUANTITY_ITEMS_BY_PAGE,
         payload: parseInt(value),
-      });
-      updateTable(value, page);
+      })
     },
-    [page, updateTable]
-  );
+    []
+  )
 
   const handleChangePage = useCallback(
     (pageNumber: number) => () => {
-      setPage(pageNumber);
-      updateTable(itemsByPage, pageNumber);
+      dispatch({
+        type: SET_CURRENT_PAGE,
+        payload: pageNumber
+      })
     },
-    [itemsByPage, updateTable]
-  );
+    []
+  )
 
   const isActive = useCallback((selectedPage, currentPage) => {
-    return selectedPage === currentPage ? style.active : '';
-  }, []);
+    return selectedPage === currentPage ? style.active : ''
+  }, [])
 
   return (
     <div className={style.pagination}>
@@ -108,7 +95,7 @@ const Pagination: FC<IPaginationProps> = () => {
         </select>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default memo(Pagination);
+export default memo(Pagination)

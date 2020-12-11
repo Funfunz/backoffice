@@ -5,7 +5,10 @@ export const CLEAR_SELECTED_FILTER = 'CLEAR_SELECTED_FILTER'
 
 export interface IFilterState extends IBaseState {
   selectedFilters: {
-    [key: string]: unknown
+    [key: string]: {
+      value: unknown,
+      valueType: string
+    }
   }
 }
 
@@ -20,13 +23,18 @@ export function filterReducer(state: IFilterState, action: IAction) {
         ...state,
         selectedFilters: {
           ...state.selectedFilters,
-          [action.payload.propertyName]: action.payload.value
-        }
+          [action.payload.propertyName]: {
+            value: action.payload.value === 'undefined' ? undefined : action.payload.value,
+            valueType: action.payload.valueType,
+          },
+        },
+        forceTableReload: true,
       }
     case CLEAR_SELECTED_FILTER:
       return {
         ...state,
-        selectedFilters: {}
+        selectedFilters: {},
+        forceTableReload: true,
       }
 
     default:
