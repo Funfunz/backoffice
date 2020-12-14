@@ -4,6 +4,7 @@
   display: flex;
   & > .main {
     flex-grow: 1;
+    width: calc(100% - 280px);
     & > .children {
       margin-top: 70px;
       padding: 0 35px;
