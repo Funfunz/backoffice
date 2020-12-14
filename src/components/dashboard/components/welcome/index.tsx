@@ -8,7 +8,7 @@ export interface IWelcomeProps {}
 
 const Welcome: FC<IWelcomeProps> = () => {
 
-  const [isDismissed, setIsDismiss] = useState(localStorage.getItem('dismiss-welcome-widget') == 'true' || false); 
+  const [isDismissed, setIsDismiss] = useState(localStorage.getItem('dismiss-welcome-widget') === 'true' || false); 
 
   if (isDismissed) {
     return null;
