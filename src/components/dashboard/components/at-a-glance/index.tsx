@@ -1,9 +1,10 @@
-import React, { useEffect, useState, memo, FC } from 'react';
+import React, { useEffect, useRef, useState, memo, FC } from 'react';
 import { NavLink } from 'react-router-dom';
 import useTables from 'hooks/useTables';
-import Widget from './../widget';
+import Widget from 'components/dashboard/components/widget';
 import style from './style.module.scss';
-import api from 'services/api';
+import getEntitiesCount from 'services/api/getEntitiesCount';
+import { useSelector } from 'reducers';
 
 export interface IAtGlanceProps {
   entitiesFilter?: string[]
@@ -18,9 +19,16 @@ export interface IEntityData {
 const AtGlance: FC<IAtGlanceProps> = ({
   entitiesFilter = []
 }) => {
-  const { tables, loading } = useTables(); 
+  const { tables, loading } = useTables();
   const [isLoading, setIsLoading] = useState(true);
-  const [entities, setEntities] = useState<IEntityData[]>([]);
+  const entities = useRef<IEntityData[]>([]);
+
+  const { entitiesCount, loadingEntitiesCount } = useSelector((state) => {
+    return {
+      entitiesCount: state.entitiesCount,
+      loadingEntitiesCount: state.loadingEntitiesCount
+    };
+  });
 
   useEffect(() => {
     if (loading) { 
@@ -30,8 +38,7 @@ const AtGlance: FC<IAtGlanceProps> = ({
       return;
     }
 
-    const entities: IEntityData[] = [];
-    const entitiesToCount: string[] = [];
+    const entitiesList: IEntityData[] = [];
 
     tables.forEach((table: any) => {
       let isToAddItem = entitiesFilter.length > 0 
@@ -39,8 +46,7 @@ const AtGlance: FC<IAtGlanceProps> = ({
                           : true;
       
       if(isToAddItem) {
-        entitiesToCount.push(`${table.name}Count`);
-        entities.push({
+        entitiesList.push({
           name: table.name,
           label: table.layout.label,
           count: 0
@@ -48,34 +54,37 @@ const AtGlance: FC<IAtGlanceProps> = ({
       }
     })
 
-    api.post('/?', {
-      body: JSON.stringify({
-        query: `query {
-          ${entitiesToCount.join()}
-        }`,
-      })
-    }).then(result => {
-      entities.map(entity => {
-        entity.count = result.data[`${entity.name}Count`];
-      })
-      
-      setEntities(entities);
-      setIsLoading(false);
-    }).catch(err => {
-      setIsLoading(false);
-    })
+    entities.current = entitiesList;
+    const entitiesNamesToCount = entitiesList.map(entity => entity.name);
+    getEntitiesCount(entitiesNamesToCount);
   }, [loading])
+
+  useEffect(()=> {
+    if (loading || loadingEntitiesCount) {
+      return;
+    } 
+
+    entities.current.forEach(entity => {
+      entitiesCount.forEach(newEntity => {
+        if (entity.name === newEntity.entity) {
+          entity.count = newEntity.count
+        }
+      })
+    })
+    
+    setIsLoading(false);
+  },[entitiesCount])
 
   return (
     <Widget>
       <div className={style.atGlanceContainer}>
         <p className={style.title}>At a Glance</p>
-        {isLoading ? (
+        {isLoading || loadingEntitiesCount ? (
           <p>Loading...</p>
         ) : (
           <div className={style.entitiesContainer}>
             {
-              entities.map((entity: IEntityData) => {
+              entities.current.map((entity: IEntityData) => {
                return (
                 <p key={entity.name} className={style.entity}>
                   {entity.count}
