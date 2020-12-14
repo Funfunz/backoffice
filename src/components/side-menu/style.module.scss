@@ -8,48 +8,146 @@
 }
 
 .sideMenuSpace {
+  display: none;
   transition: margin-left 0.5s;
   width: 280px;
-  @include breakpoint(mobile) {
-    display: none;
+  @include breakpoint(desktop) {
+    display: block;
   }
 }
 
 .sideMenu {
+  width: 100%;
+  height: calc(100vh - 70px);
   position: fixed;
   transition: margin-left 0.5s;
-  width: 280px;
-  height: 100vh;
   background: $secondary-light;
   background: -moz-linear-gradient(180deg, $secondary-light 0%, $secondary-dark 100%);
   background: -webkit-linear-gradient(180deg, $secondary-light 0%, $secondary-dark 100%);
   background: linear-gradient(180deg, $secondary-light 0%, $secondary-dark 100%);
   margin-top: 70px;
   color: #ddd;
-  & > .menuLabel {
-    padding: 30px 30px 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  @include breakpoint(desktop) {
+    width: 280px;
+  }
+
+  .container{
+    height: 100%;
+
+    .load{
+      margin-left: 30px;
+      border: none;
+      background: none;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: white;
+      border-bottom: 1px solid white;
+      padding: 0;
+      cursor: pointer;
+
+      @include breakpoint(desktop) {
+        margin-left: 45px;
+      }
+
+      &:hover{
+        color: $primary;
+        border-color: $primary;
+      }
+
+      &:focus{
+        outline: none;
+      }
+    }
+  }
+
+  .account{
+    display: block;
+    padding: 0px 30px 30px;
+    
+    span{
+      margin-right: 10px;
+    }
+
+    @include breakpoint(desktop) {
+      display: none;
+    }
+  }
+  
+  .menuLabel {
+    padding: 30px 15px 0;
     font-size: 14px;
     text-transform: uppercase;
     letter-spacing: 0.2em;
     margin: 0;
     font-weight: bold;
+
+    @include breakpoint(desktop) {
+      padding: 30px 30px 0;
+    }
   }
-  & > .menuList {
+
+  .search{
+    margin: 15px 30px 0;
+    color: $background;
+    border-bottom: 1px solid $background;
+    display: inline-block;
+
+    @include breakpoint(desktop) {
+      margin-left: 45px;
+    }
+
+    input{
+      color: $background;
+      background: none;
+      border: none;
+      font-size: 12px;
+
+      &:focus{
+        outline: none;
+      }
+    }
+
+    ::placeholder{
+      color: $background;
+    }
+  }
+
+  .menuList {
     padding: 0 15px 0 0;
+    overflow-y: auto;
+    max-height: calc(100% - 170px);
     & > a {
       border-left: 5px solid transparent;
       display: block;
-      padding: .75em 40px;
+      padding: .75em 25px;
       color: #ddd;
       text-decoration: none;
       letter-spacing: 3px;
       font-size: 14px;
       text-decoration: none;
       text-transform: uppercase;
+
+      @include breakpoint(desktop) {
+        padding: .75em 40px;
+      }
+
       &:hover,
       &.active {
         color: $primary;
         border-left: 5px solid $primary;
+      }
+    }
+
+    .loading{
+      margin-left: 30px;
+
+      @include breakpoint(desktop) {
+        margin-left: 45px;
       }
     }
   }

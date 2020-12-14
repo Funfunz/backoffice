@@ -1,17 +1,37 @@
+@import "~style/variables";
 .table {
   width: 100%;
   border-spacing: 0;
-  tr:nth-child(even) {
-    background-color: #fafafa;
+  tr:last-child{
+    td{
+      border-bottom: none;
+    }
   }
   th {
-    padding: 10px 0;
-    border-bottom: 2px solid #ddd;
+    color: $secondary-light;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 30px 0;
+    border-bottom: 2px solid $neutral-light;
     text-align: left;
-    text-transform: capitalize;
-    background: #fdfdfd;
+
+    &:first-child{
+      text-align: center;
+      width: 60px;
+    }
+
+    &:last-child{
+      width: 120px;
+    }
   }
   td {
-    padding: 10px 0;
+    padding: 15px 0;
+    border-bottom: 2px solid $border-color;
+    font-size: 14px;
+
+    &:first-child{
+      text-align: center;
+    }
   }
 }
