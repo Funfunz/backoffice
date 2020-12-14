@@ -48,10 +48,12 @@
   .dismissContainer {
     position: absolute;
     right: 0;
-    .dismiss {
-      margin: 0;
+    .dismissButton {
       font-size: 14px;
       text-transform: uppercase;
+      border: none;
+      background-color: transparent;
+      outline: 0;
       &:hover {
         cursor: pointer;
       }
