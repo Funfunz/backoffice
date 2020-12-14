@@ -10,7 +10,7 @@ const MoreActions: FC<IMoreActionsProps> = () => {
     <Widget>
       <div className={style.moreActionsContainer}>
         <p className={style.title}>More Actions</p>
-        <NavLink to={`/todo/`}>
+        <NavLink className={style.link} to={`/todo/`}>
           More Actions
         </NavLink>
       </div>
