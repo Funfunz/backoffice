@@ -8,10 +8,7 @@
   width: calc(100% - 310px);
   border-bottom: $default-border;
   height: 70px;
-  background: rgb(77,80,83);
-  background: -moz-linear-gradient(90deg, rgba(77,80,83,1) 0%, rgba(35,37,38,1) 100%);
-  background: -webkit-linear-gradient(90deg, rgba(77,80,83,1) 0%, rgba(35,37,38,1) 100%);
-  background: linear-gradient(90deg, rgba(77,80,83,1) 0%, rgba(35,37,38,1) 100%);
+  @include horizontal-gradient;
   justify-content: flex-end;
   align-items: center;
   color: #EBEBEB;

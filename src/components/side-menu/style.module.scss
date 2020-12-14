@@ -21,13 +21,9 @@
   height: calc(100vh - 70px);
   position: fixed;
   transition: margin-left 0.5s;
-  background: $secondary-light;
-  background: -moz-linear-gradient(180deg, $secondary-light 0%, $secondary-dark 100%);
-  background: -webkit-linear-gradient(180deg, $secondary-light 0%, $secondary-dark 100%);
-  background: linear-gradient(180deg, $secondary-light 0%, $secondary-dark 100%);
+  @include vertical-gradient;
   margin-top: 70px;
   color: #ddd;
-
   display: flex;
   flex-direction: column;
   justify-content: space-between;
