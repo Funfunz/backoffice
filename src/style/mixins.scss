@@ -18,6 +18,9 @@
   &.delete {
     color: $neutral-dark;
   }
+  &.primary{
+    background-color: $primary;
+  }
 }
 
 @mixin visible {
