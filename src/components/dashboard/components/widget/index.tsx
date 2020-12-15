@@ -13,7 +13,6 @@ const Widget: FC<IWidgetProps> = ({
   half = false,
   children
 }) => {
-  console.log(full);
   const layoutClasses = classNames({
     [style.widgetContainer]: true,
     [style.span6]: full,
