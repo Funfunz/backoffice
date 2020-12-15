@@ -1,5 +1,7 @@
 import { useEffect } from 'react'
-import { useSelector } from 'reducers'
+import { useSelector, dispatch } from 'reducers'
+
+import { SET_CURRENT_PAGE } from 'reducers/table'
 
 import tableService  from 'services/api/models/table'
 
@@ -32,11 +34,19 @@ export default function useTableData(tableName: string) {
   })
 
   useEffect(() => {
-    if ((!tableData || tableName !== previousTableName || forceTableReload) && !loadingTableData && tableConfig?.properties) {
+    let tablePage = page
+   
+    const tableChanged = !tableData || tableName !== previousTableName
+    if (tableChanged) {
+      tablePage = 0
+    }
+
+    if ((tableChanged || forceTableReload) && !loadingTableData && tableConfig?.properties) {
       previousTableName = tableName
       tableService.getTableData(tableConfig, {
-        skip: page * itemsByPage,
+        skip: tablePage * itemsByPage,
         take: itemsByPage,
+        currentPage: tablePage,
         selectedFilters
       })
     }
