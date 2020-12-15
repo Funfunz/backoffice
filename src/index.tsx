@@ -1,6 +1,6 @@
 import React, { lazy, Suspense } from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { HashRouter, Route } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from './reducers';
 import PrivateRoute from 'components/private-route';
@@ -15,7 +15,7 @@ const Logout = lazy(() => import('views/logout'));
 
 const App: React.FC = () => (
   <Provider>
-    <BrowserRouter basename={process.env.REACT_APP_PUBLIC_URL}>
+    <HashRouter>
       <Suspense fallback={<Loading />}>
         <Route exact path="/login" component={Login} />
         <Route exact path="/logout" component={Logout} />
@@ -24,7 +24,7 @@ const App: React.FC = () => (
           <PrivateRoute exact path="/table/:tableName" component={Table} />
         </Layout>
       </Suspense>
-    </BrowserRouter>
+    </HashRouter>
   </Provider>
 );
 
