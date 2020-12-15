@@ -15,7 +15,7 @@ const Logout = lazy(() => import('views/logout'));
 
 const App: React.FC = () => (
   <Provider>
-    <HashRouter basename={process.env.REACT_APP_PUBLIC_URL}>
+    <HashRouter>
       <Suspense fallback={<Loading />}>
         <Route exact path="/login" component={Login} />
         <Route exact path="/logout" component={Logout} />
