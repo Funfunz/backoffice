@@ -23,7 +23,7 @@
   transition: margin-left 0.5s;
   @include vertical-gradient;
   margin-top: 70px;
-  color: #ddd;
+  color: $text-light;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -63,7 +63,7 @@
       border-left: 5px solid transparent;
       display: block;
       padding: .75em 25px;
-      color: #ddd;
+      color: $text-light;
       text-decoration: none;
       letter-spacing: 3px;
       font-size: 14px;

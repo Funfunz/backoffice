@@ -17,6 +17,15 @@
   }
   &.delete {
     color: $neutral-dark;
+    &:hover{
+      color: $primary;
+    }
+  }
+  &.edit{
+    color: $secondary-dark;
+    &:hover{
+      color: $primary;
+    }
   }
   &.primary{
     background-color: $primary;
