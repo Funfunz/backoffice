@@ -64,7 +64,7 @@ const Pagination: FC<IPaginationProps> = () => {
           {index + 1}
         </div>
     )
-  },[page])
+  },[page, handleChangePage, isActive])
 
   const pageDotButton = useCallback((index) => {
     return (
@@ -109,7 +109,7 @@ const Pagination: FC<IPaginationProps> = () => {
 
     return pageNumbers
 
-  }, [pagination, page])
+  }, [pagination, page, pageDotButton, pageNumberButton])
 
   return (
     <div className={style.pagination}>
