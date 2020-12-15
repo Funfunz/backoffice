@@ -82,12 +82,12 @@ const Pagination: FC<IPaginationProps> = () => {
     const pageNumbers = []
 
     let startIndex = page - MAX_DISTANCE_FROM_CURRENT
-    if (startIndex <= 0) {
+    if (startIndex <= 0 || startIndex - 1 === 1) {
       startIndex = 1
     }
 
     let lastIndex = page + MAX_DISTANCE_FROM_CURRENT
-    if (lastIndex >= pagination.length - 1) {
+    if (lastIndex >= pagination.length - 1 || (pagination.length - 2) - lastIndex === 1) {
       lastIndex = pagination.length - 2
     }
 
