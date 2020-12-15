@@ -12,17 +12,11 @@
       font-weight: bold;
       border: 2px solid transparent;
       font-size: 14px;
-      &.active {
+      margin: 0 2px;
+      padding: 0 10px;
+      cursor: pointer;
+      &:hover {
         border-color: $secondary-light;
-        border-radius: 3px;
-      }
-      &.clickable {
-        margin: 0 2px;
-        padding: 0 10px;
-        cursor: pointer;
-        &:hover {
-          border-color: $secondary-light;
-        }
       }
     }
   }

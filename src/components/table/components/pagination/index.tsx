@@ -5,6 +5,7 @@ import { SET_QUANTITY_ITEMS_BY_PAGE, SET_CURRENT_PAGE } from 'reducers/table'
 import tableService from 'services/api/models/table'
 import { paginationConfig } from 'utils/tableConfig'
 import style from './style.module.scss'
+import PaginationNumber from 'components/table/components/pagination-number'
 
 export interface IPaginationProps {}
 
@@ -41,7 +42,7 @@ const Pagination: FC<IPaginationProps> = () => {
   )
 
   const handleChangePage = useCallback(
-    (pageNumber: number) => () => {
+    (pageNumber: number) =>  {
       dispatch({
         type: SET_CURRENT_PAGE,
         payload: pageNumber
@@ -50,34 +51,17 @@ const Pagination: FC<IPaginationProps> = () => {
     []
   )
 
-  const isActive = useCallback((selectedPage, currentPage) => {
-    return selectedPage === currentPage ? style.active : ''
-  }, [])
-
-  const pageNumberButton = useCallback((index) => {
-    return (
-      <div
-          className={[style.item, style.clickable, isActive(index, page) ].join(' ')}
-          key={index}
-          onClick={handleChangePage(index)}
-        >
-          {index + 1}
-        </div>
-    )
-  },[page, handleChangePage, isActive])
-
-  const pageDotButton = useCallback((index) => {
-    return (
-      <div className={style.item} key={index}>
-        ...
-      </div>
-    )
-  },[])
-
   const drawPaginationNumbers = useCallback(() => {
     if (pagination.length <= MAX_PAGE_NUMBERS) {
-      return pagination.map((index: number) => pageNumberButton(index))
-    }  
+      return pagination.map((index: number) => (
+        <PaginationNumber 
+          index={index} 
+          currentPage={page} 
+          isClickable
+          onChangePage={handleChangePage}
+        />
+      )
+    )}  
 
     const pageNumbers = []
 
@@ -91,47 +75,71 @@ const Pagination: FC<IPaginationProps> = () => {
       lastIndex = pagination.length - 2
     }
 
-    pageNumbers.push(pageNumberButton(0))
+    pageNumbers.push(
+    <PaginationNumber 
+      key={0}
+      index={0} 
+      currentPage={page} 
+      isClickable 
+      onChangePage={handleChangePage}
+    /> 
+    )
 
     if (startIndex > 1) {
-      pageNumbers.push(pageDotButton('dot-before'))
+      pageNumbers.push(<PaginationNumber key={-1} index={-1} />)
     }
 
     for (let i = startIndex ; i <= lastIndex; i++) {
-      pageNumbers.push(pageNumberButton(i))
+      pageNumbers.push(
+        <PaginationNumber 
+          key={i}
+          index={i} 
+          currentPage={page} 
+          isClickable
+          onChangePage={handleChangePage}
+        />
+      )
     }
 
     if ((pagination.length - 1) - lastIndex > 1) {
-      pageNumbers.push(pageDotButton('dot-after'))
+      pageNumbers.push(<PaginationNumber  key={-2} index={-2} />)
     }
 
-    pageNumbers.push(pageNumberButton(pagination.length - 1))
+    pageNumbers.push(
+      <PaginationNumber 
+        key={pagination.length - 1}
+        index={pagination.length - 1} 
+        currentPage={page} 
+        isClickable 
+        onChangePage={handleChangePage}
+      /> 
+    )
 
     return pageNumbers
 
-  }, [pagination, page, pageDotButton, pageNumberButton])
+  }, [pagination, page, handleChangePage])
 
   return (
     <div className={style.pagination}>
       <div className={style.pages}>
-        <div className={[style.item, style.clickable].join(' ')} onClick={handleChangePage(0)}>
+        <div className={style.item} onClick={() => handleChangePage(0)}>
           <i className="fas fa-chevron-left"></i>
           <i className="fas fa-chevron-left"></i>
         </div>
         <div 
-          className={[style.item, style.clickable].join(' ')} 
-          onClick={handleChangePage(page - 1)}>
+          className={style.item} 
+          onClick={() => handleChangePage(page - 1)}>
           <i className="fas fa-chevron-left"></i>
         </div>
 
         {drawPaginationNumbers()}
 
-        <div className={[style.item, style.clickable].join(' ')} onClick={handleChangePage(page + 1)}>
+        <div className={style.item} onClick={() => handleChangePage(page + 1)}>
           <i className="fas fa-chevron-right"></i>
         </div>
         <div
-          className={[style.item, style.clickable].join(' ')}
-          onClick={handleChangePage(
+          className={style.item}
+          onClick={() => handleChangePage(
             pagination[pagination.length - 1]
           )}
         >

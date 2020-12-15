@@ -1,7 +1,5 @@
 import { useEffect } from 'react'
-import { useSelector, dispatch } from 'reducers'
-
-import { SET_CURRENT_PAGE } from 'reducers/table'
+import { useSelector } from 'reducers'
 
 import tableService  from 'services/api/models/table'
 
