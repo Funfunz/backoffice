@@ -1,7 +1,7 @@
-import React, { KeyboardEvent, useCallback } from 'react';
-import classNames from 'classnames';
-import style from './style.module.scss';
-import { serialize } from 'utils/serialize';
+import React, { KeyboardEvent, useCallback } from 'react'
+import classNames from 'classnames'
+import style from './style.module.scss'
+import { serialize } from 'utils/serialize'
 
 type InputTypes =
   | 'text'
@@ -35,7 +35,7 @@ export interface InputOption {
   description: string;
 }
 
-const defaultFormater = (value: string) => value;
+const defaultFormater = (value: string) => value
 
 export interface GetInputProps {
   modifier?: string;
@@ -74,7 +74,7 @@ function getInput({
     case 'time':
     case 'email':
     case 'date':
-      const extraDateProps = type === 'date' ? { min, max } : {};
+      const extraDateProps = type === 'date' ? { min, max } : {}
       return (
         <input
           type={type}
@@ -85,14 +85,14 @@ function getInput({
           placeholder={placeholder}
           {...extraDateProps}
         />
-      );
+      )
     case 'switch':
       return (
         <label className={style.switch}>
           <input type="checkbox" />
           <span className={classNames(style.slider, style.round)}></span>
         </label>
-      );
+      )
     case 'select':
       return (
         <select
@@ -106,7 +106,7 @@ function getInput({
               <option key={index} value={option.value}>{option.description}</option>
             ))}
         </select>
-      );
+      )
     case 'checkbox':
       return (
         <label className={style.containerInput}>
@@ -118,7 +118,7 @@ function getInput({
           ></input>
           {name && <span className={style.inputLabel}>{name}</span>}
         </label>
-      );
+      )
     case 'radio':
     case 'checkbox-group':
       return options && options.length > 0
@@ -137,9 +137,9 @@ function getInput({
               </label>
             </div>
           ))
-        : null;
+        : null
     default:
-      return null;
+      return null
   }
 }
 
@@ -182,25 +182,25 @@ const Input: React.FC<InputProps> = React.memo<InputProps>(
     const handleOnChange = useCallback(
       (lastValue: any) => (event: HtmlInputEvent) => {
         if (onChange) {
-          const value = formater(event.target.value);
-          const isValid = validation ? validation(value) : true;
+          const value = formater(event.target.value)
+          const isValid = validation ? validation(value) : true
           onChange({
             type,
             name,
             value: isValid ? value : lastValue,
             isValid,
-          } as InputEvent);
+          } as InputEvent)
         }
       },
       [onChange, formater, validation, type, name]
-    );
+    )
 
     const inputStyles = classNames(style.input, {
       [style.inputRadio]: type === 'radio',
       [style.inputCheckbox]: type === 'checkbox-group' || type === 'checkbox',
       [style.select]: type === 'select',
       [style.inputSwitch]: type === 'switch',
-    });
+    })
 
     return (
       <div className={inputStyles}>
@@ -247,8 +247,8 @@ const Input: React.FC<InputProps> = React.memo<InputProps>(
           ) : null}
         </div>
       </div>
-    );
+    )
   }
-);
+)
 
-export { Input };
+export { Input }

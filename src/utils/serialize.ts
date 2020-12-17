@@ -1,9 +1,9 @@
 export function serialize(value: any): string {
   if (value === undefined || value === null) {
-    return '';
+    return ''
   }
   if (typeof value === 'string') {
-    return value;
+    return value
   }
-  return JSON.stringify(value);
+  return JSON.stringify(value)
 }
