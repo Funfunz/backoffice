@@ -1,12 +1,16 @@
 @import './variables.scss';
 
 @mixin color-variants {
+  &.primary {
+    background-color: $primary;
+  }
   &.danger {
     background-color: $danger;
     color: white;
   }
   &.warning {
     background-color: $warning;
+    color: $secondary-dark;
   }
   &.info {
     background-color: $info;
