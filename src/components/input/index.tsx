@@ -1,7 +1,7 @@
 import React, { KeyboardEvent, useCallback } from 'react';
 import classNames from 'classnames';
-import { serialize } from '../../utils/serialize';
 import style from './style.module.scss';
+import { serialize } from 'utils/serialize';
 
 type InputTypes =
   | 'text'
