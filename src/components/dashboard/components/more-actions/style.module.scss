@@ -1,0 +1,20 @@
+@import '~style/variables.scss';
+
+.moreActionsContainer {
+  .title {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: bold;
+    font-size: 14px;
+    margin: 0;
+    margin: 0 0 20px 0;
+  }
+
+  .link {
+    text-transform: uppercase;
+    text-decoration: none;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: black;
+  }
+}
