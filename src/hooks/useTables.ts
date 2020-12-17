@@ -6,13 +6,13 @@ import table from 'services/api/models/table'
 export default function useTables() {
 
   const tables = useSelector((state) => state.tables)
-  const loading = useSelector((state) => state.loadingTables)
+  const loadingTables = useSelector((state) => state.loadingTables)
 
   useEffect(() => {
-    if (tables.length === 0 && !loading) {
+    if (tables.length === 0 && !loadingTables) {
       table.list()
     }
-  }, [tables, loading])
+  }, [tables, loadingTables])
 
-  return { tables, loading }
+  return { tables, loadingTables }
 }
