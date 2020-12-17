@@ -21,6 +21,18 @@
   }
   &.delete {
     color: $neutral-dark;
+    &:hover{
+      color: $primary;
+    }
+  }
+  &.edit{
+    color: $secondary-dark;
+    &:hover{
+      color: $primary;
+    }
+  }
+  &.primary{
+    background-color: $primary;
   }
 }
 
@@ -62,4 +74,18 @@ $breakpoints: (
       @content;
     }
   }
+}
+
+@mixin vertical-gradient(){
+  background: $secondary-light;
+  background: -moz-linear-gradient(180deg, $secondary-light 0%, $secondary-dark 100%);
+  background: -webkit-linear-gradient(180deg, $secondary-light 0%, $secondary-dark 100%);
+  background: linear-gradient(180deg, $secondary-light 0%, $secondary-dark 100%);
+}
+
+@mixin horizontal-gradient(){
+  background: $secondary-light;
+  background: -moz-linear-gradient(90deg, $secondary-light 0%, $secondary-dark 100%);
+  background: -webkit-linear-gradient(90deg, $secondary-light 0%, $secondary-dark 100%);
+  background: linear-gradient(90deg, $secondary-light 0%, $secondary-dark 100%);
 }

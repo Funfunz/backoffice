@@ -22,7 +22,7 @@ export interface IActionButtonProps {
 function getButtonProps(type: EActionType, label: string): Partial<IButtonProps> {
   switch (type) {
     case EActionType.edit:
-      return { prefix: <Icon name="pen" />, label };
+      return { prefix: <Icon name="pen" />, color: 'edit', label };
     case EActionType.delete:
       return { prefix: <Icon name="trash-alt" />, color: 'delete', label };
     case EActionType.view:
