@@ -1,6 +1,6 @@
-import React, { memo, FC } from 'react';
+import React, { memo, FC } from 'react'
 
-import classes from './style.module.scss';
+import classes from './style.module.scss'
 
 export interface ICheckboxProps {
   disabled?: boolean;
@@ -27,7 +27,7 @@ const Checkbox: FC<ICheckboxProps> = ({
       <span className={classes.checkmark}></span>
       {children}
     </label>
-  );
-};
+  )
+}
 
-export default memo(Checkbox);
+export default memo(Checkbox)

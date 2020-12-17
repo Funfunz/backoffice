@@ -1,8 +1,8 @@
-import api, { API } from 'services/api';
-import { dispatch } from 'reducers';
-import HttpError from '../HttpError';
-import { FETCH_USER_FULFILLED } from 'reducers/user';
-import { delay } from 'utils/index';
+import api, { API } from 'services/api'
+import { dispatch } from 'reducers'
+import HttpError from '../HttpError'
+import { FETCH_USER_FULFILLED } from 'reducers/user'
+import { delay } from 'utils/index'
 
 export interface IUser {
   id?: number,
@@ -15,19 +15,19 @@ class User {
   private api: API;
   
   constructor (api: API) {
-    this.api = api;
+    this.api = api
   }
 
   async me() {
-    dispatch({ type : 'FETCH_USER_PENDING' });
+    dispatch({ type : 'FETCH_USER_PENDING' })
     await delay(100)
     return await this.api.get('/users/me').then((user: IUser) => {
       if (user && user.id) {
         dispatch({ 
           type: FETCH_USER_FULFILLED, 
           payload: user,
-        });
-        return user;
+        })
+        return user
       } else {
         throw new HttpError({ status: 403 })
       }
@@ -54,7 +54,7 @@ class User {
 
   logout () {
     return this.api.get('/logout').then(() => {
-      dispatch({ type:'LOGOUT' });
+      dispatch({ type:'LOGOUT' })
       return true
     })
   }

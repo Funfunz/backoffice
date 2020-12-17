@@ -1,5 +1,5 @@
-import { ITable } from './table';
-import mock from '../mock';
+import { ITable } from './table'
+import mock from '../mock'
 
 const TABLES: ITable[] = [
   { 
@@ -14,11 +14,11 @@ const TABLES: ITable[] = [
       label: 'Products',
     },
   },
-];
+]
 
 mock('GET', '/tables', async () => {
-  return TABLES;
-});
+  return TABLES
+})
 
 mock('GET', '/tables/:tableName', async (url, params) => {
   switch (params.tableName){
@@ -30,7 +30,7 @@ mock('GET', '/tables/:tableName', async (url, params) => {
           { name: 'email' },
         ],
         ...TABLES[0],
-      };
+      }
     case 'products':
       return {
         columns: [
@@ -39,8 +39,8 @@ mock('GET', '/tables/:tableName', async (url, params) => {
           { name: 'description' },
         ],
         ...TABLES[1],
-      };
+      }
     default:
-      return ;
+      return 
   }
 })

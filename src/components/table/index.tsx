@@ -1,38 +1,39 @@
-import React, { FC, memo } from 'react';
-import Message from 'components/message';
-import { TEntry } from 'reducers/entry';
-import TableHead from './components/table-head';
-import TableRow from './components/table-row';
-import Pagination from './components/pagination';
-import style from './style.module.scss';
+import React, { FC, memo } from 'react'
+import Message from 'components/message'
+import { TEntry } from 'reducers/entry'
+import TableHead from './components/table-head'
+import TableRow from './components/table-row'
+import Pagination from './components/pagination'
+import style from './style.module.scss'
+import { TableConfig } from 'hooks/useTableConfig'
 
 export interface ITableProps {
-  columns?: Array<{ name: string; label?: string } | string>;
+  properties?: TableConfig['properties'];
   tableData: TEntry[];
   loadingTableData: boolean;
 }
 
 const Table: FC<ITableProps> = ({
-  columns = [],
+  properties = [],
   tableData,
   loadingTableData,
 }) => {
   const actions = {
     edit: () => undefined,
     delete: () => undefined,
-  };
-  const fields = columns.map((column) => {
-    return typeof column === 'string' ? column : column.name;
-  });
+  }
+  const fields = properties.map((property) => {
+    return property.layout?.visible?.entityPage ? property.name : undefined
+  }).filter(p => p) as string[]
 
   return (
     <>
       <table className={style.table}>
-        <TableHead actions={true} columns={columns} />
+        <TableHead actions={true} properties={properties} />
         <tbody>
           {(loadingTableData && (
             <tr>
-              <td colSpan={columns.length}>
+              <td colSpan={properties.length}>
                 <Message loading />
               </td>
             </tr>
@@ -50,7 +51,7 @@ const Table: FC<ITableProps> = ({
       </table>
       <Pagination />
     </>
-  );
-};
+  )
+}
 
-export default memo(Table);
+export default memo(Table)

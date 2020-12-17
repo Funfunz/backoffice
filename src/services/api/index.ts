@@ -28,14 +28,14 @@ export class API {
       return Promise.all([
         response, 
         response.json(),
-      ]);
+      ])
     }).then(([response, body]) => {
       if (!response.ok) {
         throw new HttpError({
           status: response.status,
           statusText: response.statusText,
           body,
-        });
+        })
       }
       return body
     })

@@ -1,7 +1,7 @@
 import { API_ADDRESS } from "constants/api"
 import createMatcher, { PathMatch, IMatchParams } from 'path-match'
-import { delay } from "utils";
-import { API_MOCK_ENABLED } from 'constants/api';
+import { delay } from "utils"
+import { API_MOCK_ENABLED } from 'constants/api'
 
 type MockedFetch = ((url: RequestInfo, params: IMatchParams, options?: RequestInit) => Promise<any>);
 
@@ -13,11 +13,11 @@ export interface IMockRoute {
   func: MockedFetch,
 };
 
-const routes: IMockRoute[] = [];
+const routes: IMockRoute[] = []
 
 export default function mock(method: Method, url: string, func: MockedFetch) {
-  const match = createMatcher()(url);
-  routes.push({ method, match, func });
+  const match = createMatcher()(url)
+  routes.push({ method, match, func })
 }
 
 export const originalFetch = window.fetch
@@ -30,9 +30,9 @@ if (API_MOCK_ENABLED) {
   
   // override fetch API
   window.fetch = async (url: RequestInfo, options: RequestInit = {}) => {
-    await delay(300);
+    await delay(300)
     if (typeof url === 'string') {
-      const method = options.method || 'GET';
+      const method = options.method || 'GET'
       const path = url.replace(API_ADDRESS, '')
       for (const route of routes) {
         const result = route.match(path)

@@ -1,8 +1,8 @@
-import React, { FC, memo, useState } from 'react';
-import { TEntry } from 'reducers/entry';
-import ActionButton, { EActionType, IActionFunction } from '../action-button';
-import Checkbox from '../../../checkbox';
-import style from './style.module.scss';
+import React, { FC, memo, useState } from 'react'
+import { TEntry } from 'reducers/entry'
+import ActionButton, { EActionType, IActionFunction } from '../action-button'
+import Checkbox from '../../../checkbox'
+import style from './style.module.scss'
 
 export interface ITableRowProps {
   fields: string[];
@@ -56,7 +56,7 @@ const TableRow: FC<ITableRowProps> = ({ fields, data, actions }) => {
         </td>
       )}
     </tr>
-  );
-};
+  )
+}
 
-export default memo(TableRow);
+export default memo(TableRow)

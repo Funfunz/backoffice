@@ -36,7 +36,7 @@ export default function useEntryData(entityName: string, pks: PKS) {
   const { table } = useTableConfig(entityName)
 
   useEffect(() => {
-    if (!entryData && !loadingEntry && table.columns().length && isSetPKS(pks) && !errorEntry) {
+    if (!entryData && !loadingEntry && table.properties.length && isSetPKS(pks) && !errorEntry) {
       previousEntity = entityName
       tableService.getEntry(table.config, pks)
     }

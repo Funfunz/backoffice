@@ -9,5 +9,5 @@ declare module 'path-match' {
     strict?: boolean;
     end?: boolean;
   };
-  export default function (args?: IPathMatcherFactoryArgs): PathMatcher;
+  export default function (args?: IPathMatcherFactoryArgs): PathMatcher
 }

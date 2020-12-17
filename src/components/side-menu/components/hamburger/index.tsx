@@ -1,5 +1,5 @@
-import React, { FC, memo } from 'react';
-import style from './style.module.scss';
+import React, { FC, memo } from 'react'
+import style from './style.module.scss'
 
 interface HamburgerProps {
   change: () => void;
@@ -20,7 +20,7 @@ const Hamburger: FC<HamburgerProps> = ({ change, value }) => {
         <i className="fa fa-bars"></i>
       </label>
     </>
-  );
-};
+  )
+}
 
-export default memo(Hamburger);
+export default memo(Hamburger)
