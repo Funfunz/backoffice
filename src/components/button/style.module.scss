@@ -11,4 +11,8 @@
   &:hover {
     border-color: #b5b5b5;
   }
+
+  &.rounded {
+    border-radius: 25px;
+  }
 }
