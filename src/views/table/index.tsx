@@ -1,9 +1,9 @@
 import React, { FC, memo } from 'react';
 import { useParams } from 'react-router-dom';
-import Table from 'components/table';
+import { Table } from 'components/table';
 import style from './style.module.scss';
 import useTableConfig from 'hooks/useTableConfig';
-import Message from 'components/message';
+import { Message } from 'components/message';
 import useTableData from 'hooks/useTableData';
 
 export interface ITableProps {}

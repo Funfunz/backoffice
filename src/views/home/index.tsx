@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react';
-import Button from 'components/button';
-import Icon from 'components/icon';
+import { Button } from 'components/button';
+import { Icon } from 'components/icon';
 import style from './style.module.scss';
 
 export interface IHomeProps {}
