@@ -5,7 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from './reducers';
 import PrivateRoute from 'components/private-route';
 import Layout from 'components/layout';
-import Loading from 'components/loading';
+import { Loading } from 'components/loading';
 import 'style/index.scss';
 
 const Home = lazy(() => import('views/home'));
