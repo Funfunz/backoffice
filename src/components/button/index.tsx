@@ -9,7 +9,7 @@ export interface IButtonProps {
   label?: string | JSX.Element;
   prefix?: string | JSX.Element;
   suffix?: string | JSX.Element;
-  color?: string;
+  color?: 'danger' | 'warning' | 'info' | 'success' | 'delete';
   onClick: (event: MouseEvent) => void;
   style?: any;
 }
