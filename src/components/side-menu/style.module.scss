@@ -21,12 +21,9 @@
   height: calc(100vh - 70px);
   position: fixed;
   transition: margin-left 0.5s;
-  background: $secondary-light;
-  background: -moz-linear-gradient(180deg, $secondary-light 0%, $secondary-dark 100%);
-  background: -webkit-linear-gradient(180deg, $secondary-light 0%, $secondary-dark 100%);
-  background: linear-gradient(180deg, $secondary-light 0%, $secondary-dark 100%);
+  @include vertical-gradient;
   margin-top: 70px;
-  color: #ddd;
+  color: $text-light;
   z-index: 2;
   display: flex;
   flex-direction: column;
@@ -125,7 +122,7 @@
       border-left: 5px solid transparent;
       display: block;
       padding: .75em 25px;
-      color: #ddd;
+      color: $text-light;
       text-decoration: none;
       letter-spacing: 3px;
       font-size: 14px;

@@ -10,6 +10,7 @@ export interface IButtonProps {
   prefix?: string | JSX.Element;
   suffix?: string | JSX.Element;
   color?: 'danger' | 'warning' | 'info' | 'success' | 'delete';
+  variant?: string;
   onClick: (event: MouseEvent) => void;
   style?: any;
 }
@@ -21,6 +22,7 @@ const ButtonComponent: FC<IButtonProps> = ({
   suffix,
   rounded,
   color,
+  variant,
   onClick,
   style,
   children,
@@ -29,6 +31,7 @@ const ButtonComponent: FC<IButtonProps> = ({
     [classes.button]: true,
     [classes[color || '']]: color,
     [classes.rounded]: rounded,
+    [classes[variant || '']]: variant,
   });
 
   return (

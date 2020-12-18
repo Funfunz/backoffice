@@ -2,17 +2,56 @@
 @import '~style/mixins.scss';
 
 .button {
-  padding: 0.5em 1em;
+  padding: 0.5em 1.5em;
   background-color: transparent;
-  border: none;
-  font-size: 1.1rem;
+  border: 2px solid transparent;
+  font-size: 14px;
+  letter-spacing: 1.5px;
   cursor: pointer;
   @include color-variants;
+  transition: color 0.3s;
+  -webkit-transition: color, box-shadow 0.3s;
+  -moz-transition: color 0.3s;
+  -o-transition: color 0.3s;
+  
   &:hover {
-    border-color: #b5b5b5;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
   }
 
-  &.rounded {
-    border-radius: 25px;
+  &.primary{
+    background-color: $primary;
+    color: $background;
+    text-transform: uppercase;
+    transition: color, background-color 0.3s;
+    -webkit-transition: color, background-color 0.3s;
+    -moz-transition: color, background-color 0.3s;
+    -o-transition: color, background-color 0.3s;
+
+    &:hover {
+      background: transparent;
+      color: $primary;
+      border: 2px solid $primary;
+    }
+  }
+  
+  &.secondary{
+    padding: 0;
+    background-color: transparent;
+    color: $secondary-light;
+    text-transform: uppercase;
+    transition: color 0.3s;
+    -webkit-transition: color, 0.3s;
+    -moz-transition: color 0.3s;
+    -o-transition: color 0.3s;
+
+    &:hover {
+      color: $primary;
+      box-shadow: none;    
+    }
+  }
+
+  &.rounded{
+    border-radius: 50px;
   }
 }
+

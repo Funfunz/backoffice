@@ -1,0 +1,21 @@
+@import '~style/variables.scss';
+
+.widgetContainer {
+  min-height: 100px;
+  padding: $padding;
+  background-color: white;
+  border-radius: $border-radius;
+  align-self: start;
+  
+  &.span6 {
+    grid-column: span 6;
+  }
+
+  &.span3 {
+    grid-column: span 3;
+  }
+
+  &.span2 {
+    grid-column: span 2;
+  }
+}
