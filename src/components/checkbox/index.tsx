@@ -8,7 +8,7 @@ export interface ICheckboxProps {
   checked?: boolean;
 }
 
-const Checkbox: FC<ICheckboxProps> = ({
+const CheckboxComponent: FC<ICheckboxProps> = ({
   disabled,
   label,
   checked,
@@ -30,4 +30,4 @@ const Checkbox: FC<ICheckboxProps> = ({
   );
 };
 
-export default memo(Checkbox);
+export const Checkbox = memo(CheckboxComponent);

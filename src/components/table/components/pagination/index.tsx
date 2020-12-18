@@ -8,7 +8,7 @@ import style from './style.module.scss';
 
 export interface IPaginationProps {}
 
-const Pagination: FC<IPaginationProps> = () => {
+const PaginationComponent: FC<IPaginationProps> = () => {
   const { tableName = '' } = useParams<any>();
   const [page, setPage] = useState(0);
   const { tableConfig, itemsByPage, pagination } = useSelector((state) => {
@@ -111,4 +111,4 @@ const Pagination: FC<IPaginationProps> = () => {
   );
 };
 
-export default memo(Pagination);
+export const Pagination = memo(PaginationComponent);

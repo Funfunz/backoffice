@@ -1,9 +1,9 @@
 import React, { FC, memo } from 'react';
-import Message from 'components/message';
+import { Message } from 'components/message';
 import { TEntry } from 'reducers/entry';
-import TableHead from './components/table-head';
-import TableRow from './components/table-row';
-import Pagination from './components/pagination';
+import { TableHead } from './components/table-head';
+import { TableRow } from './components/table-row';
+import { Pagination } from './components/pagination';
 import style from './style.module.scss';
 
 export interface ITableProps {
@@ -12,7 +12,7 @@ export interface ITableProps {
   loadingTableData: boolean;
 }
 
-const Table: FC<ITableProps> = ({
+const TableComponent: FC<ITableProps> = ({
   columns = [],
   tableData,
   loadingTableData,
@@ -53,4 +53,4 @@ const Table: FC<ITableProps> = ({
   );
 };
 
-export default memo(Table);
+export const Table =  memo(TableComponent);

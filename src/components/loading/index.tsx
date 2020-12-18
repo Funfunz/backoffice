@@ -7,7 +7,7 @@ export interface ILoadingProps {
   className?: string;
 };
 
-const Loading: FC<ILoadingProps> = ({ children = null, className = '' }) => {
+const LoadingComponent: FC<ILoadingProps> = ({ children = null, className = '' }) => {
   const loadingClasses = classNames({
     [style.loadingContainer]: true,
     [className]: className,
@@ -20,4 +20,4 @@ const Loading: FC<ILoadingProps> = ({ children = null, className = '' }) => {
   );
 }
 
-export default memo(Loading);
+export const Loading =  memo(LoadingComponent);

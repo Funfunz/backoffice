@@ -1,7 +1,7 @@
 import React, { FC, memo, useState } from 'react';
 import { TEntry } from 'reducers/entry';
-import ActionButton, { EActionType, IActionFunction } from '../action-button';
-import Checkbox from '../../../checkbox';
+import { ActionButton, EActionType, IActionFunction } from 'components/table/components/action-button';
+import { Checkbox } from 'components/checkbox';
 import style from './style.module.scss';
 
 export interface ITableRowProps {
@@ -12,7 +12,7 @@ export interface ITableRowProps {
   };
 }
 
-const TableRow: FC<ITableRowProps> = ({ fields, data, actions }) => {
+const TableRowComponent: FC<ITableRowProps> = ({ fields, data, actions }) => {
   const [showOptions, setShowOptions] = useState(false)
   const toggleShow = () =>{
     setShowOptions(!showOptions)
@@ -59,4 +59,4 @@ const TableRow: FC<ITableRowProps> = ({ fields, data, actions }) => {
   );
 };
 
-export default memo(TableRow);
+export const TableRow = memo(TableRowComponent);

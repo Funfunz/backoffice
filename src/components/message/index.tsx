@@ -10,7 +10,7 @@ export interface IMessageProps {
   icon?: string,
 }
 
-const Message: FC<IMessageProps> = ({ success, error, loading, text, icon }) => {
+const MessageComponent: FC<IMessageProps> = ({ success, error, loading, text, icon }) => {
   return <div className={style.message}>
 
     { loading && (
@@ -38,4 +38,4 @@ const Message: FC<IMessageProps> = ({ success, error, loading, text, icon }) => 
   </div>
 }
 
-export default memo(Message)
+export const Message =  memo(MessageComponent)

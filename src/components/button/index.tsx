@@ -14,7 +14,7 @@ export interface IButtonProps {
   style?: any;
 }
 
-const Button: FC<IButtonProps> = ({
+const ButtonComponent: FC<IButtonProps> = ({
   disabled,
   prefix,
   label,
@@ -47,4 +47,4 @@ const Button: FC<IButtonProps> = ({
   );
 };
 
-export default memo(Button);
+export const Button = memo(ButtonComponent);

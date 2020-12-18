@@ -1,6 +1,6 @@
 import React, { FC, memo, useCallback } from 'react';
-import Button, { IButtonProps } from 'components/button';
-import Icon from 'components/icon';
+import { Button, IButtonProps } from 'components/button';
+import { Icon } from 'components/icon';
 
 export enum EActionType {
   edit = 'edit',
@@ -31,7 +31,7 @@ function getButtonProps(type: EActionType, label: string): Partial<IButtonProps>
   }
 }
 
-const ActionButton: FC<IActionButtonProps> = ({ data, type, onClick, label }) => {
+const ActionButtonComponent: FC<IActionButtonProps> = ({ data, type, onClick, label }) => {
   const handleClick = useCallback(() => {
     if (onClick) {
       onClick(data);
@@ -40,4 +40,4 @@ const ActionButton: FC<IActionButtonProps> = ({ data, type, onClick, label }) =>
   return <Button {...getButtonProps(type, label ? label : "")} onClick={handleClick} />;
 };
 
-export default memo(ActionButton);
+export const ActionButton = memo(ActionButtonComponent);

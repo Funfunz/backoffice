@@ -6,7 +6,7 @@ export interface IIconProps {
   fixedWidth?: boolean,
 };
 
-const Icon: FC<IIconProps> = ({ name, fixedWidth = true }) => {
+const IconComponent: FC<IIconProps> = ({ name, fixedWidth = true }) => {
   const iconClasses = classNames({
     'fas': true,
     [`fa-${name}`]: name,
@@ -18,4 +18,4 @@ const Icon: FC<IIconProps> = ({ name, fixedWidth = true }) => {
   )
 };
 
-export default memo(Icon);
+export const Icon = memo(IconComponent);
