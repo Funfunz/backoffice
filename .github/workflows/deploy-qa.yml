@@ -8,7 +8,6 @@ on:
 env:
   REACT_APP_API_URL: https://funfunz-qa.herokuapp.com
   PUBLIC_URL: /backoffice-qa/
-  REACT_APP_PUBLIC_URL: /backoffice-qa
   GH_PAT: ${{ secrets.GH_PAT }}
   GH_USER: ${{ secrets.GH_USER }}
   GH_EMAIL: ${{ secrets.GH_EMAIL }}

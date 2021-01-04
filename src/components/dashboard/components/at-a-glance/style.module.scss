@@ -1,0 +1,35 @@
+@import '~style/variables.scss';
+
+.atGlanceContainer {
+  .title {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: bold;
+    font-size: 14px;
+    margin: 0;
+    margin: 0 0 20px 0;
+  }
+
+  .entitiesContainer {
+    display: flex;
+    flex-wrap: wrap;
+
+    .entity {
+      width: 33%;
+      min-width: 120px;
+      margin: 0 0 14px;
+      font-size: 14px;
+      
+      & > a {
+        margin-left: 5px;
+        font-size: 14px;
+        color: $primary;
+        text-decoration: none;
+      }
+  
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}

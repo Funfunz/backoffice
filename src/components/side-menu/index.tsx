@@ -13,7 +13,7 @@ export interface ISideMenuProps {
 }
 
 const SideMenu: FC<ISideMenuProps> = ({isSearchable, visible}) => {
-  const { tables, loading } = useTables()
+  const { tables, loadingTables } = useTables()
   const [toggle, setToggle] = useState(window.innerWidth < desktopSize)
   const [searchTerm, setSearchTerm] = useState("")
   const [tablesResult, setTablesResult] = useState<any>([]) 
@@ -64,7 +64,7 @@ const SideMenu: FC<ISideMenuProps> = ({isSearchable, visible}) => {
             </div>
           }
           <ul className={style.menuList}>
-            {loading ? (
+            {loadingTables ? (
               <p className={style.loading}>Loading...</p>
             ) : (
               tablesResult.slice(0, !isSearching ? show : tablesResult.length).map((table: any, index: number) => (

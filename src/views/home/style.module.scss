@@ -1,2 +1,12 @@
+@import "~style/variables";
+
 .homeContainer {
+    .title {
+        padding: 0 0 30px;
+        font-size: 36px;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        color: $secondary-light;
+        margin: 0;
+    }
 }

@@ -1,0 +1,62 @@
+@import '~style/variables.scss';
+
+.welcomeContainer {
+  display: flex;
+  position: relative;
+
+  .mainContainer {
+    width: 50%;
+    min-width: 360px;
+    max-width: 550px;
+    
+    .title {
+      color: $primary;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: bold;
+      margin: 0 0 20px 0;
+    }
+  
+    .subTitle {
+      font-size: 14px;
+      margin: 0;
+    }
+  }
+
+  .linksContainer {
+    .firstSteps {
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: bold;
+      font-size: 14px;
+      margin: 0 0 20px 0;
+    }
+  
+    .linksList {
+      padding: 0;
+      margin: 0;
+      & > a {
+        display: block;
+        margin-bottom: 15px;
+        font-size: 14px;
+        color: $primary;
+        text-decoration: none;
+      }
+    }
+  }
+
+  .dismissContainer {
+    position: absolute;
+    right: 0;
+    .dismissButton {
+      font-size: 14px;
+      text-transform: uppercase;
+      border: none;
+      background-color: transparent;
+      outline: 0;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}
