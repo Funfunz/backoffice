@@ -1,9 +1,9 @@
-import useTables from 'hooks/useTables';
+import useTables from 'hooks/useTables'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'reducers'
-import { IEntityData } from 'reducers/entitiesCount';
-import getEntitiesCount from 'services/api/getEntitiesCount';
-import { ITable } from 'services/api/models/table';
+import { IEntityData } from 'reducers/entitiesCount'
+import getEntitiesCount from 'services/api/getEntitiesCount'
+import { ITable } from 'services/api/models/table'
 
 export type entityItem = {
   name: string,
@@ -11,7 +11,7 @@ export type entityItem = {
   count: number
 }
 
-let entitiesList: entityItem[] = [];
+let entitiesList: entityItem[] = []
 
 function resetEntityList(entitiesCount: IEntityData[], tables: ITable[]) {
   entitiesList = entitiesCount.map(
@@ -50,7 +50,7 @@ function buildDefaultEntitiesList(tables: ITable[], entitiesFilter: string[]) {
           name: current.name,
           label: current.layout.label,
           count: 0
-        });
+        })
       }
       return previous
     },
@@ -60,15 +60,15 @@ function buildDefaultEntitiesList(tables: ITable[], entitiesFilter: string[]) {
 
 export default function useEntityCountData(entitiesFilter: string[]) {
 
-  const { tables, loadingTables } = useTables();
-  const [ requestedEntitiesCount, setRequestedEntitiesCount ] = useState(false);
-  const [ loadedEntitiesCount, setLoadedEntitiesCount ] = useState(false);
+  const { tables, loadingTables } = useTables()
+  const [ requestedEntitiesCount, setRequestedEntitiesCount ] = useState(false)
+  const [ loadedEntitiesCount, setLoadedEntitiesCount ] = useState(false)
   const { entitiesCount, loadingEntitiesCount } = useSelector((state) => {
     return {
       entitiesCount: state.entitiesCount,
       loadingEntitiesCount: state.loadingEntitiesCount
-    };
-  });
+    }
+  })
 
   useEffect(() => {
     if (loadingEntitiesCount || loadingTables || requestedEntitiesCount) {
@@ -77,15 +77,15 @@ export default function useEntityCountData(entitiesFilter: string[]) {
         
         setLoadedEntitiesCount(true)
       }
-      return;
+      return
     }
     if (!tables.length) {
-      return;
+      return
     }
 
     entitiesList = buildDefaultEntitiesList(tables, entitiesFilter)
-    const entitiesNamesToCount = entitiesList.map(entity => entity.name);
-    getEntitiesCount(entitiesNamesToCount);
+    const entitiesNamesToCount = entitiesList.map(entity => entity.name)
+    getEntitiesCount(entitiesNamesToCount)
     setRequestedEntitiesCount(true)
   }, [entitiesCount, entitiesFilter, loadingEntitiesCount, loadingTables, requestedEntitiesCount, tables])
 

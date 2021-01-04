@@ -1,8 +1,8 @@
-import React, { memo, FC } from 'react';
-import { NavLink } from 'react-router-dom';
-import Widget from 'components/dashboard/components/widget';
-import style from './style.module.scss';
-import useEntityCountData from './useEntityCountData';
+import React, { memo, FC } from 'react'
+import { NavLink } from 'react-router-dom'
+import Widget from 'components/dashboard/components/widget'
+import style from './style.module.scss'
+import useEntityCountData from './useEntityCountData'
 
 export interface IAtGlanceProps {
   entitiesFilter?: string[]
@@ -40,7 +40,7 @@ const AtGlance: FC<IAtGlanceProps> = ({
         )}
       </div>
     </Widget>
-  );
-};
+  )
+}
 
-export default memo(AtGlance);
+export default memo(AtGlance)

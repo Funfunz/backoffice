@@ -1,10 +1,10 @@
-import React, { FC, memo, useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import useTables from 'hooks/useTables';
-import Logo from './components/logo';
-import Hamburger from './components/hamburger';
-import style from './style.module.scss';
-import { desktopSize } from 'utils';
+import React, { FC, memo, useEffect, useState } from 'react'
+import { NavLink } from 'react-router-dom'
+import useTables from 'hooks/useTables'
+import Logo from './components/logo'
+import Hamburger from './components/hamburger'
+import style from './style.module.scss'
+import { desktopSize } from 'utils'
 
 
 export interface ISideMenuProps {
@@ -13,41 +13,41 @@ export interface ISideMenuProps {
 }
 
 const SideMenu: FC<ISideMenuProps> = ({isSearchable, visible}) => {
-  const { tables, loadingTables } = useTables();
-  const [toggle, setToggle] = useState(window.innerWidth < desktopSize);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [tablesResult, setTablesResult] = useState<any>([]); 
-  const [show, setShow] = useState(visible);
-  const [isSearching, setIsSearching] = useState(false);
+  const { tables, loadingTables } = useTables()
+  const [toggle, setToggle] = useState(window.innerWidth < desktopSize)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [tablesResult, setTablesResult] = useState<any>([]) 
+  const [show, setShow] = useState(visible)
+  const [isSearching, setIsSearching] = useState(false)
 
   const handleToggle = () => {
-    setToggle(!toggle);
-  };
+    setToggle(!toggle)
+  }
 
   useEffect(() => {
-    setTablesResult(tables);
+    setTablesResult(tables)
   }, [tables])
 
   const handleOnChangeSearch = (event: any) =>{
-    setSearchTerm(event.target.value);
+    setSearchTerm(event.target.value)
     if(event.target.value !== ""){
       const filteredResult = tablesResult.filter((table: any) =>{
         return table.layout.label.toLowerCase().includes(searchTerm.toLowerCase())
       })
-      setTablesResult(filteredResult);
-      setIsSearching(true);
+      setTablesResult(filteredResult)
+      setIsSearching(true)
     }else{
-      setTablesResult(tables);
-      setIsSearching(false);
+      setTablesResult(tables)
+      setIsSearching(false)
     }
   }
 
   const showMoreTables = () =>{
-    setShow(tablesResult.length);
+    setShow(tablesResult.length)
   }
 
   const showLessTables = () =>{
-    setShow(visible);
+    setShow(visible)
   }
 
   return (
@@ -88,7 +88,7 @@ const SideMenu: FC<ISideMenuProps> = ({isSearchable, visible}) => {
         </div>
       </aside>
     </>
-  );
-};
+  )
+}
 
-export default memo(SideMenu);
+export default memo(SideMenu)

@@ -1,15 +1,15 @@
-import api from 'services/api';
-import * as gql from 'gql-query-builder';
-import { dispatch } from 'reducers';
-import { FETCH_ENTITIES_COUNT, FETCH_ENTITIES_COUNT_LOADING } from 'reducers/entitiesCount';
+import api from 'services/api'
+import * as gql from 'gql-query-builder'
+import { dispatch } from 'reducers'
+import { FETCH_ENTITIES_COUNT, FETCH_ENTITIES_COUNT_LOADING } from 'reducers/entitiesCount'
 
 const getEntitiesCount = async (entities: string[]) => {
   dispatch({ 
     type: FETCH_ENTITIES_COUNT_LOADING, 
     payload: true,
-  });
+  })
 
-  const entitiesNameToCount = entities.map(entity => `${entity}Count`);
+  const entitiesNameToCount = entities.map(entity => `${entity}Count`)
   const graphQl = gql.query({
     operation: entitiesNameToCount.join()
   })
@@ -29,9 +29,9 @@ const getEntitiesCount = async (entities: string[]) => {
     dispatch({ 
       type: FETCH_ENTITIES_COUNT, 
       payload: newResult,
-    });
+    })
 
-    return newResult;
+    return newResult
   }).catch(error => {
     throw error
   })

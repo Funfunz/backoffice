@@ -1,6 +1,6 @@
-import React, { memo, FC } from 'react';
-import Widget from './../widget';
-import style from './style.module.scss';
+import React, { memo, FC } from 'react'
+import Widget from './../widget'
+import style from './style.module.scss'
 
 export interface IQuickActionsProps {}
 
@@ -11,7 +11,7 @@ const QuickActions: FC<IQuickActionsProps> = () => {
         <p className={style.title}>Quick Actions</p>
       </div>
     </Widget>
-  );
-};
+  )
+}
 
-export default memo(QuickActions);
+export default memo(QuickActions)
