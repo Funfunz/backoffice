@@ -1,8 +1,8 @@
 import api, { API } from 'services/api'
 import { dispatch } from 'reducers'
 import HttpError from '../HttpError'
-import { FETCH_USER_FULFILLED } from 'reducers/user'
-import { delay } from 'utils/index'
+import { LOGIN_PENDING, FETCH_USER_PENDING, FETCH_USER_FULFILLED, FETCH_USER_REJECTED, LOGIN_FULFILLED, LOGIN_REJECTED } from 'reducers/user'
+import * as gql from 'gql-query-builder'
 
 export interface IUser {
   id?: number,
@@ -19,37 +19,78 @@ class User {
   }
 
   async me() {
-    dispatch({ type : 'FETCH_USER_PENDING' })
-    await delay(100)
-    return await this.api.get('/users/me').then((user: IUser) => {
-      if (user && user.id) {
+    dispatch({ type: FETCH_USER_PENDING })
+    const graphQl = gql.query({
+      operation: 'me',
+      fields: ['id', 'name', 'email']
+    })
+    return this.api.post('/', {
+      body: JSON.stringify({
+        query: graphQl.query
+      })
+    }).then(
+      (body) => {
+        console.log("body me", body)
+        if (body.errors) {
+          throw body.errors
+        }
+        if (body.data && body.data.me) {
+          
+          dispatch({ 
+            type: FETCH_USER_FULFILLED,
+            payload: body.data.me
+          })
+          return body.data.me as IUser
+        }
         dispatch({ 
-          type: FETCH_USER_FULFILLED, 
-          payload: user,
+          type: FETCH_USER_REJECTED,
         })
-        return user
-      } else {
         throw new HttpError({ status: 403 })
       }
-    })
+    ).catch(
+      (errors) => {
+        dispatch({ type: FETCH_USER_REJECTED, payload: errors[0].message })
+        throw new HttpError({ status: 403 })
+      }
+    )
   }
 
-  login(username: string, password: string) {
-    const data = {
-      username,
-      password,
-    }
-    return this.api.post('/auth/local', { body: JSON.stringify(data)}).then((user: IUser) => {
-      if (user.id) {
+  login(
+    identity: string,
+    password: string,
+  ) {
+    dispatch({ type: LOGIN_PENDING })
+    const graphQl = gql.mutation({
+      operation: `login (email: "${identity}", password: "${password}")`,
+    })
+    return this.api.post('/', {
+      body: JSON.stringify({
+        query: graphQl.query
+      })
+    }).then(
+      (body) => {
+        console.log("body login", body)
+        if (body.errors) {
+          throw body.errors
+        }
+        if (body.data && body.data.login) {
+          
+          dispatch({ 
+            type: LOGIN_FULFILLED,
+          })
+          return this.me()
+        }
         dispatch({ 
-          type: FETCH_USER_FULFILLED, 
-          payload: user,
+          type: LOGIN_REJECTED,
         })
-        return user
-      } else {
         throw new HttpError({ status: 403 })
       }
-    })
+    ).catch(
+      (errors) => {
+        dispatch({ type: LOGIN_REJECTED, payload: errors[0].message })
+        throw new HttpError({ status: 403 })
+      }
+    )
   }
 
   logout () {

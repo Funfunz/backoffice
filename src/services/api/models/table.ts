@@ -96,7 +96,7 @@ class Table {
       }
     ).catch(
       (error) => {
-        dispatch({ type: FETCH_TABLES_REJECTED })
+        dispatch({ type: FETCH_TABLES_REJECTED, payload: error })
         throw error
       }
     )

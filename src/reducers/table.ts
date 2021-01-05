@@ -22,7 +22,7 @@ export interface ITableState extends IBaseState {
   tableData?: TEntry[]
   errorTableData?: string
   loadingTableData: boolean
-  error?: boolean
+  errorTables?: boolean
   itemsByPage: number
   page: number
   pagination: [],
@@ -33,7 +33,7 @@ export const initialState: ITableState = {
   tables: [],
   loadingTables: false,
   loadingTableData: false,
-  error: false,
+  errorTables: false,
   itemsByPage: paginationConfig.itemsPerPage.default,
   page: 0,
   pagination: [],
@@ -137,7 +137,7 @@ export function tableReducer(state: ITableState, action: IAction) {
       return {
         ...state,
         loadingTables: false,
-        error: true,
+        errorTables: action.payload,
       }
 
     default:

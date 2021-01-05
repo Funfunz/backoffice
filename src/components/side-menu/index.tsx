@@ -13,7 +13,7 @@ export interface ISideMenuProps {
 }
 
 const SideMenu: FC<ISideMenuProps> = ({isSearchable, visible}) => {
-  const { tables, loadingTables } = useTables()
+  const { tables, loadingTables, errorTables } = useTables()
   const [toggle, setToggle] = useState(window.innerWidth < desktopSize)
   const [searchTerm, setSearchTerm] = useState("")
   const [tablesResult, setTablesResult] = useState<any>([]) 
@@ -64,19 +64,31 @@ const SideMenu: FC<ISideMenuProps> = ({isSearchable, visible}) => {
             </div>
           }
           <ul className={style.menuList}>
-            {loadingTables ? (
-              <p className={style.loading}>Loading...</p>
-            ) : (
-              tablesResult.slice(0, !isSearching ? show : tablesResult.length).map((table: any, index: number) => (
-                <NavLink
-                  key={index}
-                  to={`/table/${table.name}`}
-                  activeClassName={style.active}
-                >
-                  {table.layout.label}
-                </NavLink>
-              ))
-            )}
+            {
+              errorTables
+              ? (
+                <p className={style.loading}>Error...</p>
+              )
+              : (
+                loadingTables
+                ? (
+                  <p className={style.loading}>Loading...</p>
+                )
+                : (
+                  tablesResult.slice(0, !isSearching ? show : tablesResult.length).map(
+                    (table: any, index: number) => (
+                      <NavLink
+                        key={index}
+                        to={`/table/${table.name}`}
+                        activeClassName={style.active}
+                      >
+                        {table.layout.label}
+                      </NavLink>
+                    )
+                  )
+                )
+              )
+            }
           </ul>
           {show && !isSearching && (show < tablesResult.length ?
             <button className={style.load} onClick={showMoreTables}>Show more</button>

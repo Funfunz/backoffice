@@ -1,30 +1,13 @@
-import React, { lazy, Suspense } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom'
-import { HashRouter, Route } from 'react-router-dom'
 import reportWebVitals from './reportWebVitals'
 import { Provider } from './reducers'
-import PrivateRoute from 'components/private-route'
-import Layout from 'components/layout'
-import Loading from 'components/loading'
+import { RoutedContent } from 'views/RoutedContent'
 import 'style/index.scss'
-
-const Home = lazy(() => import('views/home'))
-const Table = lazy(() => import('views/table'))
-const Login = lazy(() => import('views/login'))
-const Logout = lazy(() => import('views/logout'))
 
 const App: React.FC = () => (
   <Provider>
-    <HashRouter>
-      <Suspense fallback={<Loading />}>
-        <Route exact path="/login" component={Login} />
-        <Route exact path="/logout" component={Logout} />
-        <Layout>
-          <PrivateRoute exact path="/" component={Home} />
-          <PrivateRoute exact path="/table/:tableName" component={Table} />
-        </Layout>
-      </Suspense>
-    </HashRouter>
+    <RoutedContent/>
   </Provider>
 )
 

@@ -1,3 +1,37 @@
+@import "~style/variables";
+
 .loginContainer {
-  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: $text-dark;
+}
+
+.loginCenter {
+  border: $default-border;
+  border-radius: $border-radius;
+  padding: $padding;
+}
+
+.title {
+  margin-top: 0;
+}
+
+.label {
+  width: 200px;
+}
+
+.input,
+.label {
+  margin: $padding-small 0;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.actions {
+  margin-top: $padding-small; 
+  button {
+    margin-right: $padding-small;
+  }
 }

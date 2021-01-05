@@ -11,8 +11,9 @@ export interface IButtonProps {
   suffix?: string | JSX.Element;
   color?: string;
   variant?: string;
-  onClick: (event: MouseEvent) => void;
+  onClick?: (event: MouseEvent) => void;
   style?: any;
+  submit?: boolean;
 }
 
 const Button: FC<IButtonProps> = ({
@@ -26,6 +27,7 @@ const Button: FC<IButtonProps> = ({
   onClick,
   style,
   children,
+  submit,
 }) => {
   const wrapperClasses = classNames({
     [classes.button]: true,
@@ -37,7 +39,7 @@ const Button: FC<IButtonProps> = ({
     <button
       onClick={onClick}
       className={wrapperClasses}
-      type="button"
+      type={submit ? 'submit' : 'button'}
       style={style}
       disabled={disabled}
     >
