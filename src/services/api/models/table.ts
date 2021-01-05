@@ -1,5 +1,5 @@
 import api, { API } from 'services/api'
-import { dispatch } from 'reducers'
+import { dispatch,  } from 'reducers'
 import HttpError from '../HttpError'
 import * as gql from 'gql-query-builder'
 import {
@@ -15,6 +15,8 @@ import {
   SET_QUANTITY_OF_PAGES
 } from 'reducers/table'
 import { FETCH_ENTRY_FULFILLED, FETCH_ENTRY_PENDING, FETCH_ENTRY_REJECTED } from 'reducers/entry'
+import { IFilterState } from 'reducers/filters'
+import { buildGQLFilter, existSelectedFilters } from 'utils'
 
 export interface IColumn {
   name: string,
@@ -24,15 +26,30 @@ export interface IColumn {
     type: string,
     allowNull: boolean,
   },
-  layout: {
+  layout?: {
     label?: string,
+    entityPage?: {
+      filterable?: {
+        type: string,
+        inputType: 'checkbox'
+        checked: unknown
+        unChecked: unknown
+      } | {
+        type: string,
+        inputType: 'select',
+        content: {
+          label: string,
+          value: unknown,
+        }[]
+      },
+    },
+    visible?: {
+      entityPage: boolean,
+      detail: boolean,
+      relation: boolean
+    },
     [key: string]: unknown
   }
-  visible: {
-    list: boolean,
-    detail: boolean,
-    relation: boolean
-  },
 }
 
 export interface ITable {
@@ -118,10 +135,15 @@ class Table {
     )
   }
 
-  getEntityItemsCount(table: ITable, itemsByPage: number) {
-    const tableName = `${table.name}Count`;
+  getEntityItemsCount(table: ITable, itemsByPage: number, selectedFilters?: IFilterState['selectedFilters']) {
+    console.log(selectedFilters)
+    const queryName = `${table.name}Count`
+    const filters = (selectedFilters && existSelectedFilters(selectedFilters))
+      ? ` (${buildGQLFilter(selectedFilters as IFilterState['selectedFilters'])})`
+      : ''
+    const operation = `${queryName}${filters}`
     const graphQl = gql.query({
-      operation: tableName,
+      operation,
     })
     return this.api
       .post('/', {
@@ -131,29 +153,29 @@ class Table {
       })
       .then((body) => {
         if (body.errors) {
-          throw body.errors;
+          throw body.errors
         }
-        if (body.data && body.data[tableName]) {
-          const allItems = body.data[tableName];
-          const itemsPagination = allItems / itemsByPage;
-          let pagination = [];
+        if (body.data && body.data[queryName]) {
+          const allItems = body.data[queryName]
+          const itemsPagination = allItems / itemsByPage
+          let pagination = []
           for (let i = 0; i < itemsPagination; i++) {
-            pagination.push(i);
+            pagination.push(i)
           }
           dispatch({
             type: SET_QUANTITY_OF_PAGES,
             payload: pagination
           })
-          return pagination;
+          return pagination
         }
-        return [];
+        return []
       })
       .catch((errors) => {
         dispatch({
           type: FETCH_TABLE_ENTRIES_REJECTED,
           payload: errors[0].message,
-        });
-      });
+        })
+      })
   }
 
   getTableData(
@@ -161,16 +183,25 @@ class Table {
     options: {
       skip?: number
       take?: number
+      currentPage?: number
+      selectedFilters?: IFilterState['selectedFilters']
     } = {
       skip: 0,
-      take: 10
-    }) {
+      take: 10,
+      currentPage: 0,
+      selectedFilters: {}
+    }
+  ) {
+    let filter
+    if (options.selectedFilters) {
+      filter = buildGQLFilter(options.selectedFilters)
+    }
     dispatch({ type: FETCH_TABLE_ENTRIES_PENDING })
     const graphQl = gql.query({
-      operation: `${table.name} (skip: ${options.skip || 0}, take: ${options.take || 10})`,
+      operation: `${table.name} (skip: ${options.skip || 0}, take: ${options.take || 10}${filter ? ', ' + filter : ''})`,
       fields: [`${table.properties?.map(
-        (column) => column.visible?.list && column.name
-      )}`]
+        (property) => property.layout?.visible?.entityPage ? property.name : undefined
+      ).filter(f => f)}`]
     })
     return this.api.post('/', {
       body: JSON.stringify({
@@ -178,6 +209,7 @@ class Table {
       })
     }).then(
       (body) => {
+        console.log("body", body)
         if (body.errors) {
           throw body.errors
         }
@@ -185,13 +217,13 @@ class Table {
           const data = body.data[table.name]
           dispatch({ 
             type: FETCH_TABLE_ENTRIES_FULFILLED,
-            payload: data,
+            payload: {data, page: options.currentPage},
           })
           return data
         }
         dispatch({ 
           type: FETCH_TABLE_ENTRIES_FULFILLED,
-          payload: [],
+          payload: {data: [], page: 0},
         })
         return []
       }
@@ -209,9 +241,9 @@ class Table {
     const graphQl = gql.query({
       operation: `${table.name} (filter: ${this.filterByPks(pks)})`,
       fields: [`${table.properties?.filter(
-        (column) => column.visible.detail
+        (property) => property.layout?.visible?.detail
       ).map(
-        (column) => column.name
+        (property) => property.name
       )}`]
     })
     return this.api.post('/', {

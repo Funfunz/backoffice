@@ -1,5 +1,5 @@
-import React, { FC, memo } from 'react';
-import style from './style.module.scss';
+import React, { FC, memo } from 'react'
+import style from './style.module.scss'
 
 export interface ILogoutProps {};
 
@@ -8,7 +8,7 @@ const Logout: FC<ILogoutProps> = () => {
     <div className={style.logoutContainer}>
       Logout view
     </div>
-  );
+  )
 }
 
-export default memo(Logout);
+export default memo(Logout)

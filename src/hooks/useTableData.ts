@@ -13,7 +13,9 @@ export default function useTableData(tableName: string) {
     loadingTableData,
     page,
     itemsByPage,
-    tableConfig
+    tableConfig,
+    selectedFilters,
+    forceTableReload
   } = useSelector((state) => {
     return {
       tableData: state.tableData,
@@ -23,19 +25,30 @@ export default function useTableData(tableName: string) {
       itemsByPage: state.itemsByPage,
       tableConfig: state.tables.find(
         (table) => table.name === tableName
-      )
+      ),
+      selectedFilters: state.selectedFilters,
+      forceTableReload: state.forceTableReload
     }
   })
 
   useEffect(() => {
-    if ((!tableData || tableName !== previousTableName) && !loadingTableData && tableConfig?.properties) {
+    let tablePage = page
+   
+    const tableChanged = !tableData || tableName !== previousTableName
+    if (tableChanged) {
+      tablePage = 0
+    }
+
+    if ((tableChanged || forceTableReload) && !loadingTableData && tableConfig?.properties) {
       previousTableName = tableName
       tableService.getTableData(tableConfig, {
-        skip: page,
+        skip: tablePage * itemsByPage,
         take: itemsByPage,
+        currentPage: tablePage,
+        selectedFilters
       })
     }
-  }, [tableData, loadingTableData, tableName, tableConfig, page, itemsByPage])
+  }, [tableData, loadingTableData, tableName, tableConfig, page, itemsByPage, selectedFilters, forceTableReload])
 
   return { 
     tableData: tableData || [],
