@@ -4,25 +4,27 @@ import logger from 'recost-logger'
 import { userReducer, initialState as userInitialState, IUserState } from './user'
 import { tableReducer, initialState as tableInitialState, ITableState } from './table'
 import { entryReducer, initialState as entryInitialState, IEntryState } from './entry'
-import { entitiesCountReducer, initialState as entitiesCountInitialState, IEntitiesCountState } from './entitiesCount'
 import { filterReducer, initialState as filterInitialState, IFilterState } from './filters'
+import { entitiesCountReducer, initialState as entitiesCountInitialState, IEntitiesCountState } from './entitiesCount'
 
-interface IState extends IUserState, ITableState, IEntryState, IFilterState, IEntitiesCountState {}
+
+interface IState extends IUserState, ITableState, IEntryState, IFilterState, IEntitiesCountState  {}
+
 
 const initialState: IState = {
   ...userInitialState,
   ...tableInitialState,
   ...entryInitialState,
-  ...entitiesCountInitialState,
   ...filterInitialState,
+  ...entitiesCountInitialState,
 }
 
 const reducers = [
   userReducer,
   tableReducer,
   entryReducer,
-  entitiesCountReducer,
   filterReducer,
+  entitiesCountReducer,
 ]
 
 const middlewares = [

@@ -32,11 +32,19 @@ export default function useTableData(tableName: string) {
   })
 
   useEffect(() => {
-    if ((!tableData || tableName !== previousTableName || forceTableReload) && !loadingTableData && tableConfig?.properties) {
+    let tablePage = page
+   
+    const tableChanged = !tableData || tableName !== previousTableName
+    if (tableChanged) {
+      tablePage = 0
+    }
+
+    if ((tableChanged || forceTableReload) && !loadingTableData && tableConfig?.properties) {
       previousTableName = tableName
       tableService.getTableData(tableConfig, {
-        skip: page * itemsByPage,
+        skip: tablePage * itemsByPage,
         take: itemsByPage,
+        currentPage: tablePage,
         selectedFilters
       })
     }

@@ -73,7 +73,8 @@ export function tableReducer(state: ITableState, action: IAction) {
       return {
         ...state,
         loadingTableData: false,
-        tableData: action.payload,
+        tableData: action.payload.data,
+        page: action.payload.page,
         errorTableData: undefined
       }
     case FETCH_TABLE_ENTRIES_REJECTED:

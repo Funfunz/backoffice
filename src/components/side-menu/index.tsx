@@ -1,11 +1,10 @@
-import React, { FC, memo, useState } from 'react'
+import React, { FC, memo, useEffect, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import useTables from 'hooks/useTables'
 import Logo from './components/logo'
 import Hamburger from './components/hamburger'
 import style from './style.module.scss'
 import { desktopSize } from 'utils'
-import { useEffect } from 'react'
 
 
 export interface ISideMenuProps {
