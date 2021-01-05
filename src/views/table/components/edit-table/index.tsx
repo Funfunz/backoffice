@@ -1,5 +1,7 @@
 import React, { FC, memo, useState } from 'react'
+import Select from 'react-select'
 import { Input } from 'components/input'
+
 import style from './style.module.scss'
 import classNames from 'classnames'
 
@@ -7,9 +9,14 @@ const EditTable: FC<{}> = () => {
   const [text, setText] = useState('')
 
   const handleChangeTextInput = (event: any) => {
-    console.log('v', event)
     setText(event.value)
   }
+
+  const options = [
+    { value: 'chocolate', label: 'Chocolate' },
+    { value: 'strawberry', label: 'Strawberry' },
+    { value: 'vanilla', label: 'Vanilla' }
+  ]
 
   return (
     <div className={style.editTable}>
@@ -64,15 +71,11 @@ const EditTable: FC<{}> = () => {
 
         <div className={style.columns}>
           <div className={classNames(style.column, style.col6)}>
-            SINGLE SELECT
+            PASSWORD
             <Input
-              type="select"
-              onChange={() => false}
-              value={'2'}
-              options={[
-                { value: '1', description: '1' },
-                { value: '2', description: '2' },
-              ]}
+              type="password"
+              onChange={handleChangeTextInput}
+              value={text}
             />
           </div>
           <div className={classNames(style.column, style.col6)}>
@@ -88,12 +91,14 @@ const EditTable: FC<{}> = () => {
         </div>
         <div className={style.columns}>
           <div className={classNames(style.column, style.col6)}>
-            PASSWORD
-            <Input
-              type="password"
-              onChange={handleChangeTextInput}
-              value={text}
-            />
+            SINGLE SELECT
+            <Select options={options} />
+          </div>
+        </div>
+        <div className={style.columns}>
+          <div className={classNames(style.column, style.col6)}>
+            MULTI SELECT
+            <Select options={options} isMulti />
           </div>
         </div>
       </div>

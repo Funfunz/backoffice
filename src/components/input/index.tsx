@@ -10,7 +10,6 @@ type InputTypes =
   | 'date'
   | 'time'
   | 'email'
-  | 'select'
   | 'checkbox'
   | 'radio'
   | 'checkbox-group'
@@ -92,20 +91,6 @@ function getInput({
           <input type="checkbox" />
           <span className={classNames(style.slider, style.round)}></span>
         </label>
-      )
-    case 'select':
-      return (
-        <select
-          disabled={disabled}
-          onChange={onChange}
-          name={name}
-          value={value}
-        >
-          {options &&
-            options.map((option, index) => (
-              <option key={index} value={option.value}>{option.description}</option>
-            ))}
-        </select>
       )
     case 'checkbox':
       return (
@@ -198,7 +183,6 @@ const Input: React.FC<InputProps> = React.memo<InputProps>(
     const inputStyles = classNames(style.input, {
       [style.inputRadio]: type === 'radio',
       [style.inputCheckbox]: type === 'checkbox-group' || type === 'checkbox',
-      [style.select]: type === 'select',
       [style.inputSwitch]: type === 'switch',
     })
 
