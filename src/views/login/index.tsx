@@ -13,7 +13,6 @@ const Login: FC<ILoginProps> = () => {
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault()
       auth.login(username, password)
-      console.log('submit', username, password)
     },
     [username, password]
   )

@@ -12,6 +12,7 @@ export class API {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
     },
+    credentials: 'include',
   }
 
   private request(method: FetchMethod, endpoint: string, options: RequestInit = {}) {
