@@ -7,8 +7,7 @@ import * as gql from 'gql-query-builder'
 export interface IUser {
   id?: number,
   name: string,
-  username: string,
-  password?: string,
+  email: string,
 };
 
 class User {
@@ -94,10 +93,8 @@ class User {
   }
 
   logout () {
-    return this.api.get('/logout').then(() => {
-      dispatch({ type:'LOGOUT' })
-      return true
-    })
+    dispatch({ type:'LOGOUT' })
+    return true
   }
 }
 

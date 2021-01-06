@@ -2,19 +2,26 @@ import React, { FC, memo, useCallback, useState } from 'react'
 import { auth } from 'services'
 import style from './style.module.scss'
 import Button from 'components/button'
+import { useHistory } from 'react-router-dom'
 
 export interface ILoginProps {};
 
 const Login: FC<ILoginProps> = memo(() => {
   const [username, setusername] = useState('')
   const [password, setpassword] = useState('')
-
+  const history = useHistory()
   const submit = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault()
-      auth.login(username, password)
+      auth.login(username, password).then(
+        () => {
+          const seachParams = new URLSearchParams(history.location.search)
+          const redirect = seachParams.get('redirect')
+          history.push(redirect || '/')
+        }
+      )
     },
-    [username, password]
+    [username, password, history]
   )
 
   const handleInputChange = useCallback(
@@ -47,7 +54,9 @@ const Login: FC<ILoginProps> = memo(() => {
         </div>
         <div className={style.actions}>
           <Button rounded={true} color='primary' label='Login' submit={true}/>
-          <Button rounded={true} color='primary' outlined={true} label='Create account' onClick={() => {console.log('create')}}/>
+          {/*
+            <Button rounded={true} color='primary' outlined={true} label='Create account' onClick={() => {console.log('create')}}/>
+          */}
         </div>
       </form>
     </>

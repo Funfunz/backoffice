@@ -4,7 +4,7 @@ import mock from "../mock"
 const USER: IUser = {
   id: 1,
   name: 'João Leite',
-  username: 'joaoleite',
+  email: 'joaomoura@gmail.com',
 }
 
 mock('GET', '/users/me', async () => {

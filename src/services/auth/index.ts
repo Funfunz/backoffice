@@ -3,7 +3,7 @@ import user, { IUser } from 'services/api/models/user'
 class Auth {
 
   private user?: IUser;
-  private authenticated: boolean = true;
+  private authenticated: boolean = false;
 
   constructor() {
     const username = localStorage.getItem('username') || undefined
@@ -12,7 +12,7 @@ class Auth {
       user.me().then((result) => {
         if (result) {
           this.user = result
-          localStorage.setItem('username', this.user.username)
+          localStorage.setItem('username', this.user.email)
         }
       }).catch(() => {
         this.user = undefined
@@ -20,7 +20,7 @@ class Auth {
         localStorage.removeItem('username')
       })
     } else {
-      this.authenticated = true
+      this.authenticated = false
     }
   }
 
@@ -28,16 +28,12 @@ class Auth {
     return this.authenticated
   }
 
-  get me() {
-    return this.user
-  }
-
   async login(username: string, password: string) {
     try {
       const result = await user.login(username, password)
       this.user = result
       this.authenticated = true
-      localStorage.setItem('username', this.user.username)
+      localStorage.setItem('username', this.user.email)
     } catch (error) {
       this.user = undefined
       this.authenticated = false
@@ -45,12 +41,12 @@ class Auth {
   }
 
   async resetPassword(username: string) {
-    console.log('reset password auth service')
+    console.log('reset password auth service:', username)
   }
 
   async logout() {
     try {
-      await user.logout()
+      user.logout()
     } finally {
       this.authenticated = false
       this.user = undefined
