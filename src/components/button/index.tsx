@@ -6,11 +6,11 @@ import classes from './style.module.scss'
 export interface IButtonProps {
   disabled?: boolean;
   rounded?: boolean;
+  outlined?: boolean;
   label?: string | JSX.Element;
   prefix?: string | JSX.Element;
   suffix?: string | JSX.Element;
   color?: string;
-  variant?: string;
   onClick?: (event: MouseEvent) => void;
   style?: any;
   submit?: boolean;
@@ -22,8 +22,8 @@ const Button: FC<IButtonProps> = ({
   label,
   suffix,
   rounded,
+  outlined,
   color,
-  variant,
   onClick,
   style,
   children,
@@ -33,6 +33,7 @@ const Button: FC<IButtonProps> = ({
     [classes.button]: true,
     [classes[color || '']]: color,
     [classes.rounded]: rounded,
+    [classes.outlined]: outlined,
   })
 
   return (

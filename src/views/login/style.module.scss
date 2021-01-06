@@ -30,8 +30,15 @@
 }
 
 .actions {
-  margin-top: $padding-small; 
+  margin: $padding-small 0 ; 
   button {
     margin-right: $padding-small;
   }
+}
+
+.viewSwitcher {
+  color: $info;
+  cursor: pointer;
+  margin-top: $padding-small; 
+  margin-bottom: 0;
 }

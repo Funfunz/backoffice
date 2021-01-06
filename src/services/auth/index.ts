@@ -44,6 +44,10 @@ class Auth {
     }
   }
 
+  async resetPassword(username: string) {
+    console.log('reset password auth service')
+  }
+
   async logout() {
     try {
       await user.logout()

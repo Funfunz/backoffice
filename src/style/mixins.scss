@@ -1,38 +1,60 @@
 @import './variables.scss';
 
-@mixin color-variants {
-  &.primary {
-    background-color: $primary;
-  }
-  &.danger {
-    background-color: $danger;
-    color: white;
-  }
-  &.warning {
-    background-color: $warning;
-    color: $secondary-dark;
-  }
-  &.info {
-    background-color: $info;
-  }
-  &.success {
-    background-color: $success;
-    color: white;
-  }
-  &.delete {
-    color: $neutral-dark;
-    &:hover{
-      color: $primary;
+@mixin color-variants($type: background) {
+  @if $type == outlined {
+    &.primary {
+      border-color: $primary;
     }
-  }
-  &.edit{
-    color: $secondary-dark;
-    &:hover{
-      color: $primary;
+    &.danger {
+      border-color: $danger;
+      color: $danger;
     }
-  }
-  &.primary{
-    background-color: $primary;
+    &.warning {
+      border-color: $warning;
+      color: $warning;
+    }
+    &.info {
+      border-color: $info;
+      color: $info;
+    }
+    &.success {
+      border-color: $success;
+      color: $success;
+    }
+  } @else if $type == background {
+    &.primary {
+      background-color: $primary;
+    }
+    &.danger {
+      background-color: $danger;
+      color: white;
+    }
+    &.warning {
+      background-color: $warning;
+      color: $secondary-dark;
+    }
+    &.info {
+      background-color: $info;
+    }
+    &.success {
+      background-color: $success;
+      color: white;
+    }
+    &.delete {
+      color: $neutral-dark;
+      &:hover{
+        color: $primary;
+      }
+    }
+    &.edit{
+      color: $secondary-dark;
+      &:hover{
+        color: $primary;
+      }
+    }
+    &.primary{
+      background-color: $primary;
+    }
   }
 }
 
