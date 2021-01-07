@@ -16,8 +16,13 @@ $warning: #F59B00;
 $success: #07AF85;
 $info: #1A8CE7;
 
+$white: #fff;
+$black: #000;
 
-$border-color: #EBEBEB;
+$text-light: #EBEBEB;
+$text-dark: $secondary-dark;
+
+$border-color: $text-light;
 $default-border: 1px solid $border-color;
 
 $border-radius: 2px;

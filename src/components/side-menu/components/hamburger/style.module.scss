@@ -6,7 +6,7 @@
   &:checked ~ aside {
     margin-left: -100%;
 
-    @include breakpoint(desktop) {
+    @include screen(md) {
       margin-left: -280px;
     }
   }
@@ -22,6 +22,6 @@
   display: flex;
   align-items: center;
   padding: 0 20px 0 30px;
-  color: white;
+  color: $text-light;
   cursor: pointer;
 }

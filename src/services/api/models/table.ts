@@ -183,10 +183,12 @@ class Table {
     options: {
       skip?: number
       take?: number
+      currentPage?: number
       selectedFilters?: IFilterState['selectedFilters']
     } = {
       skip: 0,
       take: 10,
+      currentPage: 0,
       selectedFilters: {}
     }
   ) {
@@ -207,6 +209,7 @@ class Table {
       })
     }).then(
       (body) => {
+        console.log("body", body)
         if (body.errors) {
           throw body.errors
         }
@@ -214,13 +217,13 @@ class Table {
           const data = body.data[table.name]
           dispatch({ 
             type: FETCH_TABLE_ENTRIES_FULFILLED,
-            payload: data,
+            payload: {data, page: options.currentPage},
           })
           return data
         }
         dispatch({ 
           type: FETCH_TABLE_ENTRIES_FULFILLED,
-          payload: [],
+          payload: {data: [], page: 0},
         })
         return []
       }
