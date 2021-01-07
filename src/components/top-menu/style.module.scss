@@ -14,7 +14,7 @@
   color: $text-light;
   padding-right: 30px;
 
-  @include breakpoint(desktop) {
+  @include screen(md) {
     display: flex;
   }
 

@@ -18,6 +18,41 @@
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
   }
 
+  &.primary{
+    background-color: $primary;
+    color: $background;
+    text-transform: uppercase;
+    transition: color, background-color 0.3s;
+    -webkit-transition: color, background-color 0.3s;
+    -moz-transition: color, background-color 0.3s;
+    -o-transition: color, background-color 0.3s;
+
+    &:hover {
+      background: transparent;
+      color: $primary;
+      border: 2px solid $primary;
+    }
+  }
+  
+  &.secondary{
+    padding: 0;
+    background-color: transparent;
+    color: $secondary-light;
+    text-transform: uppercase;
+    transition: color 0.3s;
+    -webkit-transition: color, 0.3s;
+    -moz-transition: color 0.3s;
+    -o-transition: color 0.3s;
+
+    &:hover {
+      color: $primary;
+      box-shadow: none;    
+    }
+  }
+
+  &.rounded{
+    border-radius: 50px;
+  }
   .prefix{
     margin-right: 6px;
   }

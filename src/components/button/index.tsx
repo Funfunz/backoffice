@@ -31,6 +31,7 @@ const Button: FC<IButtonProps> = ({
     [classes.button]: true,
     [classes[color || '']]: color,
     [classes.rounded]: rounded,
+    [classes[variant || '']]: variant,
   })
 
   return (
