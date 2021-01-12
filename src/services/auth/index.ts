@@ -41,7 +41,12 @@ class Auth {
   }
 
   async resetPassword(username: string) {
-    console.log('reset password auth service:', username)
+    try {
+      await user.requestResetPassword(username)
+    } catch (error) {
+      this.user = undefined
+      this.authenticated = false
+    }
   }
 
   async logout() {
