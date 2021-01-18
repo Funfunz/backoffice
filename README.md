@@ -1,6 +1,14 @@
-# Getting Started with Create React App
+# Funfunz backoffice application
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Configuration
+
+Create a new `.env` file in project root to point to the correct backend server:
+
+```bash
+REACT_APP_API_URL=https://funfunz.herokuapp.com
+```
 
 ## Available Scripts
 

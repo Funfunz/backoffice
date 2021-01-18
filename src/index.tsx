@@ -12,6 +12,7 @@ const Home = lazy(() => import('views/home'))
 const Table = lazy(() => import('views/table'))
 const Login = lazy(() => import('views/login'))
 const Logout = lazy(() => import('views/logout'))
+const EditTable = lazy(() => import('views/table/components/edit-table'))
 
 const App: React.FC = () => (
   <Provider>
@@ -22,6 +23,7 @@ const App: React.FC = () => (
         <Layout>
           <PrivateRoute exact path="/" component={Home} />
           <PrivateRoute exact path="/table/:tableName" component={Table} />
+          <PrivateRoute exact path="/edit-table" component={EditTable} />
         </Layout>
       </Suspense>
     </HashRouter>

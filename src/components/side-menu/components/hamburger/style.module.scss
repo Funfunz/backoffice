@@ -6,7 +6,7 @@
   &:checked ~ aside {
     margin-left: -100%;
 
-    @include breakpoint(desktop) {
+    @include screen(md) {
       margin-left: -280px;
     }
   }

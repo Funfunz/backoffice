@@ -1,0 +1,73 @@
+@import './mixins.scss';
+
+// Responsive grid system
+.columns {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: inherit;
+
+  &.columnsNoWrap {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+
+  &.columnsGap1 {
+    $gap: 10px;
+
+    margin-left: -$gap;
+    margin-right: -$gap;
+
+    & > .column {
+      padding-left: $gap;
+      padding-right: $gap;
+      box-sizing: border-box;
+    }
+  }
+
+  @mixin createGrid($size: '') {
+
+    @for $grid from 1 through 12 {
+      &.col#{$size}#{$grid} {
+        $width: 100 / 12 * $grid;
+        width: #{$width + '%'};
+        flex: 0 0 #{$width + '%'};
+        flex-grow: 0;
+        flex-shrink: 0;
+        flex-basis: #{$width + '%'};
+      }
+    }
+
+    &.colAuto {
+      width: auto;
+      flex: 0 0 auto;
+      flex-grow: 0;
+      flex-shrink: 0;
+      flex-basis: auto;
+    }
+
+    &.colGrow {
+      width: 0;
+      flex: 1 1 auto;
+      flex-grow: 1;
+      flex-shrink: 1;
+      flex-basis: auto;
+    }
+  }
+
+  .column {
+    display: inline-block;
+    flex: 0 0 auto;
+    width: auto;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    @include createGrid();
+
+    @each $breakpoint in map-keys($breakpoints) {
+      @include screen($breakpoint) {
+        @include createGrid($breakpoint);
+      }
+    }
+  }
+}

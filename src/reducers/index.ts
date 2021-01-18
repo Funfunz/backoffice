@@ -7,6 +7,7 @@ import { entryReducer, initialState as entryInitialState, IEntryState } from './
 import { filterReducer, initialState as filterInitialState, IFilterState } from './filters'
 import { entitiesCountReducer, initialState as entitiesCountInitialState, IEntitiesCountState } from './entitiesCount'
 
+
 interface IState extends IUserState, ITableState, IEntryState, IFilterState, IEntitiesCountState  {}
 
 

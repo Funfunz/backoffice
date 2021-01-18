@@ -11,7 +11,7 @@
   display: none;
   transition: margin-left 0.5s;
   width: 280px;
-  @include breakpoint(desktop) {
+  @include screen(md) {
     display: block;
   }
 }
@@ -28,8 +28,9 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  z-index: 2;
 
-  @include breakpoint(desktop) {
+  @include screen(md) {
     width: 280px;
   }
 
@@ -47,7 +48,7 @@
       padding: 0;
       cursor: pointer;
 
-      @include breakpoint(desktop) {
+      @include screen(md) {
         margin-left: 45px;
       }
 
@@ -70,7 +71,7 @@
       margin-right: 10px;
     }
 
-    @include breakpoint(desktop) {
+    @include screen(md) {
       display: none;
     }
   }
@@ -83,7 +84,7 @@
     margin: 0;
     font-weight: bold;
 
-    @include breakpoint(desktop) {
+    @include screen(md) {
       padding: 30px 30px 0;
     }
   }
@@ -94,10 +95,10 @@
     border-bottom: 1px solid $background;
     display: inline-block;
 
-    @include breakpoint(desktop) {
+    @include screen(md) {
       margin-left: 45px;
     }
-
+    
     input{
       color: $background;
       background: none;
@@ -129,7 +130,7 @@
       text-decoration: none;
       text-transform: uppercase;
 
-      @include breakpoint(desktop) {
+      @include screen(md) {
         padding: .75em 40px;
       }
 
@@ -143,9 +144,10 @@
     .loading{
       margin-left: 30px;
 
-      @include breakpoint(desktop) {
+      @include screen(md) {
         margin-left: 45px;
       }
+      
     }
   }
 }

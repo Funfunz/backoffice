@@ -10,6 +10,7 @@ import MoreActions from 'components/dashboard/components/more-actions'
 export interface IHomeProps {}
 
 const Home: FC<IHomeProps> = () => {
+
   return (
     <div className={style.homeContainer}>
       <h1 className={style.title}>Dashboard</h1>

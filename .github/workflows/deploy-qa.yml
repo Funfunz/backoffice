@@ -6,7 +6,7 @@ on:
       - release/*
 
 env:
-  REACT_APP_API_URL: https://funfunz-qa.herokuapp.com
+  REACT_APP_API_URL: https://funfunz-qa.herokuapp.com/graphql
   PUBLIC_URL: /backoffice-qa/
   GH_PAT: ${{ secrets.GH_PAT }}
   GH_USER: ${{ secrets.GH_USER }}
