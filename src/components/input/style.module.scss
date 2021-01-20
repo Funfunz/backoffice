@@ -10,6 +10,7 @@
   line-height: 34px;
   border: 1px solid #ccc;
   border-radius: 10px;
+  overflow: hidden;
 
   @include screen(md) {
     font-size: 100%;

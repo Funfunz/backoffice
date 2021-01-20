@@ -1,14 +1,14 @@
 import { useEffect } from 'react'
 import { useSelector } from 'reducers'
 
-import tableService, { ITable, IColumn }  from 'services/api/models/table'
+import tableService, { IEntity, IProperty }  from 'services/api/models/table'
 import { emptyTableConfig, emptyColumnConfig } from 'utils/tableConfig'
 
 export class TableConfig {
-  config: ITable
-  public properties: IColumn[]
+  config: IEntity
+  public properties: IProperty[]
 
-  constructor(config?: ITable) {
+  constructor(config?: IEntity) {
     this.config = config || emptyTableConfig
     this.properties = this.config.properties || []
   }
@@ -28,7 +28,7 @@ export class TableConfig {
     ))
   }
 
-  pkColumn(): IColumn {
+  pkColumn(): IProperty {
     return this.properties.find((c) => c.model && c.model.isPk) || emptyColumnConfig
   }
 

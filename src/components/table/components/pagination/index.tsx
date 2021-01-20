@@ -1,7 +1,7 @@
 import React, { FC, memo, useCallback, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { dispatch, useSelector } from 'reducers'
-import { SET_QUANTITY_ITEMS_BY_PAGE, SET_CURRENT_PAGE } from 'reducers/table'
+import { SET_QUANTITY_ITEMS_BY_PAGE, SET_CURRENT_PAGE } from 'reducers/entity'
 import tableService from 'services/api/models/table'
 import { paginationConfig } from 'utils/tableConfig'
 import style from './style.module.scss'

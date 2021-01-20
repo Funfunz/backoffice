@@ -3,22 +3,22 @@ import { dispatch,  } from 'reducers'
 import HttpError from '../HttpError'
 import * as gql from 'gql-query-builder'
 import {
-  FETCH_TABLES_FULFILLED,
-  FETCH_TABLES_PENDING,
-  FETCH_TABLE_PENDING,
-  FETCH_TABLE_FULFILLED,
-  FETCH_TABLE_REJECTED,
-  FETCH_TABLES_REJECTED,
-  FETCH_TABLE_ENTRIES_FULFILLED,
-  FETCH_TABLE_ENTRIES_PENDING,
-  FETCH_TABLE_ENTRIES_REJECTED,
+  FETCH_ENTITIES_FULFILLED,
+  FETCH_ENTITIES_PENDING,
+  FETCH_ENTITIES_REJECTED,
+  FETCH_ENTITY_PENDING,
+  FETCH_ENTITY_FULFILLED,
+  FETCH_ENTITY_REJECTED,
+  FETCH_ENTITY_ENTRIES_FULFILLED,
+  FETCH_ENTITY_ENTRIES_PENDING,
+  FETCH_ENTITY_ENTRIES_REJECTED,
   SET_QUANTITY_OF_PAGES
-} from 'reducers/table'
+} from 'reducers/entity'
 import { FETCH_ENTRY_FULFILLED, FETCH_ENTRY_PENDING, FETCH_ENTRY_REJECTED } from 'reducers/entry'
 import { IFilterState } from 'reducers/filters'
 import { buildGQLFilter, existSelectedFilters } from 'utils'
 
-export interface IColumn {
+export interface IProperty {
   name: string,
   searchable: boolean,
   model?: {
@@ -28,6 +28,9 @@ export interface IColumn {
   },
   layout?: {
     label?: string,
+    editField?: {
+      type: 'text' | 'number' | 'password',
+    },
     entityPage?: {
       filterable?: {
         type: string,
@@ -52,10 +55,10 @@ export interface IColumn {
   }
 }
 
-export interface ITable {
+export interface IEntity {
   loading?: boolean,
   name: string,
-  properties?: IColumn[],
+  properties?: IProperty[],
   layout: {
     label: string,
   },
@@ -71,7 +74,7 @@ class Table {
   }
 
   list() {
-    dispatch({ type : FETCH_TABLES_PENDING })
+    dispatch({ type : FETCH_ENTITIES_PENDING })
     const graphQl = gql.query({
       operation: 'entities',
       fields: ['name', 'layout']
@@ -88,7 +91,7 @@ class Table {
         }
         if (body.data?.entities) {
           dispatch({ 
-            type: FETCH_TABLES_FULFILLED, 
+            type: FETCH_ENTITIES_FULFILLED, 
             payload: body.data.entities,
           })
           return body.data.entities
@@ -96,14 +99,14 @@ class Table {
       }
     ).catch(
       (error) => {
-        dispatch({ type: FETCH_TABLES_REJECTED })
+        dispatch({ type: FETCH_ENTITIES_REJECTED })
         throw error
       }
     )
   }
 
   config(tableName: string) {
-    dispatch({ type: FETCH_TABLE_PENDING, payload: tableName })
+    dispatch({ type: FETCH_ENTITY_PENDING, payload: tableName })
     const graphQl = gql.query({
       operation: 'config',
       fields: [tableName]
@@ -119,7 +122,7 @@ class Table {
         }
         if (body.data?.config && body.data?.config[tableName]) {
           dispatch({ 
-            type: FETCH_TABLE_FULFILLED,
+            type: FETCH_ENTITY_FULFILLED,
             payload: body.data.config[tableName],
           })
           return body.data.config[tableName]
@@ -129,13 +132,13 @@ class Table {
       }
     ).catch(
       (error) => {
-        dispatch({ type: FETCH_TABLE_REJECTED })
+        dispatch({ type: FETCH_ENTITY_REJECTED })
         throw error
       }
     )
   }
 
-  getEntityItemsCount(table: ITable, itemsByPage: number, selectedFilters?: IFilterState['selectedFilters']) {
+  getEntityItemsCount(table: IEntity, itemsByPage: number, selectedFilters?: IFilterState['selectedFilters']) {
     console.log(selectedFilters)
     const queryName = `${table.name}Count`
     const filters = (selectedFilters && existSelectedFilters(selectedFilters))
@@ -172,14 +175,14 @@ class Table {
       })
       .catch((errors) => {
         dispatch({
-          type: FETCH_TABLE_ENTRIES_REJECTED,
+          type: FETCH_ENTITY_ENTRIES_REJECTED,
           payload: errors[0].message,
         })
       })
   }
 
   getTableData(
-    table: ITable,
+    entity: IEntity,
     options: {
       skip?: number
       take?: number
@@ -196,10 +199,10 @@ class Table {
     if (options.selectedFilters) {
       filter = buildGQLFilter(options.selectedFilters)
     }
-    dispatch({ type: FETCH_TABLE_ENTRIES_PENDING })
+    dispatch({ type: FETCH_ENTITY_ENTRIES_PENDING })
     const graphQl = gql.query({
-      operation: `${table.name} (skip: ${options.skip || 0}, take: ${options.take || 10}${filter ? ', ' + filter : ''})`,
-      fields: [`${table.properties?.map(
+      operation: `${entity.name} (skip: ${options.skip || 0}, take: ${options.take || 10}${filter ? ', ' + filter : ''})`,
+      fields: [`${entity.properties?.map(
         (property) => property.layout?.visible?.entityPage ? property.name : undefined
       ).filter(f => f)}`]
     })
@@ -213,34 +216,34 @@ class Table {
         if (body.errors) {
           throw body.errors
         }
-        if (body.data && body.data[table.name]) {
-          const data = body.data[table.name]
+        if (body.data && body.data[entity.name]) {
+          const data = body.data[entity.name]
           dispatch({ 
-            type: FETCH_TABLE_ENTRIES_FULFILLED,
+            type: FETCH_ENTITY_ENTRIES_FULFILLED,
             payload: {data, page: options.currentPage},
           })
           return data
         }
         dispatch({ 
-          type: FETCH_TABLE_ENTRIES_FULFILLED,
+          type: FETCH_ENTITY_ENTRIES_FULFILLED,
           payload: {data: [], page: 0},
         })
         return []
       }
     ).catch(
       (errors) => {
-        dispatch({ type: FETCH_TABLE_ENTRIES_REJECTED, payload: errors[0].message })
+        dispatch({ type: FETCH_ENTITY_ENTRIES_REJECTED, payload: errors[0].message })
       }
     )
   }
 
   getEntry(
-    table: ITable,
+    entity: IEntity,
     pks: PKS) {
     dispatch({ type: FETCH_ENTRY_PENDING })
     const graphQl = gql.query({
-      operation: `${table.name} (filter: ${this.filterByPks(pks)})`,
-      fields: [`${table.properties?.filter(
+      operation: `${entity.name} (filter: ${this.filterByPks(pks)})`,
+      fields: [`${entity.properties?.filter(
         (property) => property.layout?.visible?.detail
       ).map(
         (property) => property.name
@@ -255,8 +258,8 @@ class Table {
         if (body.errors) {
           throw body.errors
         }
-        if (body.data && body.data[table.name]) {
-          const data = body.data[table.name]
+        if (body.data && body.data[entity.name]) {
+          const data = body.data[entity.name]
           dispatch({ 
             type: FETCH_ENTRY_FULFILLED,
             payload: data,

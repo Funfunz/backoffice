@@ -1,7 +1,7 @@
-import { ITable } from './table'
+import type { IEntity } from './table'
 import mock from '../mock'
 
-const TABLES: ITable[] = [
+const TABLES: IEntity[] = [
   { 
     name: 'users',
     layout: {

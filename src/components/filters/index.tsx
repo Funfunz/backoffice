@@ -7,12 +7,12 @@ import { useParams } from 'react-router-dom'
 
 import { dispatch, useSelector } from '../../reducers/index'
 import { CLEAR_SELECTED_FILTER, UPDATE_SELECTED_FILTER } from 'reducers/filters'
-import { IColumn } from 'services/api/models/table'
+import type { IProperty } from 'services/api/models/table'
 
 export interface IFiltersProps {
 }
 
-const updateFilters = (property: IColumn, value: unknown) => {
+const updateFilters = (property: IProperty, value: unknown) => {
   dispatch({
     type: UPDATE_SELECTED_FILTER,
     payload: {
@@ -32,7 +32,7 @@ const Filters: FC<IFiltersProps> = () => {
     }
   )
   const updateFilterCallback = useCallback(
-    (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>, property: IColumn) => {
+    (event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>, property: IProperty) => {
       if ((event.currentTarget as HTMLSelectElement).selectedOptions) {
         updateFilters(property, (event.currentTarget as HTMLSelectElement).selectedOptions[0].value)
       } else {

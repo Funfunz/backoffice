@@ -1,16 +1,30 @@
-import React, { FC, memo, useState } from 'react'
+import React, { FC, memo, useCallback, useState } from 'react'
 import Select from 'react-select'
 import { Input } from 'components/input'
-
+import type { InputEvent } from 'components/input'
 import style from './style.module.scss'
 import classNames from 'classnames'
+import { useParams } from 'react-router-dom'
+import useTableConfig from 'hooks/useTableConfig'
+import type { IProperty } from 'services/api/models/table'
 
-const EditTable: FC<{}> = () => {
-  const [text, setText] = useState('')
+interface IParams {
+  tableName: string
+  id?: string
+}
 
-  const handleChangeTextInput = (event: any) => {
-    setText(event.value)
-  }
+const Edit: FC<{}> = () => {
+  const [entry, setEntry] = useState<Record<string, unknown>>({})
+
+  const handleChangeInput = useCallback(
+    (event: InputEvent) => {
+      if (event.name) {
+        entry[event.name] = event.value
+        setEntry({...entry})
+      }
+    },
+    [entry]
+  )
 
   const options = [
     { value: 'chocolate', label: 'Chocolate' },
@@ -18,13 +32,49 @@ const EditTable: FC<{}> = () => {
     { value: 'vanilla', label: 'Vanilla' }
   ]
 
+  const params = useParams<IParams>()
+  const { table } = useTableConfig(params.tableName)
+
+  const isNew = !params.id
+
+  let inputs: IProperty[][] = []
+
+  table.properties.forEach(
+    (entry, index) => {
+      if (index % 2 === 0) {
+        inputs.push([entry])
+      } else {
+        inputs[inputs.length - 1].push(entry)
+      }
+    }
+  )
+
   return (
     <div className={style.editTable}>
       <div className={style.titlePage}>
-        <h1>EDIT PAGE</h1>
+        <h1>{isNew ? 'new page' : 'edit page'}</h1>
       </div>
 
       <div className={style.editTableContainer}>
+        {inputs.map(
+          (properties, index) => (
+            <div key={index} className={style.columns + ' ' + style.columnsGap2}>
+              {properties.map(
+                (property, index) => (
+                  <div key={index} className={classNames(style.column, style.col6)}>
+                    {property.layout?.label || property.name}
+                    <Input
+                      name={property.name}
+                      type={property.layout?.editField?.type || 'text'}
+                      onChange={handleChangeInput}
+                      value={entry[property.name]}
+                    />
+                  </div>
+                )
+              )}
+            </div>
+          )
+        )}
         <div className={style.columns}>
           <div className={classNames(style.column, style.col6)}>
             RADIO
@@ -73,17 +123,19 @@ const EditTable: FC<{}> = () => {
           <div className={classNames(style.column, style.col6)}>
             PASSWORD
             <Input
+              name="password"
               type="password"
-              onChange={handleChangeTextInput}
-              value={text}
+              onChange={handleChangeInput}
+              value={entry['password']}
             />
           </div>
           <div className={classNames(style.column, style.col6)}>
             INPUT TEXT
             <Input
+              name="text"
               type="text"
-              onChange={handleChangeTextInput}
-              value={text}
+              onChange={handleChangeInput}
+              value={entry['text']}
               prefix="prefix"
               suffix="suffix"
             />
@@ -106,4 +158,4 @@ const EditTable: FC<{}> = () => {
   )
 }
 
-export default memo(EditTable)
+export default memo(Edit)

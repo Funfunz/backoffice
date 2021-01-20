@@ -2,13 +2,14 @@ import React, { FC, memo } from 'react'
 import Button from 'components/button'
 
 import style from './style.module.scss'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useParams } from 'react-router-dom'
 
 export interface IToolbarProps {
   toggleFilters?: any;
 }
 
 const Toolbar: FC<IToolbarProps> = ({ toggleFilters }) => {
+  const params = useParams<{tableName: string}>()
   return (
     <div className={style.toolbar}>
       <div className={style.inputSearch}>
@@ -27,11 +28,10 @@ const Toolbar: FC<IToolbarProps> = ({ toggleFilters }) => {
           }}
         />
       </div>
-      <NavLink to={`/edit-table`} activeClassName={style.active}>
+      <NavLink to={`/edit/${params.tableName}`} activeClassName={style.active}>
         <Button
           prefix={<i className="fas fa-plus"></i>}
           label="NEW"
-          onClick={() => {}}
           style={{
             height: '100%',
             backgroundColor: '#DCA50B',

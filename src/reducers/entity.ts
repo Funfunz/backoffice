@@ -1,23 +1,23 @@
 import { IAction, IBaseState } from "recost"
-import { ITable } from "services/api/models/table"
+import { IEntity } from "services/api/models/table"
 import { paginationConfig } from "utils/tableConfig"
 import type { TEntry } from "./entry"
 
-export const FETCH_TABLES_PENDING = 'FETCH_TABLES_PENDING'
-export const FETCH_TABLES_FULFILLED = 'FETCH_TABLES_FULFILLED'
-export const FETCH_TABLES_REJECTED = 'FETCH_TABLES_REJECTED'
-export const FETCH_TABLE_PENDING = 'FETCH_TABLE_PENDING'
-export const FETCH_TABLE_FULFILLED = 'FETCH_TABLE_FULFILLED'
-export const FETCH_TABLE_REJECTED = 'FETCH_TABLE_REJECTED'
-export const FETCH_TABLE_ENTRIES_PENDING = 'FETCH_TABLE_ENTRIES_PENDING'
-export const FETCH_TABLE_ENTRIES_FULFILLED = 'FETCH_TABLE_ENTRIES_FULFILLED'
-export const FETCH_TABLE_ENTRIES_REJECTED = 'FETCH_TABLE_ENTRIES_REJECTED'
+export const FETCH_ENTITIES_PENDING = 'FETCH_ENTITIES_PENDING'
+export const FETCH_ENTITIES_FULFILLED = 'FETCH_ENTITIES_FULFILLED'
+export const FETCH_ENTITIES_REJECTED = 'FETCH_ENTITIES_REJECTED'
+export const FETCH_ENTITY_PENDING = 'FETCH_ENTITY_PENDING'
+export const FETCH_ENTITY_FULFILLED = 'FETCH_ENTITY_FULFILLED'
+export const FETCH_ENTITY_REJECTED = 'FETCH_ENTITY_REJECTED'
+export const FETCH_ENTITY_ENTRIES_PENDING = 'FETCH_ENTITY_ENTRIES_PENDING'
+export const FETCH_ENTITY_ENTRIES_FULFILLED = 'FETCH_ENTITY_ENTRIES_FULFILLED'
+export const FETCH_ENTITY_ENTRIES_REJECTED = 'FETCH_ENTITY_ENTRIES_REJECTED'
 export const SET_QUANTITY_ITEMS_BY_PAGE = 'SET_QUANTITY_ITEMS_BY_PAGE'
 export const SET_QUANTITY_OF_PAGES = 'SET_QUANTITY_OF_PAGES'
 export const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE'
 
-export interface ITableState extends IBaseState {
-  tables: ITable[]
+export interface IEntityState extends IBaseState {
+  tables: IEntity[]
   loadingTables: boolean
   tableData?: TEntry[]
   errorTableData?: string
@@ -29,7 +29,7 @@ export interface ITableState extends IBaseState {
   forceTableReload: boolean
 }
 
-export const initialState: ITableState = {
+export const initialState: IEntityState = {
   tables: [],
   loadingTables: false,
   loadingTableData: false,
@@ -40,7 +40,7 @@ export const initialState: ITableState = {
   forceTableReload: false
 }
 
-export function tableReducer(state: ITableState, action: IAction) {
+export function entityReducer(state: IEntityState, action: IAction) {
   let tables = state.tables || []
   switch (action.type) {
     case SET_CURRENT_PAGE:
@@ -61,7 +61,7 @@ export function tableReducer(state: ITableState, action: IAction) {
         page: 0,
         forceTableReload: true,
       }
-    case FETCH_TABLE_ENTRIES_PENDING:
+    case FETCH_ENTITY_ENTRIES_PENDING:
       return {
         ...state,
         tableData: undefined,
@@ -69,7 +69,7 @@ export function tableReducer(state: ITableState, action: IAction) {
         errorTableData: undefined,
         forceTableReload: false,
       }
-    case FETCH_TABLE_ENTRIES_FULFILLED:
+    case FETCH_ENTITY_ENTRIES_FULFILLED:
       return {
         ...state,
         loadingTableData: false,
@@ -77,21 +77,21 @@ export function tableReducer(state: ITableState, action: IAction) {
         page: action.payload.page,
         errorTableData: undefined
       }
-    case FETCH_TABLE_ENTRIES_REJECTED:
+    case FETCH_ENTITY_ENTRIES_REJECTED:
       return {
         ...state,
         loadingTableData: false,
         tableData: [],
         errorTableData: action.payload,
       }
-    case FETCH_TABLES_PENDING:
+    case FETCH_ENTITIES_PENDING:
       return {
         ...state,
         loadingTables: true,
       }
     
-    case FETCH_TABLE_PENDING:
-      tables = tables.map((table: ITable) => ({
+    case FETCH_ENTITY_PENDING:
+      tables = tables.map((table: IEntity) => ({
         ...table,
         loading: table.name === action.payload
           ? true
@@ -102,9 +102,9 @@ export function tableReducer(state: ITableState, action: IAction) {
         tables,
       }
 
-    case FETCH_TABLES_FULFILLED:
-      (action.payload || []).forEach((table: ITable) => {
-        if (!tables.find((t: ITable) => t.name === table.name)) {
+    case FETCH_ENTITIES_FULFILLED:
+      (action.payload || []).forEach((table: IEntity) => {
+        if (!tables.find((t: IEntity) => t.name === table.name)) {
           tables.push({
             ...table,
             loading: false
@@ -117,11 +117,11 @@ export function tableReducer(state: ITableState, action: IAction) {
         tables,
       }
 
-    case FETCH_TABLE_FULFILLED:
+    case FETCH_ENTITY_FULFILLED:
       if (tables.length === 0) {
         tables = [action.payload]
       }
-      tables = tables.map((table: ITable) => {
+      tables = tables.map((table: IEntity) => {
         return table.name === action.payload.name
           ? { ...table, loading: false, ...action.payload }
           : { ...table, loading: false }
@@ -132,8 +132,8 @@ export function tableReducer(state: ITableState, action: IAction) {
         tables,
       }
 
-    case FETCH_TABLE_REJECTED:
-    case FETCH_TABLES_REJECTED:
+    case FETCH_ENTITY_REJECTED:
+    case FETCH_ENTITIES_REJECTED:
       return {
         ...state,
         loadingTables: false,

@@ -11,7 +11,7 @@ export interface IButtonProps {
   suffix?: string | JSX.Element;
   color?: string;
   variant?: string;
-  onClick: (event: MouseEvent) => void;
+  onClick?: (event: MouseEvent) => void;
   style?: any;
 }
 
