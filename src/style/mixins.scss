@@ -3,10 +3,24 @@
 @mixin color-variants {
   &.primary {
     background-color: $primary;
+    color: $table-background;
+    &:hover {
+      border: 2px solid $primary;
+      color: $primary;
+    }
+  }
+  &.secondary {
+    background-color: $neutral-dark;
+    color: $table-background;
+    &:hover{
+      color: $neutral-dark;
+      background-color: $table-background;
+      border: 2px solid $neutral-dark;
+    }
   }
   &.danger {
     background-color: $danger;
-    color: white;
+    color: $background;
   }
   &.warning {
     background-color: $warning;
@@ -17,13 +31,18 @@
   }
   &.success {
     background-color: $success;
-    color: white;
+    color: $background;
   }
   &.delete {
     color: $neutral-dark;
     &:hover{
       color: $primary;
     }
+  }
+  &.cancel {
+    border: 2px solid $neutral-dark;
+    background-color: $table-background;
+    color: $neutral-dark;
   }
   &.edit{
     color: $secondary-dark;

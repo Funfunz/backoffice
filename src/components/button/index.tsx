@@ -4,15 +4,16 @@ import classNames from 'classnames'
 import classes from './style.module.scss'
 
 export interface IButtonProps {
-  disabled?: boolean;
-  rounded?: boolean;
-  label?: string | JSX.Element;
-  prefix?: string | JSX.Element;
-  suffix?: string | JSX.Element;
-  color?: string;
-  variant?: string;
-  onClick?: (event: MouseEvent) => void;
-  style?: any;
+  disabled?: boolean
+  rounded?: boolean
+  label?: string | JSX.Element
+  prefix?: string | JSX.Element
+  suffix?: string | JSX.Element
+  color?: string
+  variant?: string
+  onClick?: (event: MouseEvent) => void
+  style?: any
+  className?: string
 }
 
 const Button: FC<IButtonProps> = ({
@@ -26,13 +27,16 @@ const Button: FC<IButtonProps> = ({
   onClick,
   style,
   children,
+  className
 }) => {
-  const wrapperClasses = classNames({
-    [classes.button]: true,
-    [classes[color || '']]: color,
-    [classes.rounded]: rounded,
-    [classes[variant || '']]: variant,
-  })
+  const wrapperClasses = classNames([
+    classes.button,
+    className,
+    {
+      [classes[color || '']]: color,
+      [classes.rounded]: rounded,
+    }
+  ])
 
   return (
     <button

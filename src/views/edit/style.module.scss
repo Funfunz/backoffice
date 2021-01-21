@@ -1,24 +1,33 @@
 @import '~style/variables';
 @import '~style/grid';
 
-.editTable {
-  .titlePage {
-    padding: 0 0 30px;
-    h1 {
-      font-size: 36px;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      color: $secondary-light;
-      margin: 0;
-    }
+.titlePage {
+  padding: 0 0 30px;
+  h1 {
+    font-size: 36px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: $secondary-light;
+    margin: 0;
   }
+}
 
-  .editTableContainer {
-    background-color: $table-background;
-    padding: 25px;
-
-    .columns {
-      padding: 15px 0;
-    }
+.editTableContainer {
+  background-color: $table-background;
+  padding: 25px;
+  .columns:first-child {
+    padding: 0 0 15px;
   }
+}
+
+.columns {
+  padding: 15px 0;
+}
+
+.actions {
+  text-align: right;
+}
+
+.actionButton {
+  margin-left: $padding;
 }

@@ -21,23 +21,14 @@ const Toolbar: FC<IToolbarProps> = ({ toggleFilters }) => {
           prefix={<i className="fas fa-filter"></i>}
           label="FILTERS"
           onClick={() => toggleFilters()}
-          style={{
-            backgroundColor: '#818181',
-            fontSize: '12px',
-            color: 'white',
-          }}
+          color='secondary'
         />
       </div>
       <NavLink to={`/edit/${params.tableName}`} activeClassName={style.active}>
         <Button
           prefix={<i className="fas fa-plus"></i>}
           label="NEW"
-          style={{
-            height: '100%',
-            backgroundColor: '#DCA50B',
-            fontSize: '12px',
-            color: 'white',
-          }}
+          color='primary'
         />
       </NavLink>
     </div>

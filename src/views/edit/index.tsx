@@ -1,6 +1,7 @@
 import React, { FC, memo, useCallback, useState } from 'react'
 import Select from 'react-select'
 import { Input } from 'components/input'
+import Button from 'components/button'
 import type { InputEvent } from 'components/input'
 import style from './style.module.scss'
 import classNames from 'classnames'
@@ -152,6 +153,21 @@ const Edit: FC<{}> = () => {
             MULTI SELECT
             <Select options={options} isMulti />
           </div>
+        </div>
+
+        <div className={style.actions}>
+          <Button
+            prefix={<i className="fas fa-plus"></i>}
+            label="CANCEL"
+            color='cancel'
+            className={style.actionButton}
+          />
+          <Button
+            prefix={<i className="fas fa-save"></i>}
+            label="SAVE"
+            color='primary'
+            className={style.actionButton}
+          />
         </div>
       </div>
     </div>
