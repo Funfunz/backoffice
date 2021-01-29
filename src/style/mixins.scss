@@ -23,12 +23,14 @@
     color: $neutral-dark;
     &:hover{
       color: $primary;
+      box-shadow: none;
     }
   }
   &.edit{
     color: $secondary-dark;
     &:hover{
       color: $primary;
+      box-shadow: none;
     }
   }
   &.primary{
