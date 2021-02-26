@@ -26,6 +26,9 @@ export function entryEquals(entry: any, filter: IFilter) {
   )
 }
 
+/*
+ * To be used on Create, View and Edit pages to get and set entry values
+ */
 export function useEntry(entityName: string, filter: IFilter) {
   const entry = useSelector((state) => state.entry) 
   const loading = useSelector((state) => state.loadingEntry)
