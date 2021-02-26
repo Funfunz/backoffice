@@ -2,8 +2,8 @@ import useTables from 'hooks/useTables'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'reducers'
 import { IEntityData } from 'reducers/entitiesCount'
-import getEntitiesCount from 'services/api/getEntitiesCount'
-import { ITable } from 'services/api/models/table'
+import { ITable } from 'services/table'
+import table from 'services/table'
 
 export type entityItem = {
   name: string,
@@ -85,7 +85,7 @@ export default function useEntityCountData(entitiesFilter: string[]) {
 
     entitiesList = buildDefaultEntitiesList(tables, entitiesFilter)
     const entitiesNamesToCount = entitiesList.map(entity => entity.name)
-    getEntitiesCount(entitiesNamesToCount)
+    table.getEntitiesCount(entitiesNamesToCount)
     setRequestedEntitiesCount(true)
   }, [entitiesCount, entitiesFilter, loadingEntitiesCount, loadingTables, requestedEntitiesCount, tables])
 

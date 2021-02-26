@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom'
 
 import { dispatch, useSelector } from '../../reducers/index'
 import { CLEAR_SELECTED_FILTER, UPDATE_SELECTED_FILTER } from 'reducers/filters'
-import { IColumn } from 'services/api/models/table'
+import { IColumn } from 'services/table'
 
 export interface IFiltersProps {
 }

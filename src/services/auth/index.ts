@@ -1,4 +1,4 @@
-import user, { IUser } from 'services/api/models/user'
+import user, { IUser } from 'services/auth/user'
 
 class Auth {
 
