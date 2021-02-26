@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useSelector } from "reducers"
 
-import table from 'services/api/models/table'
+import table from 'services/table'
 
 export default function useTables() {
 

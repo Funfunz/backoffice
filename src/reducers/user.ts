@@ -1,5 +1,5 @@
 import { IAction, IBaseState } from "recost"
-import { IUser } from "services/api/models/user"
+import { IUser } from "services/auth/user"
 
 export const FETCH_USER_FULFILLED = 'FETCH_USER_FULFILLED'
 

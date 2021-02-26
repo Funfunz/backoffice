@@ -1,11 +1,28 @@
 import { API_ADDRESS } from 'constants/api'
-import HttpError from './HttpError'
-
-import './mock'
 
 type FetchMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
 
-export class API {
+export interface IHttpError {
+  status: number
+  statusText?: string
+  body?: any
+}
+
+export class HttpError extends Error{
+
+  public readonly status: number
+  public readonly statusText?: string
+  public readonly body?: any
+
+  constructor({status, statusText, body}: IHttpError) {
+    super(statusText)
+    this.status = status
+    this.statusText = statusText
+    this.body = body
+  }
+}
+
+export class HTTP {
   private baseUrl = API_ADDRESS
   private defaultOptions: RequestInit = {
     headers: {
@@ -56,8 +73,7 @@ export class API {
   delete(endpoint: string, options?: RequestInit) {
     return this.request('DELETE', endpoint, options)
   }
-
 }
 
-const api = new API()
-export default api
+const http = new HTTP()
+export default http
