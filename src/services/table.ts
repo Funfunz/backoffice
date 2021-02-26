@@ -1,7 +1,5 @@
-import api, { API } from 'services/api'
 import { dispatch,  } from 'reducers'
-import HttpError from '../HttpError'
-import * as gql from 'gql-query-builder'
+import * as graphql from 'services/graphql'
 import {
   FETCH_ENTITIES_FULFILLED,
   FETCH_ENTITIES_PENDING,
@@ -17,6 +15,7 @@ import {
 import { FETCH_ENTRY_FULFILLED, FETCH_ENTRY_PENDING, FETCH_ENTRY_REJECTED } from 'reducers/entry'
 import { IFilterState } from 'reducers/filters'
 import { buildGQLFilter, existSelectedFilters } from 'utils'
+import { FETCH_ENTITIES_COUNT, FETCH_ENTITIES_COUNT_LOADING } from 'reducers/entitiesCount'
 
 export interface IProperty {
   name: string,
@@ -67,38 +66,24 @@ export interface IEntity {
 export interface PKS extends Record<string, string | number> {}
 
 class Table {
-  private api: API
   
-  constructor (api: API) {
-    this.api = api
-  }
-
   list() {
     dispatch({ type : FETCH_ENTITIES_PENDING })
-    const graphQl = gql.query({
+    graphql.query({
       operation: 'entities',
-      fields: ['name', 'layout']
-    })
-    return this.api.post('/?', {
-      body: JSON.stringify({
-        query: graphQl.query,
-        variables: null
-      })
+      fields: ['name', 'layout'],
     }).then(
-      (body: any) => {
-        if (body.error) {
-          throw body.error
-        }
-        if (body.data?.entities) {
+      (entities: any) => {
+        if (entities) {
           dispatch({ 
             type: FETCH_ENTITIES_FULFILLED, 
-            payload: body.data.entities,
+            payload: entities,
           })
-          return body.data.entities
+          return entities
         }
       }
     ).catch(
-      (error) => {
+      (error: any) => {
         dispatch({ type: FETCH_ENTITIES_REJECTED })
         throw error
       }
@@ -107,27 +92,19 @@ class Table {
 
   config(tableName: string) {
     dispatch({ type: FETCH_ENTITY_PENDING, payload: tableName })
-    const graphQl = gql.query({
+    graphql.query({
       operation: 'config',
       fields: [tableName]
-    })
-    return this.api.post('/', {
-      body: JSON.stringify({
-        query: graphQl.query
-      })
     }).then(
-      (body) => {
-        if (body.error) {
-          throw body.error
-        }
-        if (body.data?.config && body.data?.config[tableName]) {
+      (config: any) => {
+        if (config[tableName]) {
           dispatch({ 
             type: FETCH_ENTITY_FULFILLED,
-            payload: body.data.config[tableName],
+            payload: config[tableName],
           })
-          return body.data.config[tableName]
+          return config[tableName]
         } else {
-          throw new HttpError({ status: 404 })
+          throw new Error(`Table ${tableName} not found`)
         }
       }
     ).catch(
@@ -139,27 +116,16 @@ class Table {
   }
 
   getEntityItemsCount(table: IEntity, itemsByPage: number, selectedFilters?: IFilterState['selectedFilters']) {
-    console.log(selectedFilters)
-    const queryName = `${table.name}Count`
-    const filters = (selectedFilters && existSelectedFilters(selectedFilters))
-      ? ` (${buildGQLFilter(selectedFilters as IFilterState['selectedFilters'])})`
-      : ''
-    const operation = `${queryName}${filters}`
-    const graphQl = gql.query({
-      operation,
-    })
-    return this.api
-      .post('/', {
-        body: JSON.stringify({
-          query: graphQl.query,
-        }),
-      })
-      .then((body) => {
-        if (body.errors) {
-          throw body.errors
-        }
-        if (body.data && body.data[queryName]) {
-          const allItems = body.data[queryName]
+    const query: graphql.IGQuery = {
+      operation: `${table.name}Count`,
+      args: {}
+    }
+    if (selectedFilters && existSelectedFilters(selectedFilters) && query.args) {
+      query.args.filters = buildGQLFilter(selectedFilters as IFilterState['selectedFilters'])
+    }
+    return graphql.query(query).then(
+      (allItems) => {
+        if (allItems) {
           const itemsPagination = allItems / itemsByPage
           let pagination = []
           for (let i = 0; i < itemsPagination; i++) {
@@ -172,13 +138,15 @@ class Table {
           return pagination
         }
         return []
-      })
-      .catch((errors) => {
+      }
+    ).catch(
+      (error) => {
         dispatch({
           type: FETCH_ENTITY_ENTRIES_REJECTED,
-          payload: errors[0].message,
+          payload: error,
         })
-      })
+      }
+    )
   }
 
   getTableData(
@@ -195,44 +163,41 @@ class Table {
       selectedFilters: {}
     }
   ) {
-    let filter
-    if (options.selectedFilters) {
-      filter = buildGQLFilter(options.selectedFilters)
+    
+    const query: graphql.IGQuery = {
+      operation: entity.name,
+      args: {
+        skip: options.skip || 0,
+        take: options.take || 10,
+      },
+      fields: entity.properties?.map(
+          (property) => {
+            return property.layout?.visible?.entityPage ? property.name : ''
+          }
+        ).filter(f => f) || [],
+    }
+    if (query.args && options.selectedFilters && Object.keys(options.selectedFilters).length > 0) {
+      query.args.filter = buildGQLFilter(options.selectedFilters)
     }
     dispatch({ type: FETCH_ENTITY_ENTRIES_PENDING })
-    const graphQl = gql.query({
-      operation: `${entity.name} (skip: ${options.skip || 0}, take: ${options.take || 10}${filter ? ', ' + filter : ''})`,
-      fields: [`${entity.properties?.map(
-        (property) => property.layout?.visible?.entityPage ? property.name : undefined
-      ).filter(f => f)}`]
-    })
-    return this.api.post('/', {
-      body: JSON.stringify({
-        query: graphQl.query
-      })
-    }).then(
-      (body) => {
-        console.log("body", body)
-        if (body.errors) {
-          throw body.errors
-        }
-        if (body.data && body.data[entity.name]) {
-          const data = body.data[entity.name]
+    return graphql.query(query).then(
+      (data: any) => {
+        if (data) {
           dispatch({ 
             type: FETCH_ENTITY_ENTRIES_FULFILLED,
-            payload: {data, page: options.currentPage},
+            payload: { data, page: options.currentPage },
           })
           return data
         }
         dispatch({ 
           type: FETCH_ENTITY_ENTRIES_FULFILLED,
-          payload: {data: [], page: 0},
+          payload: { data: [], page: 0 },
         })
         return []
       }
     ).catch(
-      (errors) => {
-        dispatch({ type: FETCH_ENTITY_ENTRIES_REJECTED, payload: errors[0].message })
+      (error: any) => {
+        dispatch({ type: FETCH_ENTITY_ENTRIES_REJECTED, payload: error })
       }
     )
   }
@@ -241,25 +206,17 @@ class Table {
     entity: IEntity,
     pks: PKS) {
     dispatch({ type: FETCH_ENTRY_PENDING })
-    const graphQl = gql.query({
-      operation: `${entity.name} (filter: ${this.filterByPks(pks)})`,
-      fields: [`${entity.properties?.filter(
+    return graphql.query({
+      operation: entity.name,
+      args: this.filterByPks(pks),
+      fields: entity.properties?.filter(
         (property) => property.layout?.visible?.detail
       ).map(
         (property) => property.name
-      )}`]
-    })
-    return this.api.post('/', {
-      body: JSON.stringify({
-        query: graphQl.query
-      })
+      )
     }).then(
-      (body) => {
-        if (body.errors) {
-          throw body.errors
-        }
-        if (body.data && body.data[entity.name]) {
-          const data = body.data[entity.name]
+      (data: any) => {
+        if (data) {
           dispatch({ 
             type: FETCH_ENTRY_FULFILLED,
             payload: data,
@@ -284,20 +241,45 @@ class Table {
     )
   }
 
+  getEntitiesCount(entities: string[]) {
+    dispatch({ 
+      type: FETCH_ENTITIES_COUNT_LOADING, 
+      payload: true,
+    })
+
+    return graphql.query(entities.map(
+      (entityName) => ({
+        operation: `${entityName}Count`
+      })
+    )).then(
+      (data) => {
+        const payload = entities.map(
+          (entity) => ({
+            entity: entity,
+            count: data[`${entity}Count`]
+          })
+        )
+        dispatch({ 
+          type: FETCH_ENTITIES_COUNT, 
+          payload,
+        })
+        return payload
+      }
+    )
+  }
+
   private filterByPks(pks: PKS) {
-    let resultFilter: string = ''
+    let resultFilter: { [key: string]: { _eq: number | string} } = {}
     Object.keys(pks).forEach(
       (pk) => {
-        resultFilter += `{
-          ${pk}: {
-            _eq: ${pks[pk]}
-          }
-        }`
+        resultFilter[pk] = {
+          '_eq': pks[pk],
+        }
       }
     )
     return resultFilter
   }
 }
 
-const table = new Table(api)
+const table = new Table()
 export default table

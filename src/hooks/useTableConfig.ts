@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useSelector } from 'reducers'
 
-import tableService, { IEntity, IProperty }  from 'services/api/models/table'
+import tableService, { IEntity, IProperty }  from 'services/table'
 import { emptyTableConfig, emptyColumnConfig } from 'utils/tableConfig'
 
 export class TableConfig {
@@ -22,7 +22,6 @@ export class TableConfig {
   }
 
   filters() {
-    console.log(this.properties)
     return this.properties.filter((property) => (
       property.layout?.entityPage?.filterable
     ))

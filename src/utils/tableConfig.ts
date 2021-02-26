@@ -1,4 +1,4 @@
-import type { IEntity, IProperty } from "services/api/models/table"
+import type { IEntity, IProperty } from "services/table"
 
 export const emptyTableConfig: IEntity = {
   name: '',

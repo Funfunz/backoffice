@@ -10,32 +10,28 @@ function typeMatcher(filter: {
 }) {
   switch (filter.valueType) {
     case 'string':
-      return `_like: "${filter.value}"`
+      return { _like: filter.value }
     default:
-      return `_eq: ${filter.value}`
+      return { _eq: filter.value }
   }
 }
 
-export function buildGQLFilter(selectedFilters: IFilterState['selectedFilters']): string | undefined {
+export function buildGQLFilter(selectedFilters: IFilterState['selectedFilters'])  {
   const filterProperties = Object.keys(selectedFilters)
   if (filterProperties.length) {
-    return `filter: {
-      _and: [
-        ${
-          filterProperties.reduce(
-          (previous, current) => {
-            if (selectedFilters[current].value === undefined) {
-              return previous
-            }
-            return previous + `{
-              ${current}: {
-                ${typeMatcher(selectedFilters[current])}
-              }
-            }`
-          }, '')
+    return {
+      _and: filterProperties.filter(
+        (prop) => {
+          return selectedFilters[prop].value !== undefined
         }
-      ]
-    }`
+      ).map(
+        (prop) => {
+          return {
+            [prop]: typeMatcher(selectedFilters[prop])
+          }
+        }
+      )
+    }
   } else {
     return undefined
   }

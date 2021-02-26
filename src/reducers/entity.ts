@@ -1,5 +1,5 @@
 import { IAction, IBaseState } from "recost"
-import { IEntity } from "services/api/models/table"
+import { IEntity } from "services/table"
 import { paginationConfig } from "utils/tableConfig"
 import type { TEntry } from "./entry"
 

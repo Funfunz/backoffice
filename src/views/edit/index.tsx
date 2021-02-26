@@ -7,7 +7,7 @@ import style from './style.module.scss'
 import classNames from 'classnames'
 import { useParams } from 'react-router-dom'
 import useTableConfig from 'hooks/useTableConfig'
-import type { IProperty } from 'services/api/models/table'
+import type { IProperty } from 'services/table'
 
 interface IParams {
   tableName: string

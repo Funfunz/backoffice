@@ -37,6 +37,7 @@
     color: $neutral-dark;
     &:hover{
       color: $primary;
+      box-shadow: none;
     }
   }
   &.cancel {
@@ -48,6 +49,7 @@
     color: $secondary-dark;
     &:hover{
       color: $primary;
+      box-shadow: none;
     }
   }
   &.primary{
