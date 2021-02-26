@@ -46,3 +46,6 @@ export function query(options: IGQuery | IGQuery[], type: 'query' | 'mutation' =
 export function mutation(options: IGQuery | IGQuery[]) {
   return query(options, 'mutation')
 }
+
+const graphql = { query, mutation }
+export default graphql
