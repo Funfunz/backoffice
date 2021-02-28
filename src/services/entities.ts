@@ -40,7 +40,7 @@ export function useEntities(): IEntity[] {
   const error = useSelector((state) => state.error)
   
   useEffect(() => {
-    if ((!entities || entities.length > 0) && !loading && !error) {
+    if ((!entities || entities.length === 0) && !loading && !error) {
       listEntities()
     } 
   }, [loading, error, entities])

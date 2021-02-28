@@ -91,6 +91,9 @@ export function entityReducer(state: IEntityState, action: IAction) {
       }
     
     case FETCH_ENTITY_PENDING:
+      if (!tables.find(t => t.name === action.payload)) {
+        tables = [...tables, { name: action.payload, layout: { label: action.payload } }]
+      }
       tables = tables.map((table: IEntity) => ({
         ...table,
         loading: table.name === action.payload

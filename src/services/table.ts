@@ -177,7 +177,7 @@ class Table {
         ).filter(f => f) || [],
     }
     if (query.args && options.selectedFilters && Object.keys(options.selectedFilters).length > 0) {
-      query.args.filter = buildGQLFilter(options.selectedFilters)
+      query.args.filter = buildGQLFilter(options.selectedFilters) as any
     }
     dispatch({ type: FETCH_ENTITY_ENTRIES_PENDING })
     return graphql.query(query).then(

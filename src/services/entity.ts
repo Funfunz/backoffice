@@ -86,11 +86,11 @@ export async function getEntity(entityName: string): Promise<IEntity> {
  */
 export function useEntity(entityName: string): IEntity & { label: string, fields: IField[] } {
   const entity = useSelector((state) => state.tables.find(t => t.name === entityName))
-  const loading = useSelector((state) => state.loadingTables)
+  const loading = useSelector((state) => state.loadingTables || state.tables.find(t => t.name === entityName)?.loading)
   const error = useSelector((state) => state.error)
   
-  useEffect(() => {
-    if (entity?.name !== entityName && !entity?.properties && !loading && !error) {
+  useEffect(() => { 
+    if ((entity?.name !== entityName || !entity?.properties?.length) && !loading && !error) {
       getEntity(entityName)
     } 
   }, [entityName, loading, error, entity])
