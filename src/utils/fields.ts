@@ -5,6 +5,7 @@ export interface IField {
   component: string     // react component that should be used to render the field
   props: {              // props that should be passed to that component
     name: string
+    label: string
     type: string
     value?: any
     onChange?: (name: string, value: any) => void
@@ -32,6 +33,7 @@ export function mapFieldComponents(entity: IEntity): IField[] {
             component: mapComponentName(property),
             props: {
               name: property.name,
+              label: property.layout?.label || property.name,
               type: property.layout?.editField?.type || property.model?.type || 'text',
               ...(property.layout?.editField || {})
             }

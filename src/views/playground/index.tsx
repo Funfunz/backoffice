@@ -6,7 +6,8 @@ import { useEntry } from 'services/entry'
 const Playground: FC = () => {
   const entities = useEntities()
   const entity = useEntity('products')
-  const [entry] = useEntry('products', { id: 1 })
+  const [entry, setEntry, saveEntry] = useEntry(entity, { id: 1 })
+
   return (
     <div>
       <h1>Entities</h1>
@@ -25,6 +26,19 @@ const Playground: FC = () => {
       <pre>
         {JSON.stringify(entry, null, 4)}
       </pre>
+      {entity.fields.map((field, index) =>
+        // match `field.component` to correct React component
+        // pass `field.props` to that component
+        <div key={index}>
+          <label>{field.props.label}</label><br />
+          <input 
+            {...field.props} 
+            onChange={(event) => setEntry((entry) => ({...entry, [event.target.name]: event.target.value}))} 
+            value={entry[field.props.name] as string || ''} />
+        </div>
+        
+      )}
+      <button onClick={saveEntry}>Save</button>
     </div>
   )
 }
