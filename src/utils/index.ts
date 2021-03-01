@@ -1,4 +1,5 @@
 import { IFilterState } from "reducers/filters"
+import { IGQuery } from "services/graphql"
 
 export function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms))
@@ -31,7 +32,7 @@ export function buildGQLFilter(selectedFilters: IFilterState['selectedFilters'])
           }
         }
       )
-    }
+    } as IGQuery['args']
   } else {
     return undefined
   }
