@@ -9,14 +9,15 @@ export enum EActionType {
 }
 
 export interface IActionFunction {
-  (data: any): void;
+  (data: any): void
 }
 
 export interface IActionButtonProps {
-  data: any;
-  type: EActionType;
-  onClick?: IActionFunction;
-  label?: string;
+  data: any
+  type: EActionType
+  onClick?: IActionFunction
+  label?: string
+  className?: string
 }
 
 function getButtonProps(type: EActionType, label: string): Partial<IButtonProps> {
@@ -31,13 +32,13 @@ function getButtonProps(type: EActionType, label: string): Partial<IButtonProps>
   }
 }
 
-const ActionButton: FC<IActionButtonProps> = ({ data, type, onClick, label }) => {
+const ActionButton: FC<IActionButtonProps> = ({ data, type, onClick, label, className }) => {
   const handleClick = useCallback(() => {
     if (onClick) {
       onClick(data)
     }
   }, [onClick, data])
-  return <Button {...getButtonProps(type, label ? label : "")} onClick={handleClick} />
+  return <Button className={className} {...getButtonProps(type, label ? label : "")} onClick={handleClick} />
 }
 
 export default memo(ActionButton)
