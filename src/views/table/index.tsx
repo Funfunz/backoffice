@@ -6,7 +6,9 @@ import useTableConfig from 'hooks/useTableConfig'
 import Message from 'components/message'
 import Toolbar from 'components/toolbar'
 import Filters from 'components/filters'
+import PageTitle from 'components/page-title'
 import useTableData from 'hooks/useTableData'
+
 
 export interface ITableProps {}
 
@@ -26,7 +28,7 @@ const TableView: FC<ITableProps> = () => {
   return (
     <div className={style.container}>
       <div className={style.toolbar}>
-        <h1>{table.title()}</h1>
+        <PageTitle text={table.title()}/>
         <Toolbar toggleFilters={toggleFilters}/>
       </div>
       {showFilters && <Filters />}

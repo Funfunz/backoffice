@@ -2,12 +2,14 @@ import React, { FC, memo, useCallback, useState } from 'react'
 import Select from 'react-select'
 import { Input } from 'components/input'
 import Button from 'components/button'
+import PageTitle from 'components/page-title'
 import type { InputEvent } from 'components/input'
 import style from './style.module.scss'
 import classNames from 'classnames'
 import { useParams } from 'react-router-dom'
 import useTableConfig from 'hooks/useTableConfig'
 import type { IProperty } from 'services/table'
+
 
 interface IParams {
   tableName: string
@@ -53,7 +55,7 @@ const Edit: FC<{}> = () => {
   return (
     <div className={style.editTable}>
       <div className={style.titlePage}>
-        <h1>{isNew ? 'new page' : 'edit page'}</h1>
+        <PageTitle text={isNew ? 'new page' : 'edit page'}/>
       </div>
 
       <div className={style.editTableContainer}>
