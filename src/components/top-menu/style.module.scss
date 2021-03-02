@@ -5,8 +5,7 @@
   display: none;
   position: fixed;
   left: 280px;
-  width: calc(100% - 310px);
-  border-bottom: $default-border;
+  width: calc(100% - 280px);
   height: 70px;
   @include horizontal-gradient;
   justify-content: flex-end;

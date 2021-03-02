@@ -33,11 +33,12 @@ const TableRow: FC<ITableRowProps> = ({ fields, data, actions }) => {
               data={data}
               type={type}
               onClick={actions[type]}
+              className={style.button}
             />
           ))}
           <div className={style.mobileOptions}>
             <div className={style.moreContainer}>
-              <button onClick={() => toggleShow()} className={style.more}><i className="fas fa-2x fa-ellipsis-v"></i></button>
+              <button className={`${style.button} ${style.more}`} onClick={() => toggleShow()}><i className="fas fa-2x fa-ellipsis-v"></i></button>
             </div>
             {showOptions &&
               <div className={style.rowOptions}>
@@ -48,6 +49,7 @@ const TableRow: FC<ITableRowProps> = ({ fields, data, actions }) => {
                   type={type}
                   onClick={actions[type]}
                   label={type}
+                  className={style.button}
                 />
           ))}
               </div>
