@@ -48,23 +48,33 @@ export function getEntryData(entityName: string, filter: IFilter, fields?: strin
   )
 }
 
-export async function saveEntryData(entityName: string, filter: IFilter, data: any): Promise<void> {
-  const fields = Object.keys(data)
-  return graphql.mutation({
-    operation: 'update' + entityName[0].toUpperCase() + entityName.substr(1),
+export async function saveEntryData(entityName: string, data: any, filter?: IFilter, ): Promise<void> {
+  const mutation: IGQuery = {
+    operation: entityName[0].toUpperCase() + entityName.substr(1),
     args: {
-      filter: Object.keys(filter).reduce((res, key) => ({
-        ...res,
-        [key]: {
-          _eq: filter[key]
-        }
-      }), {}),
-      data,
+      data
     },
-    fields: !!fields.length ? fields : Object.keys(filter)
-  }).then(
+    fields: Object.keys(data)
+  }
+  if (filter && mutation.args) {
+    mutation.operation = 'update' + mutation.operation
+    mutation.args.filter = Object.keys(filter).reduce((res, key) => ({
+      ...res,
+      [key]: {
+        _eq: filter[key]
+      }
+    }), {})
+    if (!mutation.fields?.length) {
+      mutation.fields = Object.keys(filter)
+    }
+  } else {
+    mutation.operation = 'add' + mutation.operation
+  }
+  return graphql.mutation(mutation).then(
     (data) => {
-      console.log(data)
+      return Array.isArray(data)
+        ? data[0]
+        : data
     }
   )
 }
@@ -107,14 +117,14 @@ export function entryDiff(entry: any, newEntry: any) {
 /*
  * To be used on Create, View and Edit pages to get and set entry values
  */
-export function useEntry(entity: IEntity, filter: IFilter): [IEntryData, React.Dispatch<React.SetStateAction<IEntryData>>, () => Promise<void>] {
+export function useEntry(entity: IEntity, filter?: IFilter): [IEntryData, React.Dispatch<React.SetStateAction<IEntryData>>, () => Promise<void>] {
   const entry = useSelector((state) => state.entry) as IEntryData
   const loading = useSelector((state) => state.loadingEntry)
   const error = useSelector((state) => state.errorEntry)
   const [modifiedEntry, setEntry] = useState(entry || {})
   
   useEffect(() => {
-    if (!entryEquals(entry, filter) && !loading && !error && entity.properties?.length) {
+    if (filter && !entryEquals(entry, filter) && !loading && !error && entity.properties?.length) {
       getEntryData(
         entity.name,
         filter,
@@ -128,7 +138,7 @@ export function useEntry(entity: IEntity, filter: IFilter): [IEntryData, React.D
   }, [entity, filter, loading, error, entry])
 
   const saveEntry = useCallback(() => {
-    return saveEntryData(entity.name, filter, entryDiff(entry, modifiedEntry))
+    return saveEntryData(entity.name, entryDiff(entry, modifiedEntry), filter)
   }, [entity, filter, modifiedEntry, entry])
 
   return [modifiedEntry, setEntry, saveEntry]
