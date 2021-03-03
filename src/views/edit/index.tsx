@@ -10,7 +10,6 @@ import { useParams } from 'react-router-dom'
 import useTableConfig from 'hooks/useTableConfig'
 import type { IProperty } from 'services/table'
 
-
 interface IParams {
   tableName: string
   id?: string
@@ -28,12 +27,6 @@ const Edit: FC<{}> = () => {
     },
     [entry]
   )
-
-  const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' }
-  ]
 
   const params = useParams<IParams>()
   const { table } = useTableConfig(params.tableName)
