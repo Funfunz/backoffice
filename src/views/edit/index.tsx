@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom'
 import useTableConfig from 'hooks/useTableConfig'
 import type { IProperty } from 'services/table'
 
+
 interface IParams {
   tableName: string
   id?: string
@@ -27,6 +28,12 @@ const Edit: FC<{}> = () => {
     },
     [entry]
   )
+
+  const options = [
+    { value: 'chocolate', label: 'Chocolate' },
+    { value: 'strawberry', label: 'Strawberry' },
+    { value: 'vanilla', label: 'Vanilla' }
+  ]
 
   const params = useParams<IParams>()
   const { table } = useTableConfig(params.tableName)
@@ -74,6 +81,85 @@ const Edit: FC<{}> = () => {
             </div>
           )
         )}
+        <div className={row}>
+          <div className={inputContainer}>
+            RADIO
+            <Input
+              type="radio"
+              onChange={() => false}
+              value={'2'}
+              options={[
+                { value: '1', description: '1' },
+                { value: '2', description: '2' },
+              ]}
+            />
+          </div>
+
+          <div className={inputContainer}>
+            CHECKBOX
+            <Input
+              type="checkbox"
+              onChange={() => false}
+              name={'aaa'}
+              value={true}
+            />
+          </div>
+        </div>
+        <div className={row}>
+          <div className={inputContainer}>
+            CHECKBOX GROUP
+            <Input
+              type="checkbox-group"
+              onChange={() => false}
+              value={'2'}
+              options={[
+                { value: '1', description: '1' },
+                { value: '2', description: '2' },
+              ]}
+            />
+          </div>
+          
+
+          <div className={inputContainer}>
+            ACTIVE
+            <Input type="switch" onChange={() => false} />
+          </div>
+        </div>
+
+        <div className={row}>
+          <div className={inputContainer}>
+            PASSWORD
+            <Input
+              name="password"
+              type="password"
+              onChange={handleChangeInput}
+              value={entry['password']}
+            />
+          </div>
+          <div className={inputContainer}>
+            INPUT TEXT
+            <Input
+              name="text"
+              type="text"
+              onChange={handleChangeInput}
+              value={entry['text']}
+              prefix="prefix"
+              suffix="suffix"
+            />
+          </div>
+        </div>
+        <div className={row}>
+          <div className={inputContainer}>
+            SINGLE SELECT
+            <Select options={options} />
+          </div>
+        </div>
+        <div className={row}>
+          <div className={inputContainer}>
+            MULTI SELECT
+            <Select options={options} isMulti />
+          </div>
+        </div>
 
         <div className={style.actions}>
           <Button
