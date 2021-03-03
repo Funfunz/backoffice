@@ -7,7 +7,7 @@ import { entryDiff, entryEquals, getEntryData, IEntryData, IFilter, saveEntryDat
 export interface IUseEntry {
   entry: IEntryData,
   setEntry: React.Dispatch<React.SetStateAction<IEntryData>>,
-  saveEntry: () => void,
+  saveEntry: () => Promise<void>,
   error: boolean
 }
 

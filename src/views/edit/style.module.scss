@@ -14,17 +14,17 @@
 
 .editTableContainer {
   background-color: $table-background;
-  padding: 25px;
-  .columns:first-child {
-    padding: 0 0 15px;
-  }
+  padding: 20px;
 }
 
-.columns {
-  padding: 15px 0;
+.inputLabel {
+  display: block;
+  margin-top: 25px;
+  margin-bottom: 5px;
 }
 
 .actions {
+  margin-top: 25px;
   text-align: right;
 }
 
