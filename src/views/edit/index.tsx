@@ -8,7 +8,7 @@ import classNames from 'classnames'
 import { useParams } from 'react-router-dom'
 import useTableConfig from 'hooks/useTableConfig'
 import { useEntry } from 'hooks/useEntry'
-import { useEntity } from 'services/entity'
+import { useEntity } from 'hooks/useEntity'
 import type { IField } from 'utils/fields'
 import type { InputEvent } from 'components/input'
 
@@ -30,7 +30,7 @@ const Edit: FC<{}> = () => {
   const isNew = !params.id
 
   const entity = useEntity(params.tableName)
-  const [entry, set] = useEntry(
+  const {entry, setEntry} = useEntry(
     entity,
     params.id ? {
       [table.pkColumn().name]: params.id
@@ -53,10 +53,10 @@ const Edit: FC<{}> = () => {
     (event: InputEvent) => {
       if (event.name) {
         entry[event.name] = event.value
-        set({...entry})
+        setEntry({...entry})
       }
     },
-    [entry, set]
+    [entry, setEntry]
   )
 
   const row = classNames(style.columns, style.columnsGap2) 
