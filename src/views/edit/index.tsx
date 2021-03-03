@@ -52,6 +52,9 @@ const Edit: FC<{}> = () => {
     }
   )
 
+  const row = classNames(style.columns, style.columnsGap2) 
+  const inputContainer = classNames(style.column, style.col6)
+
   return (
     <div className={style.editTable}>
       <div className={style.titlePage}>
@@ -61,10 +64,10 @@ const Edit: FC<{}> = () => {
       <div className={style.editTableContainer}>
         {inputs.map(
           (properties, index) => (
-            <div key={index} className={style.columns + ' ' + style.columnsGap2}>
+            <div key={index} className={row}>
               {properties.map(
                 (property, index) => (
-                  <div key={index} className={classNames(style.column, style.col6)}>
+                  <div key={index} className={inputContainer}>
                     {property.layout?.label || property.name}
                     <Input
                       name={property.name}
@@ -78,84 +81,6 @@ const Edit: FC<{}> = () => {
             </div>
           )
         )}
-        <div className={style.columns}>
-          <div className={classNames(style.column, style.col6)}>
-            RADIO
-            <Input
-              type="radio"
-              onChange={() => false}
-              value={'2'}
-              options={[
-                { value: '1', description: '1' },
-                { value: '2', description: '2' },
-              ]}
-            />
-          </div>
-
-          <div className={classNames(style.column, style.col6)}>
-            CHECKBOX GROUP
-            <Input
-              type="checkbox-group"
-              onChange={() => false}
-              value={'2'}
-              options={[
-                { value: '1', description: '1' },
-                { value: '2', description: '2' },
-              ]}
-            />
-          </div>
-        </div>
-        <div className={style.columns}>
-          <div className={classNames(style.column, style.col6)}>
-            CHECKBOX
-            <Input
-              type="checkbox"
-              onChange={() => false}
-              name={'aaa'}
-              value={true}
-            />
-          </div>
-
-          <div className={classNames(style.column, style.col6)}>
-            ACTIVE
-            <Input type="switch" onChange={() => false} />
-          </div>
-        </div>
-
-        <div className={style.columns}>
-          <div className={classNames(style.column, style.col6)}>
-            PASSWORD
-            <Input
-              name="password"
-              type="password"
-              onChange={handleChangeInput}
-              value={entry['password']}
-            />
-          </div>
-          <div className={classNames(style.column, style.col6)}>
-            INPUT TEXT
-            <Input
-              name="text"
-              type="text"
-              onChange={handleChangeInput}
-              value={entry['text']}
-              prefix="prefix"
-              suffix="suffix"
-            />
-          </div>
-        </div>
-        <div className={style.columns}>
-          <div className={classNames(style.column, style.col6)}>
-            SINGLE SELECT
-            <Select options={options} />
-          </div>
-        </div>
-        <div className={style.columns}>
-          <div className={classNames(style.column, style.col6)}>
-            MULTI SELECT
-            <Select options={options} isMulti />
-          </div>
-        </div>
 
         <div className={style.actions}>
           <Button
