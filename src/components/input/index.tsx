@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import style from './style.module.scss'
 import { serialize } from 'utils/serialize'
 
-type InputTypes =
+export type InputTypes =
   | 'text'
   | 'password'
   | 'number'

@@ -3,13 +3,14 @@ import Select from 'react-select'
 import { Input } from 'components/input'
 import Button from 'components/button'
 import PageTitle from 'components/page-title'
-import type { InputEvent } from 'components/input'
 import style from './style.module.scss'
 import classNames from 'classnames'
 import { useParams } from 'react-router-dom'
 import useTableConfig from 'hooks/useTableConfig'
-import type { IProperty } from 'services/table'
 import { useEntry } from 'hooks/useEntry'
+import { useEntity } from 'services/entity'
+import type { IField } from 'utils/fields'
+import type { InputEvent } from 'components/input'
 
 interface IParams {
   tableName: string
@@ -28,16 +29,17 @@ const Edit: FC<{}> = () => {
 
   const isNew = !params.id
 
+  const entity = useEntity(params.tableName)
   const [entry, set] = useEntry(
-    table.config,
+    entity,
     params.id ? {
       [table.pkColumn().name]: params.id
     } : undefined
   )
 
-  let inputs: IProperty[][] = []
+  let inputs: IField[][] = []
 
-  table.properties.forEach(
+  entity.fields.forEach(
     (entry, index) => {
       if (index % 2 === 0) {
         inputs.push([entry])
@@ -56,7 +58,7 @@ const Edit: FC<{}> = () => {
     },
     [entry, set]
   )
-  console.log('entry', entry)
+
   const row = classNames(style.columns, style.columnsGap2) 
   const inputContainer = classNames(style.column, style.col6)
 
@@ -68,17 +70,16 @@ const Edit: FC<{}> = () => {
 
       <div className={style.editTableContainer}>
         {entry && inputs.map(
-          (properties, index) => (
+          (fields, index) => (
             <div key={index} className={row}>
-              {properties.map(
-                (property, index) => (
+              {fields.map(
+                (field, index) => (
                   <div key={index} className={inputContainer}>
-                    {property.layout?.label || property.name}
+                    <label>{field.props.label}</label>
                     <Input
-                      name={property.name}
-                      type={property.layout?.editField?.type || 'text'}
+                      {...field.props} 
                       onChange={handleChangeInput}
-                      value={entry[property.name]}
+                      value={entry[field.props.name] as string || ''}
                     />
                   </div>
                 )
