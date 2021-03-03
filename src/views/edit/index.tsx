@@ -1,15 +1,16 @@
-import React, { FC, memo, useCallback, useState } from 'react'
+import React, { FC, memo, useCallback } from 'react'
 import Select from 'react-select'
 import { Input } from 'components/input'
 import Button from 'components/button'
 import PageTitle from 'components/page-title'
-import type { InputEvent } from 'components/input'
 import style from './style.module.scss'
 import classNames from 'classnames'
 import { useParams } from 'react-router-dom'
 import useTableConfig from 'hooks/useTableConfig'
-import type { IProperty } from 'services/table'
-
+import { useEntry } from 'hooks/useEntry'
+import { useEntity } from 'hooks/useEntity'
+import type { IField } from 'utils/fields'
+import type { InputEvent } from 'components/input'
 
 interface IParams {
   tableName: string
@@ -17,18 +18,6 @@ interface IParams {
 }
 
 const Edit: FC<{}> = () => {
-  const [entry, setEntry] = useState<Record<string, unknown>>({})
-
-  const handleChangeInput = useCallback(
-    (event: InputEvent) => {
-      if (event.name) {
-        entry[event.name] = event.value
-        setEntry({...entry})
-      }
-    },
-    [entry]
-  )
-
   const options = [
     { value: 'chocolate', label: 'Chocolate' },
     { value: 'strawberry', label: 'Strawberry' },
@@ -40,9 +29,17 @@ const Edit: FC<{}> = () => {
 
   const isNew = !params.id
 
-  let inputs: IProperty[][] = []
+  const entity = useEntity(params.tableName)
+  const {entry, setEntry} = useEntry(
+    entity,
+    params.id ? {
+      [table.pkColumn().name]: params.id
+    } : undefined
+  )
 
-  table.properties.forEach(
+  let inputs: IField[][] = []
+
+  entity.fields.forEach(
     (entry, index) => {
       if (index % 2 === 0) {
         inputs.push([entry])
@@ -52,6 +49,19 @@ const Edit: FC<{}> = () => {
     }
   )
 
+  const handleChangeInput = useCallback(
+    (event: InputEvent) => {
+      if (event.name) {
+        entry[event.name] = event.value
+        setEntry({...entry})
+      }
+    },
+    [entry, setEntry]
+  )
+
+  const row = classNames(style.columns, style.columnsGap2) 
+  const inputContainer = classNames(style.column, style.col6)
+
   return (
     <div className={style.editTable}>
       <div className={style.titlePage}>
@@ -59,18 +69,17 @@ const Edit: FC<{}> = () => {
       </div>
 
       <div className={style.editTableContainer}>
-        {inputs.map(
-          (properties, index) => (
-            <div key={index} className={style.columns + ' ' + style.columnsGap2}>
-              {properties.map(
-                (property, index) => (
-                  <div key={index} className={classNames(style.column, style.col6)}>
-                    {property.layout?.label || property.name}
+        {entry && inputs.map(
+          (fields, index) => (
+            <div key={index} className={row}>
+              {fields.map(
+                (field, index) => (
+                  <div key={index} className={inputContainer}>
+                    <label>{field.props.label}</label>
                     <Input
-                      name={property.name}
-                      type={property.layout?.editField?.type || 'text'}
+                      {...field.props} 
                       onChange={handleChangeInput}
-                      value={entry[property.name]}
+                      value={entry[field.props.name] as string || ''}
                     />
                   </div>
                 )
@@ -78,8 +87,8 @@ const Edit: FC<{}> = () => {
             </div>
           )
         )}
-        <div className={style.columns}>
-          <div className={classNames(style.column, style.col6)}>
+        <div className={row}>
+          <div className={inputContainer}>
             RADIO
             <Input
               type="radio"
@@ -92,7 +101,18 @@ const Edit: FC<{}> = () => {
             />
           </div>
 
-          <div className={classNames(style.column, style.col6)}>
+          <div className={inputContainer}>
+            CHECKBOX
+            <Input
+              type="checkbox"
+              onChange={() => false}
+              name={'aaa'}
+              value={true}
+            />
+          </div>
+        </div>
+        <div className={row}>
+          <div className={inputContainer}>
             CHECKBOX GROUP
             <Input
               type="checkbox-group"
@@ -104,54 +124,44 @@ const Edit: FC<{}> = () => {
               ]}
             />
           </div>
-        </div>
-        <div className={style.columns}>
-          <div className={classNames(style.column, style.col6)}>
-            CHECKBOX
-            <Input
-              type="checkbox"
-              onChange={() => false}
-              name={'aaa'}
-              value={true}
-            />
-          </div>
+          
 
-          <div className={classNames(style.column, style.col6)}>
+          <div className={inputContainer}>
             ACTIVE
             <Input type="switch" onChange={() => false} />
           </div>
         </div>
 
-        <div className={style.columns}>
-          <div className={classNames(style.column, style.col6)}>
+        <div className={row}>
+          <div className={inputContainer}>
             PASSWORD
             <Input
               name="password"
               type="password"
               onChange={handleChangeInput}
-              value={entry['password']}
+              value='asd'
             />
           </div>
-          <div className={classNames(style.column, style.col6)}>
+          <div className={inputContainer}>
             INPUT TEXT
             <Input
               name="text"
               type="text"
               onChange={handleChangeInput}
-              value={entry['text']}
+              value='text'
               prefix="prefix"
               suffix="suffix"
             />
           </div>
         </div>
-        <div className={style.columns}>
-          <div className={classNames(style.column, style.col6)}>
+        <div className={row}>
+          <div className={inputContainer}>
             SINGLE SELECT
             <Select options={options} />
           </div>
         </div>
-        <div className={style.columns}>
-          <div className={classNames(style.column, style.col6)}>
+        <div className={row}>
+          <div className={inputContainer}>
             MULTI SELECT
             <Select options={options} isMulti />
           </div>

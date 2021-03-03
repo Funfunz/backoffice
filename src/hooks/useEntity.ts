@@ -1,6 +1,6 @@
-import { useEffect } from "react"
-import { useSelector } from "reducers"
-import { IEntity } from "services/table"
+import { useEffect } from 'react'
+import { useSelector } from 'reducers'
+import type { IEntity } from 'services/entity'
 import { getEntity } from 'services/entity'
 import { IField, mapFieldComponents } from "utils/fields"
 

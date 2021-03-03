@@ -1,3 +1,4 @@
+import { InputTypes } from "components/input"
 import type { IEntity } from "services/entity"
 import { IProperty } from "services/table"
 
@@ -6,7 +7,7 @@ export interface IField {
   props: {              // props that should be passed to that component
     name: string
     label: string
-    type: string
+    type: InputTypes
     value?: any
     onChange?: (name: string, value: any) => void
     readonly?: boolean
@@ -34,7 +35,7 @@ export function mapFieldComponents(entity: IEntity): IField[] {
             props: {
               name: property.name,
               label: property.layout?.label || property.name,
-              type: property.layout?.editField?.type || property.model?.type || 'text',
+              type: property.layout?.editField?.type || property.model?.type as InputTypes || 'text' ,
               ...(property.layout?.editField || {})
             }
           }
