@@ -1,7 +1,7 @@
 import React, { FC, memo } from 'react'
 import { useEntities } from 'services/entities'
 import { useEntity } from 'services/entity'
-import { useEntry } from 'services/entry'
+import { useEntry } from 'hooks/useEntry'
 
 const Playground: FC = () => {
   const entities = useEntities()

@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useState } from 'react'
+import React, { FC, memo, useCallback } from 'react'
 import Select from 'react-select'
 import { Input } from 'components/input'
 import Button from 'components/button'
@@ -9,7 +9,7 @@ import classNames from 'classnames'
 import { useParams } from 'react-router-dom'
 import useTableConfig from 'hooks/useTableConfig'
 import type { IProperty } from 'services/table'
-
+import { useEntry } from 'hooks/useEntry'
 
 interface IParams {
   tableName: string
@@ -17,18 +17,6 @@ interface IParams {
 }
 
 const Edit: FC<{}> = () => {
-  const [entry, setEntry] = useState<Record<string, unknown>>({})
-
-  const handleChangeInput = useCallback(
-    (event: InputEvent) => {
-      if (event.name) {
-        entry[event.name] = event.value
-        setEntry({...entry})
-      }
-    },
-    [entry]
-  )
-
   const options = [
     { value: 'chocolate', label: 'Chocolate' },
     { value: 'strawberry', label: 'Strawberry' },
@@ -39,6 +27,13 @@ const Edit: FC<{}> = () => {
   const { table } = useTableConfig(params.tableName)
 
   const isNew = !params.id
+
+  const [entry, set] = useEntry(
+    table.config,
+    params.id ? {
+      [table.pkColumn().name]: params.id
+    } : undefined
+  )
 
   let inputs: IProperty[][] = []
 
@@ -52,6 +47,16 @@ const Edit: FC<{}> = () => {
     }
   )
 
+  const handleChangeInput = useCallback(
+    (event: InputEvent) => {
+      if (event.name) {
+        entry[event.name] = event.value
+        set({...entry})
+      }
+    },
+    [entry, set]
+  )
+  console.log('entry', entry)
   const row = classNames(style.columns, style.columnsGap2) 
   const inputContainer = classNames(style.column, style.col6)
 
@@ -62,7 +67,7 @@ const Edit: FC<{}> = () => {
       </div>
 
       <div className={style.editTableContainer}>
-        {inputs.map(
+        {entry && inputs.map(
           (properties, index) => (
             <div key={index} className={row}>
               {properties.map(
@@ -133,7 +138,7 @@ const Edit: FC<{}> = () => {
               name="password"
               type="password"
               onChange={handleChangeInput}
-              value={entry['password']}
+              value='asd'
             />
           </div>
           <div className={inputContainer}>
@@ -142,7 +147,7 @@ const Edit: FC<{}> = () => {
               name="text"
               type="text"
               onChange={handleChangeInput}
-              value={entry['text']}
+              value='text'
               prefix="prefix"
               suffix="suffix"
             />
