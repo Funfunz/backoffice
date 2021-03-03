@@ -71,6 +71,7 @@ const Edit: FC<{}> = () => {
   const save = useCallback(
     async () => {
       await saveEntry()
+      console.log('entry saved')
       goBack()
     },
     [saveEntry, goBack]
