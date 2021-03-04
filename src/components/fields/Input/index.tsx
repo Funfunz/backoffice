@@ -1,7 +1,7 @@
 import React, { useCallback } from "react"
 import { FC, memo } from "react"
 import { IFieldProps } from "components/fields"
-import FieldWrapper from 'components/fields/FieldWrapper'
+import FieldWrapper from 'components/fields/Wrapper'
 import classes from './style.module.scss'
 
 export interface IInputField extends IFieldProps {}
@@ -11,12 +11,12 @@ const InputField: FC<IInputField> = ({
   type = 'text',
   label,
   value,
-  placeholder = '',
+  placeholder,
   onChange,
   readOnly = false
 }) => {
 
-  const handleChange = useCallback((event) => {
+  const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
       onChange(name, event.target.value)
     }
