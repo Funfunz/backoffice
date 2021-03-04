@@ -1,20 +1,15 @@
 import React, { useCallback } from "react"
 import { FC, memo } from "react"
-
+import { IFieldProps } from "components/fields"
+import FieldWrapper from 'components/fields/FieldWrapper'
 import classes from './style.module.scss'
 
-export interface IInput {
-  name: string
-  type?: string
-  value?: string | number
-  placeholder?: string
-  onChange?: (name: string, value?: string | number) => void
-  readOnly?: boolean
-}
+export interface IInputField extends IFieldProps {}
 
-const Input: FC<IInput> = ({ 
+const InputField: FC<IInputField> = ({ 
   name,
   type = 'text',
+  label,
   value,
   placeholder = '',
   onChange,
@@ -28,17 +23,21 @@ const Input: FC<IInput> = ({
   }, [name, onChange])
 
   return (
-    <input
-      className={classes.input}
-      id={`input-${name}`}
-      readOnly={readOnly}
-      name={name}
-      type={type}
-      value={value}
-      placeholder={placeholder}
-      onChange={handleChange}
-    />
+    <FieldWrapper name={name} label={label}>
+      <input
+        className={classes.input}
+        id={`field-${name}`}
+        readOnly={readOnly}
+        name={name}
+        type={type}
+        value={value}
+        placeholder={placeholder}
+        onChange={handleChange}
+      />
+    </FieldWrapper>
+    
+    
   )
 }
 
-export default memo(Input)
+export default memo(InputField)

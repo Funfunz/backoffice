@@ -41,9 +41,12 @@ const Edit: FC<{}> = () => {
 
   const goBack = useCallback(
     async () => {
-      history.goBack()
+      history.push({
+        pathname: `/table/${params.tableName}`,
+        state: { reload: true } 
+      })
     },
-    [history]
+    [history, params.tableName]
   )
 
   const save = useCallback(
@@ -65,9 +68,6 @@ const Edit: FC<{}> = () => {
           {entity.fields.map(
             ({ Component, props }, index) =>
               <Column size={6} key={index}>
-                <label className={style.inputLabel}>
-                  {props.label}
-                </label>
                 <Component
                   {...props} 
                   onChange={handleChange}

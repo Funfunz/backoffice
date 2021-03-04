@@ -12,9 +12,10 @@ export type FieldTypes =
 
 export interface IFieldProps {
   name: string
-  label: string
+  label?: string
   type: FieldTypes
   value?: any
+  placeholder?: string
   onChange?: (name: string, value: any) => void
   readonly?: boolean
   [key: string]: any  

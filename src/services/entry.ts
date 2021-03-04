@@ -75,9 +75,11 @@ export async function saveEntryData(entityName: string, data: any, filter?: IFil
   }
   return graphql.mutation(mutation).then(
     (data) => {
-      return Array.isArray(data)
+      const payload = Array.isArray(data)
         ? data[0]
         : data
+      dispatch({ type: FETCH_ENTRY_FULFILLED, payload })
+      return payload
     }
   )
 }

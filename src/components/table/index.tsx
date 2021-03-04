@@ -22,7 +22,9 @@ const Table: FC<ITableProps> = ({
   const history = useHistory()
   const { tableName = '' } = useParams<any>()
   const actions = {
-    edit: (data: any) => history.push(`/edit/${tableName}/${data[properties.find(p => p.model?.isPk)?.name || 'id']}`),
+    edit: (data: any) => {
+      history.push(`/edit/${tableName}/${data[properties.find(p => p.model?.isPk)?.name || 'id']}`)
+    },
     delete: () => undefined,
   }
   const fields = properties.map((property) => {
