@@ -1,5 +1,6 @@
-import { useEffect } from 'react'
-import { useSelector } from 'reducers'
+import { useCallback, useEffect } from 'react'
+import { dispatch, useSelector } from 'reducers'
+import { SET_CURRENT_PAGE } from 'reducers/entity'
 
 import tableService  from 'services/table'
 
@@ -31,6 +32,13 @@ export default function useTableData(tableName: string) {
     }
   })
 
+  const reload = useCallback(() => {
+    dispatch({
+      type: SET_CURRENT_PAGE,
+      payload: page
+    })
+  }, [page])
+
   useEffect(() => {
     let tablePage = page
    
@@ -54,5 +62,6 @@ export default function useTableData(tableName: string) {
     tableData: tableData || [],
     loadingTableData,
     errorTableData,
+    reload,
   }
 }

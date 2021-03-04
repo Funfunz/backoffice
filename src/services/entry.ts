@@ -9,7 +9,12 @@ export interface IEntryData {
   [key: string]: string | number | boolean | undefined
 }
 
-export function getEntryData(entityName: string, filter: IFilter, fields?: string[]): Promise<IEntryData> {
+export function getEntryData(entityName: string, filter?: IFilter, fields?: string[]): Promise<IEntryData> {
+  if (!filter) {
+    const payload = {}
+    dispatch({ type: FETCH_ENTRY_FULFILLED, payload })
+    return Promise.resolve(payload)
+  }
   dispatch({ type: FETCH_ENTRY_PENDING })
   console.log(fields)
   const query: IGQuery = {
@@ -70,15 +75,20 @@ export async function saveEntryData(entityName: string, data: any, filter?: IFil
   }
   return graphql.mutation(mutation).then(
     (data) => {
-      return Array.isArray(data)
+      const payload = Array.isArray(data)
         ? data[0]
         : data
+      dispatch({ type: FETCH_ENTRY_FULFILLED, payload })
+      return payload
     }
   )
 }
 
 
-export function entryEquals(entry: any, filter: IFilter) {
+export function entryEquals(entry: any, filter?: IFilter) {
+  if (!filter && entry && !Object.keys(entry).length) {
+    return true
+  }
   return entry && filter && Object.keys(filter).reduce(
     (result, key) => {
       // eslint-disable-next-line eqeqeq

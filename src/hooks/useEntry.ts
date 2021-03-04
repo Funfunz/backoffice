@@ -7,7 +7,7 @@ import { entryDiff, entryEquals, getEntryData, IEntryData, IFilter, saveEntryDat
 export interface IUseEntry {
   entry: IEntryData,
   setEntry: React.Dispatch<React.SetStateAction<IEntryData>>,
-  saveEntry: () => void,
+  saveEntry: () => Promise<void>,
   error: boolean
 }
 
@@ -19,9 +19,9 @@ export function useEntry(entity: IEntity, filter?: IFilter): IUseEntry {
   const loading = useSelector((state) => state.loadingEntry)
   const [error, setError] = useState(false)
   const [entry, setEntry] = useState(fetchedEntry || {})
-  
+
   useEffect(() => {
-    if (filter && !entryEquals(fetchedEntry, filter) && !loading && !error && entity.properties?.length) {
+    if (!entryEquals(fetchedEntry, filter) && !loading && !error && entity.properties?.length) {
       getEntryData(
         entity.name,
         filter,
@@ -40,7 +40,7 @@ export function useEntry(entity: IEntity, filter?: IFilter): IUseEntry {
         }
       )
     } 
-  }, [entity, filter, loading, error, fetchedEntry])
+  }, [entity, filter, loading, error, fetchedEntry, setEntry])
 
   const saveEntry = useCallback(() => {
     return saveEntryData(entity.name, entryDiff(fetchedEntry, entry), filter)

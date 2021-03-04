@@ -9,7 +9,7 @@
   font-size: 110%;
   line-height: 34px;
   border: 1px solid #ccc;
-  border-radius: 10px;
+  border-radius: 5px;
   overflow: hidden;
 
   @include screen(md) {
@@ -32,6 +32,7 @@
     font-size: inherit;
     line-height: inherit;
     background-color: transparent;
+    padding: 2.5px 10px;
 
     &::placeholder {
       color: $black;

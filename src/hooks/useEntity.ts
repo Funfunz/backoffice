@@ -2,12 +2,12 @@ import { useEffect } from 'react'
 import { useSelector } from 'reducers'
 import type { IEntity } from 'services/entity'
 import { getEntity } from 'services/entity'
-import { IField, mapFieldComponents } from "utils/fields"
+import { IMappedField, mapFieldComponents } from "utils/fields"
 
 /*
  * To be used on Create, View and Edit page to render input fields
  */
-export function useEntity(entityName: string): IEntity & { label: string, fields: IField[] } {
+export function useEntity(entityName: string): IEntity & { label: string, fields: IMappedField[] } {
   const entity = useSelector((state) => state.tables.find(t => t.name === entityName))
   const loading = useSelector((state) => state.loadingTables || state.tables.find(t => t.name === entityName)?.loading)
   const error = useSelector((state) => state.error)
