@@ -1,17 +1,21 @@
 import { useEffect, useState } from "react"
-import { useSelector } from "reducers"
 import { IEntity } from "services/entity"
 import { getEntries } from "services/entries"
-import { IEntryData, IFilter } from "services/entry"
+import { entryEquals, IEntryData, IFilter } from "services/entry"
 
-
+/* Return list of entries for one entity based on a filter */
 export function useEntries(entity: IEntity, filter?: IFilter): IEntryData[] {
-  const loading = useSelector((state) => state.loadingEntry)
+  const [oldEntityName, setEntityName] = useState('')
+  const [oldFilter, setFilter] = useState<IFilter>()
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
   const [entries, setEntries] = useState<IEntryData[]>([])
 
   useEffect(() => {
-    if (!loading && !error && entity.properties?.length) {
+    if (!loading && !error && entity.properties?.length && oldEntityName !== entity.name && !entryEquals(filter, oldFilter)) {
+      setEntityName(entity.name)
+      setFilter(filter)
+      setLoading(true)
       getEntries(
         entity.name,
         filter,
@@ -20,6 +24,7 @@ export function useEntries(entity: IEntity, filter?: IFilter): IEntryData[] {
         }).map(p => p.name)
       ).then(
         (data) => {
+          setLoading(false)
           if (data) {
             setEntries(data)
           } else {
@@ -28,11 +33,12 @@ export function useEntries(entity: IEntity, filter?: IFilter): IEntryData[] {
         }
       ).catch(
         () => {
+          setLoading(false)
           setError(true)
         }
       )
     } 
-  }, [filter, loading, error, setEntries, entity.properties, entity.name])
+  }, [filter, loading, error, setEntries, entity.properties, entity.name, oldFilter, oldEntityName])
 
   return entries
 }
