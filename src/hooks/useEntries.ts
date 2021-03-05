@@ -1,20 +1,36 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { IEntity } from "services/entity"
 import { getEntries } from "services/entries"
 import { entryEquals, IEntryData, IFilter } from "services/entry"
 
 /* Return list of entries for one entity based on a filter */
 export function useEntries(entity: IEntity, filter?: IFilter): IEntryData[] {
-  const [oldEntityName, setEntityName] = useState('')
-  const [oldFilter, setFilter] = useState<IFilter>()
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(false)
+
   const [entries, setEntries] = useState<IEntryData[]>([])
 
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
+
+  const [oldArgs, setNewArgs] = useState<{ entity?: IEntity, filter?: IFilter }>({})
+
+  const hasNewArgs = useCallback(() => {
+    if (
+      entity.name !== oldArgs.entity?.name || 
+      entity.properties?.length !== oldArgs.entity?.properties?.length ||
+      !entryEquals(filter, oldArgs.filter)
+    ) {
+      setNewArgs({ entity, filter })
+      return true
+    }
+    return false
+  }, [entity, oldArgs, filter])
+
   useEffect(() => {
-    if (!loading && !error && entity.properties?.length && oldEntityName !== entity.name && !entryEquals(filter, oldFilter)) {
-      setEntityName(entity.name)
-      setFilter(filter)
+    if (
+      hasNewArgs() &&
+      !loading && !error && 
+      entity.properties?.length
+    ) {
       setLoading(true)
       getEntries(
         entity.name,
@@ -38,7 +54,7 @@ export function useEntries(entity: IEntity, filter?: IFilter): IEntryData[] {
         }
       )
     } 
-  }, [filter, loading, error, setEntries, entity.properties, entity.name, oldFilter, oldEntityName])
+  }, [filter, loading, error, setEntries, entity, hasNewArgs])
 
   return entries
 }
