@@ -1,21 +1,27 @@
 import { useEffect } from "react"
-import { useSelector } from "reducers"
+import { useForceUpdate, runForceUpdate } from 'react-forceupdate'
 import { listEntities } from "services/entities"
 import { IEntity } from "services/table"
 
-/*
- * To be used on sidebar to render entity list
- */
+let entities: IEntity[] = []
+let loading = false
+
 export function useEntities(): IEntity[] {
-  const entities = useSelector((state) => state.tables)
-  const loading = useSelector((state) => state.loadingTables)
-  const error = useSelector((state) => state.error)
   
   useEffect(() => {
-    if ((!entities || entities.length === 0) && !loading && !error) {
-      listEntities()
-    } 
-  }, [loading, error, entities])
+    if (entities.length === 0 && !loading) {
+      loading = true
+      listEntities().then((fetchedEntities) => {
+        // force all hooks/components that subscribed `entities` to re-render
+        entities = fetchedEntities
+        loading = false
+        runForceUpdate('entities')
+      })
+    }
+  }, [])
+
+  // subscribe to `entities` so that we can re-render if there are changes
+  useForceUpdate('entities')
 
   return entities
 }

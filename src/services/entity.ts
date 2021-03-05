@@ -1,5 +1,3 @@
-import { dispatch } from "reducers"
-import { FETCH_ENTITY_FULFILLED, FETCH_ENTITY_PENDING, FETCH_ENTITY_REJECTED } from "reducers/entity"
 import graphql from 'services/graphql'
 
 export interface IProperty {
@@ -47,11 +45,12 @@ export interface IRelation {
 }
 
 export interface IEntity {
-  loading?: boolean,
-  name: string,
-  properties?: IProperty[],
+  error?: boolean
+  loading?: boolean
+  name: string
+  properties?: IProperty[]
   layout: {
-    label: string,
+    label: string
   },
   relations?: IRelation[]
 }
@@ -65,20 +64,12 @@ export function getEntityLabel(entity: IEntity) {
 }
 
 export async function getEntity(entityName: string): Promise<IEntity> {
-  dispatch({ 
-    type: FETCH_ENTITY_PENDING,
-    payload: entityName 
-  })
   return graphql.query({
     operation: 'config',
     fields: [entityName]
   }).then(
     (config: any) => {
       if (config[entityName]) {
-        dispatch({ 
-          type: FETCH_ENTITY_FULFILLED,
-          payload: config[entityName],
-        })
         return config[entityName]
       } else {
         throw new Error(`Entity ${entityName} not found`)
@@ -86,10 +77,6 @@ export async function getEntity(entityName: string): Promise<IEntity> {
     }
   ).catch(
     (error) => {
-      dispatch({ 
-        type: FETCH_ENTITY_REJECTED,
-        payload: error 
-      })
       throw error
     }
   )

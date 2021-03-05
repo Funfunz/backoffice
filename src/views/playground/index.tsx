@@ -2,6 +2,7 @@ import React, { FC, memo } from 'react'
 import { useEntities } from 'hooks/useEntities'
 import { useEntity } from 'hooks/useEntity'
 import { useEntry } from 'hooks/useEntry'
+import { mapFieldComponents } from 'utils/fields'
 
 const Playground: FC = () => {
   const entities = useEntities()
@@ -19,16 +20,12 @@ const Playground: FC = () => {
       <pre>
         {JSON.stringify(entity, null, 4)}
       </pre>
-      <h1>Entity</h1>
-      <pre>
-        {JSON.stringify(entity, null, 4)}
-      </pre>
       <h1>User entry</h1>
       <pre>
         {JSON.stringify(entry, null, 4)}
       </pre>
       <h1>Update entry</h1>
-      {entity.fields.map((field, index) =>
+      {mapFieldComponents(entity).map((field, index) =>
         // match `field.component` to correct React component
         // pass `field.props` to that component
         <div key={index}>
@@ -42,7 +39,7 @@ const Playground: FC = () => {
       )}
       <button onClick={saveEntry}>Save</button>
       <h1>Add entry</h1>
-      {entity.fields.map((field, index) =>
+      {mapFieldComponents(entity).map((field, index) =>
         // match `field.component` to correct React component
         // pass `field.props` to that component
         <div key={index}>

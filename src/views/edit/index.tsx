@@ -3,10 +3,10 @@ import Button from 'components/button'
 import PageTitle from 'components/page-title'
 import style from './style.module.scss'
 import { useParams, useHistory } from 'react-router-dom'
-import useTableConfig from 'hooks/useTableConfig'
 import { useEntry } from 'hooks/useEntry'
 import { useEntity } from 'hooks/useEntity'
 import { Column, Row } from 'components/grid'
+import { mapFieldComponents } from 'utils/fields'
 
 interface IParams {
   tableName: string
@@ -17,17 +17,11 @@ const Edit: FC<{}> = () => {
 
   const params = useParams<IParams>()
   const history = useHistory()
-  const { table } = useTableConfig(params.tableName)
 
   const isNew = !params.id
 
   const entity = useEntity(params.tableName)
-  const {entry, setEntry, saveEntry } = useEntry(
-    entity,
-    params.id ? {
-      [table.pkColumn().name]: params.id
-    } : undefined
-  )
+  const {entry, setEntry, saveEntry } = useEntry(entity, params.id)
 
   const handleChange = useCallback(
     (name: string, value?: any) => {
@@ -65,7 +59,7 @@ const Edit: FC<{}> = () => {
 
       <div className={style.editTableContainer}>
         <Row>
-          {entity.fields.map(
+          {mapFieldComponents(entity).map(
             ({ Component, props }, index) =>
               <Column size={6} key={index}>
                 <Component

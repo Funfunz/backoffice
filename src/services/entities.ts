@@ -1,30 +1,17 @@
-import { dispatch } from "reducers"
-import { 
-  FETCH_ENTITIES_FULFILLED,
-  FETCH_ENTITIES_PENDING,
-  FETCH_ENTITIES_REJECTED
-} from "reducers/entity"
+import { IEntity } from "./entity"
 import graphql from "./graphql"
 
 export function listEntities() {
-  dispatch({ type : FETCH_ENTITIES_PENDING })
   return graphql.query({
     operation: 'entities',
     fields: ['name', 'layout'],
   }).then(
-    (entities: any) => {
-      if (entities) {
-        dispatch({ 
-          type: FETCH_ENTITIES_FULFILLED, 
-          payload: entities,
-        })
+    (entities?: IEntity[]) => {
+      if (entities && entities.length > 0) {
         return entities
+      } else {
+        throw new Error('No entities found')
       }
-    }
-  ).catch(
-    (error: any) => {
-      dispatch({ type: FETCH_ENTITIES_REJECTED })
-      throw error
     }
   )
 }

@@ -1,17 +1,37 @@
-import { useEffect, useState } from "react"
-import { useSelector } from "reducers"
+import { useCallback, useEffect, useState } from "react"
 import { IEntity } from "services/entity"
 import { getEntries } from "services/entries"
-import { IEntryData, IFilter } from "services/entry"
+import { entryEquals, IEntryData, IFilter } from "services/entry"
 
-
+/* Return list of entries for one entity based on a filter */
 export function useEntries(entity: IEntity, filter?: IFilter): IEntryData[] {
-  const loading = useSelector((state) => state.loadingEntry)
-  const [error, setError] = useState(false)
+
   const [entries, setEntries] = useState<IEntryData[]>([])
 
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
+
+  const [oldArgs, setNewArgs] = useState<{ entity?: IEntity, filter?: IFilter }>({})
+
+  const hasNewArgs = useCallback(() => {
+    if (
+      entity.name !== oldArgs.entity?.name || 
+      entity.properties?.length !== oldArgs.entity?.properties?.length ||
+      !entryEquals(filter, oldArgs.filter)
+    ) {
+      setNewArgs({ entity, filter })
+      return true
+    }
+    return false
+  }, [entity, oldArgs, filter])
+
   useEffect(() => {
-    if (!loading && !error && entity.properties?.length) {
+    if (
+      hasNewArgs() &&
+      !loading && !error && 
+      entity.properties?.length
+    ) {
+      setLoading(true)
       getEntries(
         entity.name,
         filter,
@@ -20,6 +40,7 @@ export function useEntries(entity: IEntity, filter?: IFilter): IEntryData[] {
         }).map(p => p.name)
       ).then(
         (data) => {
+          setLoading(false)
           if (data) {
             setEntries(data)
           } else {
@@ -28,11 +49,12 @@ export function useEntries(entity: IEntity, filter?: IFilter): IEntryData[] {
         }
       ).catch(
         () => {
+          setLoading(false)
           setError(true)
         }
       )
     } 
-  }, [filter, loading, error, setEntries, entity.properties, entity.name])
+  }, [filter, loading, error, setEntries, entity, hasNewArgs])
 
   return entries
 }
