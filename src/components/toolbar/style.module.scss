@@ -3,9 +3,11 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
   .inputSearch{
     display: flex;
+    align-items: center;
   }
 
   .inputContainer{
@@ -15,6 +17,8 @@
     display: flex;
     color: $secondary-light;
     margin-right: 50px;
+    align-self: stretch;
+    align-items: center;
 
     input{
       border: none;

@@ -1,18 +1,17 @@
 import { useEffect } from 'react'
 import { useSelector } from "reducers"
 
-import table from 'services/api/models/table'
+import table from 'services/table'
 
 export default function useTables() {
 
-  const tables = useSelector((state) => state.tables)
-  const loadingTables = useSelector((state) => state.loadingTables)
+  const { tables, loadingTables, error } = useSelector((state) => state)
 
   useEffect(() => {
-    if (tables.length === 0 && !loadingTables) {
+    if (tables.length === 0 && !loadingTables && !error) {
       table.list()
     }
-  }, [tables, loadingTables])
+  }, [tables, loadingTables, error])
 
-  return { tables, loadingTables }
+  return { tables, loadingTables, error }
 }

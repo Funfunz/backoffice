@@ -1,14 +1,14 @@
 import { useEffect } from 'react'
 import { useSelector } from 'reducers'
 
-import tableService, { ITable, IColumn }  from 'services/api/models/table'
+import tableService, { IEntity, IProperty }  from 'services/table'
 import { emptyTableConfig, emptyColumnConfig } from 'utils/tableConfig'
 
 export class TableConfig {
-  config: ITable
-  public properties: IColumn[]
+  config: IEntity
+  public properties: IProperty[]
 
-  constructor(config?: ITable) {
+  constructor(config?: IEntity) {
     this.config = config || emptyTableConfig
     this.properties = this.config.properties || []
   }
@@ -22,13 +22,12 @@ export class TableConfig {
   }
 
   filters() {
-    console.log(this.properties)
     return this.properties.filter((property) => (
       property.layout?.entityPage?.filterable
     ))
   }
 
-  pkColumn(): IColumn {
+  pkColumn(): IProperty {
     return this.properties.find((c) => c.model && c.model.isPk) || emptyColumnConfig
   }
 

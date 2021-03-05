@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useSelector } from 'reducers'
 
-import tableService  from 'services/api/models/table'
+import tableService  from 'services/table'
 
 let previousTableName = ''
 

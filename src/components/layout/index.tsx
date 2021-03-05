@@ -17,7 +17,7 @@ const Layout: FC<ILayoutProps> = ({ children, className = '' }) => {
   })
   return (
     <div className={layoutClasses}>
-      <SideMenu isSearchable visible={1}/>
+      <SideMenu isSearchable visible={10}/>
       <TopMenu />
       <div className={style.main}>
         <div className={style.children}>{children}</div>
