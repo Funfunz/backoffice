@@ -21,7 +21,7 @@ const InputField: FC<IInputField> = ({
       onChange(name, event.target.value)
     }
   }, [name, onChange])
-
+  
   return (
     <FieldWrapper name={name} label={label}>
       <input
