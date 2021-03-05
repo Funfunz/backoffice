@@ -9,6 +9,9 @@ export type FieldTypes =
   | 'radio'
   | 'checkbox-group'
   | 'switch'
+  | 'n:1'
+  | 'n:m'
+  | 'select'
 
 export interface IFieldProps {
   name: string
@@ -22,3 +25,5 @@ export interface IFieldProps {
 }
 
 export { default as InputField } from './Input'
+export { default as SelectField } from './Select'
+export { default as RelationSelectField } from './RelationSelect'
