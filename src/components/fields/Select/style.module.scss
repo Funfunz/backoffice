@@ -1,0 +1,11 @@
+@import "~style/variables.scss";
+
+.select {
+  width: 100%;
+  background-color: transparent;
+  border: 1px solid $neutral-light;
+  outline: none;
+  border-radius: 3px;
+  padding: 7.5px;
+  font-size: 18px;
+}
