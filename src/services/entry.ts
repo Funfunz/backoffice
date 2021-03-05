@@ -16,7 +16,6 @@ export function getEntryData(entityName: string, filter?: IFilter, fields?: stri
     return Promise.resolve(payload)
   }
   dispatch({ type: FETCH_ENTRY_PENDING })
-  console.log(fields)
   const query: IGQuery = {
     operation: entityName,
     fields: (fields && !!fields.length) ? fields : Object.keys(filter),

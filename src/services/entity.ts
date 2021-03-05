@@ -39,6 +39,13 @@ export interface IProperty {
   }
 }
 
+export interface IRelation {
+  type: "n:1" | "n:m"
+  foreignKey: string
+  relationalTable: string
+  remoteTable: string
+}
+
 export interface IEntity {
   loading?: boolean,
   name: string,
@@ -46,6 +53,15 @@ export interface IEntity {
   layout: {
     label: string,
   },
+  relations?: IRelation[]
+}
+
+export function getEntityPk(entity: IEntity) {
+  return entity.properties?.find(p => p.model?.isPk)
+}
+
+export function getEntityLabel(entity: IEntity) {
+  return entity.properties?.find(p => p.layout?.visible?.relation)
 }
 
 export async function getEntity(entityName: string): Promise<IEntity> {
