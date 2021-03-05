@@ -6,6 +6,7 @@ import TableRow from './components/table-row'
 import Pagination from './components/pagination'
 import style from './style.module.scss'
 import { TableConfig } from 'hooks/useTableConfig'
+import { useHistory, useParams } from 'react-router-dom'
 
 export interface ITableProps {
   properties?: TableConfig['properties'];
@@ -18,8 +19,12 @@ const Table: FC<ITableProps> = ({
   tableData,
   loadingTableData,
 }) => {
+  const history = useHistory()
+  const { tableName = '' } = useParams<any>()
   const actions = {
-    edit: () => undefined,
+    edit: (data: any) => {
+      history.push(`/edit/${tableName}/${data[properties.find(p => p.model?.isPk)?.name || 'id']}`)
+    },
     delete: () => undefined,
   }
   const fields = properties.map((property) => {

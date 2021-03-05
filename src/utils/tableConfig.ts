@@ -1,6 +1,6 @@
-import { ITable, IColumn } from "services/api/models/table"
+import type { IEntity, IProperty } from "services/table"
 
-export const emptyTableConfig: ITable = {
+export const emptyTableConfig: IEntity = {
   name: '',
   properties: [],
   layout: {
@@ -8,7 +8,7 @@ export const emptyTableConfig: ITable = {
   },
 }
 
-export const emptyColumnConfig: IColumn = {
+export const emptyColumnConfig: IProperty = {
   name: '',
   searchable: false,
   model: {

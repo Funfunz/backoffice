@@ -24,6 +24,19 @@
     }
   }
 
+  &.columnsGap2 {
+    $gap: 20px;
+
+    margin-left: -$gap;
+    margin-right: -$gap;
+
+    & > .column {
+      padding-left: $gap;
+      padding-right: $gap;
+      box-sizing: border-box;
+    }
+  }
+
   @mixin createGrid($size: '') {
 
     @for $grid from 1 through 12 {

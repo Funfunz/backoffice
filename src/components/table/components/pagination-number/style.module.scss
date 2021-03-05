@@ -9,12 +9,13 @@
     border-color: $secondary-light;
     border-radius: 3px;
   }
+  
   &.clickable {
-    margin: 0 2px;
-    padding: 0 10px;
+    margin-right: 15px;
+    padding: 0 5px;
     cursor: pointer;
     &:hover {
-      border-color: $secondary-light;
+      color: $primary;
     }
   }
 }

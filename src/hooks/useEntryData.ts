@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useSelector } from 'reducers'
 
-import tableService, { PKS }  from 'services/api/models/table'
+import tableService, { PKS }  from 'services/table'
 import useTableConfig from './useTableConfig'
 
 let previousEntity = ''
@@ -21,7 +21,6 @@ export default function useEntryData(entityName: string, pks: PKS) {
     const entry = previousEntity !== entityName ? undefined : state.entry
       ? Object.keys(pks).filter(
         (pk) => {
-          console.log((state.entry as Record<string, unknown>)[pk])
           return (state.entry as Record<string, unknown>)[pk] === pks[pk]
         }
       )

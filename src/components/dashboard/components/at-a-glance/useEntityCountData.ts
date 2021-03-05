@@ -2,8 +2,8 @@ import useTables from 'hooks/useTables'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'reducers'
 import { IEntityData } from 'reducers/entitiesCount'
-import getEntitiesCount from 'services/api/getEntitiesCount'
-import { ITable } from 'services/api/models/table'
+import type { IEntity } from 'services/table'
+import table from 'services/table'
 
 export type entityItem = {
   name: string,
@@ -13,7 +13,7 @@ export type entityItem = {
 
 let entitiesList: entityItem[] = []
 
-function resetEntityList(entitiesCount: IEntityData[], tables: ITable[]) {
+function resetEntityList(entitiesCount: IEntityData[], tables: IEntity[]) {
   entitiesList = entitiesCount.map(
     (countResult) => {
       const foundEntity = tables.find(
@@ -33,7 +33,7 @@ function resetEntityList(entitiesCount: IEntityData[], tables: ITable[]) {
   ).filter(i => i) as entityItem[]
 }
 
-function buildDefaultEntitiesList(tables: ITable[], entitiesFilter: string[]) {
+function buildDefaultEntitiesList(tables: IEntity[], entitiesFilter: string[]) {
   if (!entitiesFilter.length) {
     return tables.map(
       (entity) => ({
@@ -85,7 +85,7 @@ export default function useEntityCountData(entitiesFilter: string[]) {
 
     entitiesList = buildDefaultEntitiesList(tables, entitiesFilter)
     const entitiesNamesToCount = entitiesList.map(entity => entity.name)
-    getEntitiesCount(entitiesNamesToCount)
+    table.getEntitiesCount(entitiesNamesToCount)
     setRequestedEntitiesCount(true)
   }, [entitiesCount, entitiesFilter, loadingEntitiesCount, loadingTables, requestedEntitiesCount, tables])
 

@@ -1,0 +1,27 @@
+@import '~style/variables';
+@import '~style/grid';
+
+.titlePage {
+  padding: 0 0 30px;
+  h1 {
+    font-size: 36px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: $secondary-light;
+    margin: 0;
+  }
+}
+
+.editTableContainer {
+  background-color: $table-background;
+  padding: 20px;
+}
+
+.actions {
+  margin-top: 25px;
+  text-align: right;
+}
+
+.actionButton {
+  margin-left: $padding;
+}

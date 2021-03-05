@@ -12,10 +12,10 @@ export interface ISideMenuProps {
   visible?: number;
 }
 
-const SideMenu: FC<ISideMenuProps> = ({isSearchable, visible}) => {
+const SideMenu: FC<ISideMenuProps> = ({isSearchable, visible = 10}) => {
   const { tables, loadingTables } = useTables()
   const [toggle, setToggle] = useState(window.innerWidth < desktopSize)
-  const [searchTerm, setSearchTerm] = useState("")
+  const [searchTerm, setSearchTerm] = useState('')
   const [tablesResult, setTablesResult] = useState<any>([]) 
   const [show, setShow] = useState(visible)
   const [isSearching, setIsSearching] = useState(false)
@@ -59,7 +59,7 @@ const SideMenu: FC<ISideMenuProps> = ({isSearchable, visible}) => {
         <div className={style.container}>
           <p className={style.menuLabel}>Content Types</p>
           {isSearchable && <div className={style.search}>
-              <input type="text" placeholder="SEARCH" onChange={handleOnChangeSearch}/>
+              <input type="text" placeholder="SEARCH" name='search' autoComplete={'off'} value={searchTerm} onChange={handleOnChangeSearch}/>
               <i className="fa fa-search"></i>
             </div>
           }
@@ -80,7 +80,7 @@ const SideMenu: FC<ISideMenuProps> = ({isSearchable, visible}) => {
           </ul>
           {show && !isSearching && (show < tablesResult.length ?
             <button className={style.load} onClick={showMoreTables}>Show more</button>
-          : <button className={style.load} onClick={showLessTables}>Show less</button>)}
+          : (tablesResult.length > visible && <button className={style.load} onClick={showLessTables}>Show less</button>))}
         </div>
         <div className={style.account}>
           <span>example@gmail.com</span>

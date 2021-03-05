@@ -18,7 +18,9 @@
 
     &:first-child{
       text-align: center;
-      width: 60px;
+      padding-left: 15px;
+      padding-right: 15px;
+      width: 1px;
     }
 
     &:last-child{
@@ -33,6 +35,8 @@
 
     &:first-child{
       text-align: center;
+      padding-left: 15px;
+      padding-right: 15px;
     }
   }
 }
