@@ -1,19 +1,18 @@
 import { useEffect } from 'react'
 import { runForceUpdate, useForceUpdate } from 'react-forceupdate'
-import type { IEntity } from 'services/entity'
-import { getEntity } from 'services/entity'
+import Entity from 'services/entity'
 
-const entities: Record<string, IEntity> = {}
+const entities: Record<string, Entity> = {}
 
 /* Get entity config by entity name */
-export function useEntity(entityName: string): IEntity {
+export function useEntity(entityName: string): Entity | undefined {
 
   useForceUpdate(`entities/${entityName}`)
 
   useEffect(() => { 
-    if (!entities[entityName]?.properties && !entities[entityName]?.loading && !entities[entityName]?.error) {
-      (entities[entityName] as Partial<IEntity>) = { loading: true }
-      getEntity(entityName).then(
+    if (!entities[entityName] && !entities[entityName]?.loading && !entities[entityName]?.error) {
+      (entities[entityName] as any) = { loading: true }
+      Entity.fetchEntity(entityName).then(
         (entity) => {
           entities[entityName] = entity
           entities[entityName].loading = false
@@ -22,18 +21,12 @@ export function useEntity(entityName: string): IEntity {
         }
       ).catch(
         (error) => {
-          entities[entityName].loading = false
-          entities[entityName].error = error
+          (entities[entityName] as any) = { loading: false, error }
           runForceUpdate(`entities/${entityName}`)
         }
       )
     } 
   }, [entityName])
 
-  return { 
-    name: entityName,
-    layout: { label: entityName },
-    properties: [],
-    ...(entities[entityName] as Partial<IEntity> || {})
-  }
+  return entities[entityName]
 }

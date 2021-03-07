@@ -1,12 +1,11 @@
 import { useEffect } from "react"
 import { useForceUpdate, runForceUpdate } from 'react-forceupdate'
 import { listEntities } from "services/entities"
-import { IEntity } from "services/table"
 
-let entities: IEntity[] = []
+let entities: { name: string, label: string }[] = []
 let loading = false
 
-export function useEntities(): IEntity[] {
+export function useEntities(): { name: string, label: string }[] {
   
   useEffect(() => {
     if (entities.length === 0 && !loading) {

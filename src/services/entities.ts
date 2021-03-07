@@ -1,4 +1,3 @@
-import { IEntity } from "./entity"
 import graphql from "./graphql"
 
 export function listEntities() {
@@ -6,9 +5,14 @@ export function listEntities() {
     operation: 'entities',
     fields: ['name', 'layout'],
   }).then(
-    (entities?: IEntity[]) => {
+    (entities?: { name: string, layout: { label?: string }}[]) => {
       if (entities && entities.length > 0) {
-        return entities
+        return entities.map((entity) => {
+          return {
+            name: entity.name,
+            label: entity.layout.label || entity.name
+          }
+        })
       } else {
         throw new Error('No entities found')
       }

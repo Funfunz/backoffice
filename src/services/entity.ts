@@ -55,29 +55,71 @@ export interface IEntity {
   relations?: IRelation[]
 }
 
-export function getEntityPk(entity: IEntity) {
-  return entity.properties?.find(p => p.model?.isPk)
-}
+export type PropertiesViewType = 'list' | 'edit' | 'relation'
 
-export function getEntityLabel(entity: IEntity) {
-  return entity.properties?.find(p => p.layout?.visible?.relation)
-}
-
-export async function getEntity(entityName: string): Promise<IEntity> {
-  return graphql.query({
-    operation: 'config',
-    fields: [entityName]
-  }).then(
-    (config: any) => {
-      if (config[entityName]) {
-        return config[entityName]
-      } else {
-        throw new Error(`Entity ${entityName} not found`)
+export default class Entity {
+  public loading?: boolean
+  public error?: any
+  private entity: IEntity
+  constructor(entity: IEntity) {
+    this.entity = entity
+  }
+  getName() {
+    return this.entity.name
+  }
+  getPk() {
+    return this.entity.properties?.find(p => p.model?.isPk)?.name || 'id'
+  }
+  getLabel() {
+    return this.entity.layout.label || this.entity.name
+  }
+   
+  getProperties(view: 'list' | 'edit' | 'relation' = 'list') {
+    return this.entity.properties?.filter(p => {
+      switch (view) {
+        case 'relation':
+          return p.model?.isPk || p.layout?.visible?.relation
+        case 'edit':
+          return p.model?.isPk || p.layout?.visible?.entityPage
+        case 'list':
+        default:
+          return true
       }
-    }
-  ).catch(
-    (error) => {
-      throw error
-    }
-  )
+    }).map(p => p.name) || []
+  }
+  getPropertyToBeUsedAsLabel() {
+    return this.entity.properties?.find(p => p.layout?.visible?.relation)?.name || this.getPk()
+  }
+  private getPropertyByName(propertyName: string) {
+    return this.entity.properties?.find(p => p.name === propertyName)
+  }
+  getPropertyModelType(propertyName: string) {
+    const property = this.getPropertyByName(propertyName)
+    return property?.model?.type || 'text'
+  }
+  getRelationByProperty(propertyName: string) {
+    return this.entity.relations?.find(r => r.foreignKey === propertyName)
+  }
+  getEditFieldByProperty(propertyName: string): Record<string, string|number|boolean> {
+    const property = this.getPropertyByName(propertyName)
+    return property?.layout?.editField || {}
+  }
+  getPropertyLabel(propertyName: string) {
+    const property = this.getPropertyByName(propertyName)
+    return property?.layout?.label || property?.name || propertyName
+  }
+  public static fetchEntity(entityName: string) {
+    return graphql.query({
+      operation: 'config',
+      fields: [entityName]
+    }).then(
+      (config: any) => {
+        if (config[entityName]) {
+          return new Entity(config[entityName])
+        } else {
+          throw new Error(`Entity ${entityName} not found`)
+        }
+      }
+    )
+  }
 }

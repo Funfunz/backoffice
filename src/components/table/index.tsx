@@ -5,11 +5,11 @@ import TableRow from './components/table-row'
 import Pagination from './components/pagination'
 import style from './style.module.scss'
 import { useHistory } from 'react-router-dom'
-import { IEntity } from 'services/table'
+import Entity from 'services/entity'
 import { IEntryData } from 'services/entry'
 
 export interface ITableProps {
-  entity?: IEntity
+  entity?: Entity
   entries: IEntryData[]
   loading: boolean
 }
@@ -22,22 +22,20 @@ const Table: FC<ITableProps> = ({
   const history = useHistory()
   const actions = {
     edit: (data: any) => {
-      history.push(`/edit/${entity?.name}/${data[entity?.properties?.find(p => p.model?.isPk)?.name || 'id']}`)
+      history.push(`/edit/${entity?.getName()}/${data[entity?.getPk() || 'id']}`)
     },
     delete: () => undefined,
   }
-  const fields = entity?.properties?.map((property) => {
-    return property.layout?.visible?.entityPage ? property.name : undefined
-  }).filter(p => p) as string[]
+  const fields = entity?.getProperties('list') || []
 
   return (
     <>
       <table className={style.table}>
-        <TableHead actions={true} properties={entity?.properties || []} />
+        <TableHead actions={true} columns={fields} />
         <tbody>
           {(loading && (
             <tr>
-              <td colSpan={entity?.properties?.length || 0}>
+              <td colSpan={fields.length}>
                 <Message loading />
               </td>
             </tr>

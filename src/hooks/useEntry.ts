@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { getEntityPk, IEntity } from "services/entity"
+import Entity from "services/entity"
 import { entryDiff, entryEquals, getEntryData, IEntryData, IFilter, saveEntryData } from "services/entry"
 
 export interface IUseEntry {
@@ -10,7 +10,7 @@ export interface IUseEntry {
 }
 
 /* Get entry data based on a filter */
-export function useEntry(entity: IEntity, filterOrPk?: IFilter | string | number): IUseEntry {
+export function useEntry(entity?: Entity, filterOrPk?: IFilter | string | number): IUseEntry {
 
   const [fetchedEntry, setFetchedEntry] = useState<IEntryData>({})
   const [modifiedEntry, setModifiedEntry] = useState<IEntryData>({})
@@ -20,19 +20,18 @@ export function useEntry(entity: IEntity, filterOrPk?: IFilter | string | number
   
   const filter = useMemo(() => {
     return (typeof filterOrPk === 'string' || typeof filterOrPk === 'number')
-      ? { [getEntityPk(entity)?.name || 'id']: filterOrPk }
+      ? { [entity?.getPk() as string]: filterOrPk }
       : filterOrPk
   }, [filterOrPk, entity])
 
-  const [oldArgs, setNewArgs] = useState<{ entity?: IEntity, filter?: IFilter }>({})
+  const [oldArgs, setNewArgs] = useState<{ entity?: string, filter?: IFilter }>({})
 
   const hasNewArgs = useCallback(() => {
     if (
-      entity.name !== oldArgs.entity?.name || 
-      entity.properties?.length !== oldArgs.entity?.properties?.length ||
+      entity?.getName() !== oldArgs.entity ||
       !entryEquals(filter, oldArgs.filter)
     ) {
-      setNewArgs({ entity, filter })
+      setNewArgs({ entity: entity?.getName(), filter })
       return true
     }
     return false
@@ -43,14 +42,10 @@ export function useEntry(entity: IEntity, filterOrPk?: IFilter | string | number
       hasNewArgs() && 
       !loading && !error &&
       !entryEquals(fetchedEntry, filter) &&
-      !!entity.properties?.length
+      entity
     ) {
       setLoading(true)
-      getEntryData(
-        entity.name,
-        filter,
-        entity.properties?.filter(p => p.layout?.visible?.entityPage).map(p => p.name)
-      ).then(
+      getEntryData(entity, filter).then(
         (data) => {
           setLoading(false)
           if (data && entryEquals(data, filter as IFilter)) {
@@ -71,9 +66,8 @@ export function useEntry(entity: IEntity, filterOrPk?: IFilter | string | number
   }, [entity, loading, filter, error, fetchedEntry, hasNewArgs])
 
   const saveEntry = useCallback(() => {
-    console.log(fetchedEntry, modifiedEntry, entryDiff(fetchedEntry, modifiedEntry))
     return saveEntryData(
-      entity.name,
+      entity as Entity,
       entryDiff(fetchedEntry, modifiedEntry),
       filter
     )

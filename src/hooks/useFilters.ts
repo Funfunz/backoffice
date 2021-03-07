@@ -1,13 +1,13 @@
 import { useCallback } from "react"
 import { IFilter } from "services/entry"
-import { IEntity } from "services/table"
+import Entity from "services/entity"
 
 let filter: IFilter
-let entityToFilter: IEntity
+let entityToFilter: Entity
 
-export function useFilter(entity?: IEntity): [IFilter, (newFilter: IFilter) => void] {
+export function useFilter(entity?: Entity): [IFilter, (newFilter: IFilter) => void] {
   
-  if (entity && entity?.name !== entityToFilter?.name) {
+  if (entity && entity?.getName() !== entityToFilter?.getName()) {
     entityToFilter = entity
     filter = {}
   }

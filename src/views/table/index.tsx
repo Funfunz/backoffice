@@ -29,7 +29,7 @@ const ListView: FC = () => {
   return (
     <div className={style.container}>
       <div className={style.toolbar}>
-        <PageTitle text={entity.layout.label || entity.name}/>
+        <PageTitle text={entity?.getLabel() || '...'}/>
         <Toolbar toggleFilters={toggleFilters}/>
       </div>
       {showFilters && <Filters />}

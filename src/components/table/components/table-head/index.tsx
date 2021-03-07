@@ -1,37 +1,23 @@
-import { TableConfig } from 'hooks/useTableConfig'
-import React, { FC, memo, useCallback } from 'react'
+import React, { FC, memo } from 'react'
 import Checkbox from '../../../checkbox'
 
 export interface ITableHeadProps {
-  properties: TableConfig['properties'],
+  columns: string[],
   onPropertyClick?: ((columnName: string) => void),
   actions?: boolean,
 }
 
-const TableHead: FC<ITableHeadProps> = ({ properties, onPropertyClick, actions = false }) => {
-  const handleClick = useCallback((index: number) => {
-    if (!onPropertyClick) {
-      return undefined
-    }
-    const property = properties[index]
-    return () => property && onPropertyClick(
-      typeof property === 'string'
-        ? property
-        : property.name
-    )
-  }, [properties, onPropertyClick])
+const TableHead: FC<ITableHeadProps> = ({ columns, actions = false }) => {
   return (
     <thead>
       <tr>
         <th>
           <Checkbox />
         </th>
-        {properties.map((property, index) => (
-          property.layout?.visible?.entityPage
-            ? <th key={index} onClick={handleClick(index)}>
-                {property.layout?.label || property.name }
-              </th>
-            : undefined
+        {columns.map((label, index) => (
+          <th key={index}>
+            {label}
+          </th>
         ))}
         {actions && (
           <th></th>

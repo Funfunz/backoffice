@@ -21,7 +21,7 @@ const Edit: FC<{}> = () => {
   const isNew = !params.id
 
   const entity = useEntity(params.tableName)
-  const {entry, setEntry, saveEntry } = useEntry(entity, params.id)
+  const { entry, setEntry, saveEntry } = useEntry(entity, params.id)
 
   const handleChange = useCallback(
     (name: string, value?: any) => {

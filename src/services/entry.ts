@@ -1,3 +1,4 @@
+import Entity from "services/entity"
 import graphql, { IGQuery } from "./graphql"
 
 export interface IFilter {
@@ -7,13 +8,13 @@ export interface IEntryData {
   [key: string]: string | number | boolean | undefined
 }
 
-export function getEntryData(entityName: string, filter?: IFilter, fields?: string[]): Promise<IEntryData> {
+export function getEntryData(entity: Entity, filter?: IFilter, fields?: string[]): Promise<IEntryData> {
   if (!filter) {
     const payload = {}
     return Promise.resolve(payload)
   }
   const query: IGQuery = {
-    operation: entityName,
+    operation: entity.getName(),
     fields: (fields && !!fields.length) ? fields : Object.keys(filter),
     args: {
       filter: {}
@@ -35,8 +36,8 @@ export function getEntryData(entityName: string, filter?: IFilter, fields?: stri
   )
 }
 
-export async function saveEntryData(entityName: string, data: any, filter?: IFilter): Promise<void> {
-  console.log(entityName, data, filter)
+export async function saveEntryData(entity: Entity, data: any, filter?: IFilter): Promise<void> {
+  const entityName = entity.getName()
   const mutation: IGQuery = {
     operation: entityName[0].toUpperCase() + entityName.substr(1),
     args: {
