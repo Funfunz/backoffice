@@ -1,55 +1,54 @@
 import React, { FC, memo } from 'react'
 import Message from 'components/message'
-import { TEntry } from 'reducers/entry'
 import TableHead from './components/table-head'
 import TableRow from './components/table-row'
 import Pagination from './components/pagination'
 import style from './style.module.scss'
-import { TableConfig } from 'hooks/useTableConfig'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
+import { IEntity } from 'services/table'
+import { IEntryData } from 'services/entry'
 
 export interface ITableProps {
-  properties?: TableConfig['properties'];
-  tableData: TEntry[];
-  loadingTableData: boolean;
+  entity?: IEntity
+  entries: IEntryData[]
+  loading: boolean
 }
 
 const Table: FC<ITableProps> = ({
-  properties = [],
-  tableData,
-  loadingTableData,
+  entity,
+  entries,
+  loading,
 }) => {
   const history = useHistory()
-  const { tableName = '' } = useParams<any>()
   const actions = {
     edit: (data: any) => {
-      history.push(`/edit/${tableName}/${data[properties.find(p => p.model?.isPk)?.name || 'id']}`)
+      history.push(`/edit/${entity?.name}/${data[entity?.properties?.find(p => p.model?.isPk)?.name || 'id']}`)
     },
     delete: () => undefined,
   }
-  const fields = properties.map((property) => {
+  const fields = entity?.properties?.map((property) => {
     return property.layout?.visible?.entityPage ? property.name : undefined
   }).filter(p => p) as string[]
 
   return (
     <>
       <table className={style.table}>
-        <TableHead actions={true} properties={properties} />
+        <TableHead actions={true} properties={entity?.properties || []} />
         <tbody>
-          {(loadingTableData && (
+          {(loading && (
             <tr>
-              <td colSpan={properties.length}>
+              <td colSpan={entity?.properties?.length || 0}>
                 <Message loading />
               </td>
             </tr>
           )) ||
-            (!loadingTableData &&
-              tableData.map((data, index) => (
+            (!loading &&
+              entries.map((data, index) => (
                 <TableRow
                   key={index}
                   actions={actions}
                   fields={fields}
-                  data={data}
+                  data={data as any}
                 />
               )))}
         </tbody>

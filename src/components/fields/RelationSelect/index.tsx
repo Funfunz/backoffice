@@ -12,7 +12,7 @@ export interface IRelationSelectField extends ISelectField {
 
 const RelationSelectField: FC<IRelationSelectField> = (props) => {
   const entity = useEntity(props.relation?.remoteTable || '')
-  const entries = useEntries(entity)
+  const { entries } = useEntries(entity)
   return (
     <Select
       options={entries.map((entry) => {

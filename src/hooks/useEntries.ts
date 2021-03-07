@@ -3,8 +3,14 @@ import { IEntity } from "services/entity"
 import { getEntries } from "services/entries"
 import { entryEquals, IEntryData, IFilter } from "services/entry"
 
+export interface IUseEntries {
+  entries: IEntryData[]
+  error?: boolean
+  loading?: boolean
+}
+
 /* Return list of entries for one entity based on a filter */
-export function useEntries(entity: IEntity, filter?: IFilter): IEntryData[] {
+export function useEntries(entity: IEntity, filter?: IFilter, view: 'list' | 'relation' = 'list'): IUseEntries {
 
   const [entries, setEntries] = useState<IEntryData[]>([])
 
@@ -36,7 +42,11 @@ export function useEntries(entity: IEntity, filter?: IFilter): IEntryData[] {
         entity.name,
         filter,
         entity.properties?.filter(p => {
-          return p.model?.isPk || p.layout?.visible?.relation
+          if (view === 'relation') {
+            return p.model?.isPk || p.layout?.visible?.relation
+          } else {
+            return p.model?.isPk || p.layout?.visible?.entityPage
+          }
         }).map(p => p.name)
       ).then(
         (data) => {
@@ -54,7 +64,7 @@ export function useEntries(entity: IEntity, filter?: IFilter): IEntryData[] {
         }
       )
     } 
-  }, [filter, loading, error, setEntries, entity, hasNewArgs])
+  }, [filter, loading, error, setEntries, entity, hasNewArgs, view])
 
-  return entries
+  return { entries, error, loading }
 }

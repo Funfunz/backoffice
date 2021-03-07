@@ -34,11 +34,8 @@ const Edit: FC<{}> = () => {
   )
 
   const goBack = useCallback(
-    async () => {
-      history.push({
-        pathname: `/table/${params.tableName}`,
-        state: { reload: true } 
-      })
+    () => {
+      history.push(`/table/${params.tableName}`)
     },
     [history, params.tableName]
   )
@@ -46,7 +43,7 @@ const Edit: FC<{}> = () => {
   const save = useCallback(
     async () => {
       await saveEntry()
-      goBack()
+      goBack() 
     },
     [saveEntry, goBack]
   )

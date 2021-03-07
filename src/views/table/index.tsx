@@ -1,65 +1,58 @@
-import React, { FC, memo, useEffect, useState } from "react"
-import { useLocation, useParams } from 'react-router-dom'
+import React, { FC, memo, useCallback, useState } from "react"
+import { useParams } from 'react-router-dom'
 import Table from 'components/table'
 import style from './style.module.scss'
-import useTableConfig from 'hooks/useTableConfig'
 import Message from 'components/message'
 import Toolbar from 'components/toolbar'
 import Filters from 'components/filters'
 import PageTitle from 'components/page-title'
-import useTableData from 'hooks/useTableData'
-
+import { useEntries } from "hooks/useEntries"
+import { useEntity } from "hooks/useEntity"
+import { useFilter } from "hooks/useFilters"
 
 export interface ITableProps {}
 
-const TableView: FC<ITableProps> = () => {
+const ListView: FC = () => {
+  
   const [showFilters, setShowFilters] = useState(false)
 
-  const toggleFilters = () =>{
-    setShowFilters(!showFilters)
-  }
+  const toggleFilters = useCallback(() =>{
+    setShowFilters((value) => !value)
+  }, [setShowFilters])
 
-  const { tableName = '' } = useParams<any>()
-  const { state } = useLocation()
+  const { tableName = '' } = useParams<{ tableName: string }>()
 
-  const { table, loadingTableConfig } = useTableConfig(tableName)
-  const { tableData, loadingTableData, errorTableData, reload } = useTableData(
-    tableName
-  )
-
-  useEffect(() => {
-    if ((state as any)?.reload) {
-      reload()
-    }
-  }, [state, reload])
+  const entity = useEntity(tableName)
+  const [filter] = useFilter(entity)
+  const { entries, loading, error } = useEntries(entity, filter)
 
   return (
     <div className={style.container}>
       <div className={style.toolbar}>
-        <PageTitle text={table.title()}/>
+        <PageTitle text={entity.layout.label || entity.name}/>
         <Toolbar toggleFilters={toggleFilters}/>
       </div>
       {showFilters && <Filters />}
       <div className={style.tableContainer}>
-      {!errorTableData &&
-        (loadingTableConfig ? (
+      {!error &&
+        (loading ? (
           <Message loading />
         ) : (
-          table &&
-          tableData && (
+          entity &&
+          entries && (
             <Table
-              tableData={tableData}
-              loadingTableData={loadingTableData}
-              properties={table.properties}
+              entity={entity}
+              entries={entries}
+              loading={!!loading}
             />
           )
         ))}
-      {errorTableData && (
-        <Message error={!!errorTableData} text={errorTableData} />
+      {error && (
+        <Message error={!!error} text={error + ''} />
       )}
       </div>
     </div>
   )
 }
 
-export default memo(TableView)
+export default memo(ListView)
