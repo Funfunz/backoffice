@@ -2,16 +2,15 @@ import { useEntity } from "hooks/useEntity"
 import { useEntries } from "hooks/useEntries"
 import React from "react"
 import { FC, memo } from "react"
-import { IRelation } from "services/entity"
 import Select, { ISelectField, ISelectFieldOption } from "../Select"
 
 export interface IRelationSelectField extends ISelectField {
-  relation?: IRelation
+  relationEntityName?: string
 }
 
 const RelationSelectField: FC<IRelationSelectField> = (props) => {
-  const entity = useEntity(props.relation?.remoteTable || '')
-  const { entries } = useEntries(entity)
+  const entity = useEntity(props.relationEntityName)
+  const { entries } = useEntries(entity, undefined, 'relation')
   return (
     <Select
       options={entries.map((entry) => {

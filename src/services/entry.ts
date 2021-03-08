@@ -8,14 +8,15 @@ export interface IEntryData {
   [key: string]: string | number | boolean | undefined
 }
 
-export function getEntryData(entity: Entity, filter?: IFilter, fields?: string[]): Promise<IEntryData> {
+export function getEntryData(entity: Entity, filter?: IFilter): Promise<IEntryData> {
+  const fields = entity.getProperties('edit')
   if (!filter) {
     const payload = {}
     return Promise.resolve(payload)
   }
   const query: IGQuery = {
     operation: entity.getName(),
-    fields: (fields && !!fields.length) ? fields : Object.keys(filter),
+    fields: !!fields.length ? fields : Object.keys(filter),
     args: {
       filter: {}
     }

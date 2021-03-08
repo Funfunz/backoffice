@@ -10,38 +10,42 @@ export function mapFieldComponents(entity?: Entity): IMappedField[] {
   return entity?.getProperties().map(
     (propertyName: string) => {
 
-      const editField = entity.getEditFieldByProperty(propertyName)
-      const relation = entity.getRelationByProperty(propertyName)
-
-      let Component
-
       const props: IFieldProps = {
         name: propertyName,
         label: entity.getPropertyLabel(propertyName),
-        type: (editField?.type || relation?.type || entity.getPropertyModelType(propertyName)) as FieldTypes,
-        ...editField,
+        type: (
+          entity.getPropertyEditFieldType(propertyName) || 
+          entity.getPropertyRelationType(propertyName) || 
+          entity.getPropertyModelType(propertyName) ||
+          'text'
+        ) as FieldTypes,
+        ...(entity.getPropertyEditField(propertyName)),
       }
 
       switch (props.type) {
         case 'n:1':
         case 'n:m':
-          props.relation = relation
-          Component = RelationSelectField
-          break
+          return {
+            Component: RelationSelectField,
+            props: {
+              relationType: props.type,
+              relationEntityName: entity.getPropertyRelationEntityName(propertyName),
+              ...props, 
+            }
+          }
         case 'select':
-          Component = SelectField 
-          break
+          return {
+            Component: SelectField,
+            props,
+          }
         case 'text':
         case 'number':
         case 'password':
         default:
-          Component = InputField
-          break
-      }
-
-      return { 
-        Component,
-        props,
+          return {
+            Component: InputField,
+            props,
+          }
       }
     }
   ) || []

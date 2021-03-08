@@ -1,9 +1,9 @@
 import { IEntryData, IFilter } from "./entry"
-import Entity, { PropertiesViewType } from 'services/entity'
+import Entity from 'services/entity'
 import graphql, { IGQuery } from "./graphql"
 
 
-export function getEntries(entity: Entity, filter: IFilter = {}, view: PropertiesViewType = 'list'): Promise<IEntryData[]> {
+export function getEntries(entity: Entity, filter: IFilter = {}, view: Parameters<Entity['getProperties']>[0] = 'list'): Promise<IEntryData[]> {
 
   const query: IGQuery = {
     operation: entity.getName(),

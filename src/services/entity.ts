@@ -1,65 +1,7 @@
 import graphql from 'services/graphql'
-
-export interface IProperty {
-  name: string,
-  searchable: boolean,
-  model?: {
-    isPk?: boolean,
-    type: string,
-    allowNull: boolean,
-  },
-  layout?: {
-    label?: string,
-    editField?: {
-      type: 'text' | 'number' | 'password',
-    },
-    entityPage?: {
-      filterable?: {
-        type: string,
-        inputType: 'checkbox'
-        checked: unknown
-        unChecked: unknown
-      } | {
-        type: string,
-        inputType: 'select',
-        content: {
-          label: string,
-          value: unknown,
-        }[]
-      },
-    },
-    visible?: {
-      entityPage: boolean,
-      detail: boolean,
-      relation: boolean
-    },
-    [key: string]: unknown
-  }
-}
-
-export interface IRelation {
-  type: "n:1" | "n:m"
-  foreignKey: string
-  relationalTable: string
-  remoteTable: string
-}
-
-export interface IEntity {
-  error?: boolean
-  loading?: boolean
-  name: string
-  properties?: IProperty[]
-  layout: {
-    label: string
-  },
-  relations?: IRelation[]
-}
-
-export type PropertiesViewType = 'list' | 'edit' | 'relation'
+import { IEntity } from 'utils/funfunzTypings'
 
 export default class Entity {
-  public loading?: boolean
-  public error?: any
   private entity: IEntity
   constructor(entity: IEntity) {
     this.entity = entity
@@ -73,7 +15,6 @@ export default class Entity {
   getLabel() {
     return this.entity.layout.label || this.entity.name
   }
-   
   getProperties(view: 'list' | 'edit' | 'relation' = 'list') {
     return this.entity.properties?.filter(p => {
       switch (view) {
@@ -97,18 +38,30 @@ export default class Entity {
     const property = this.getPropertyByName(propertyName)
     return property?.model?.type || 'text'
   }
-  getRelationByProperty(propertyName: string) {
+  private getPropertyRelation(propertyName: string) {
     return this.entity.relations?.find(r => r.foreignKey === propertyName)
   }
-  getEditFieldByProperty(propertyName: string): Record<string, string|number|boolean> {
+  getPropertyRelationType(propertyName: string) {
+    const relation = this.getPropertyRelation(propertyName)
+    return relation?.type
+  }
+  getPropertyRelationEntityName(propertyName: string) {
+    const relation = this.getPropertyRelation(propertyName)
+    return relation?.remoteTable
+  }
+  getPropertyEditField(propertyName: string): Record<string, string|number|boolean> {
     const property = this.getPropertyByName(propertyName)
     return property?.layout?.editField || {}
+  }
+  getPropertyEditFieldType(propertyName: string) {
+    const editField = this.getPropertyEditField(propertyName)
+    return editField.type
   }
   getPropertyLabel(propertyName: string) {
     const property = this.getPropertyByName(propertyName)
     return property?.layout?.label || property?.name || propertyName
   }
-  public static fetchEntity(entityName: string) {
+  static fetchEntity(entityName: string) {
     return graphql.query({
       operation: 'config',
       fields: [entityName]
