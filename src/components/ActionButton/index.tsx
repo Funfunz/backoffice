@@ -1,7 +1,7 @@
 import React, { FC, memo } from 'react'
 
-import Button, { IButtonProps } from 'components/button'
-import Icon from 'components/icon'
+import Button, { IButtonProps } from 'components/Button'
+import Icon from 'components/Icon'
 
 import classes from './style.module.scss'
 

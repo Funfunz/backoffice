@@ -1,4 +1,4 @@
-import React, { memo, FC } from 'react'
+import React, { FC, memo, ReactNode } from 'react'
 import classNames from 'classnames'
 
 import classes from './style.module.scss'
@@ -11,9 +11,10 @@ export interface IColumnProps {
   sizeMd?: IColumnSize
   sizeLg?: IColumnSize
   sizeXl?: IColumnSize
+  children: ReactNode
 }
 
-export const Column: FC<IColumnProps> = memo(({ size, sizeSm, sizeMd, sizeLg, sizeXl, children }) => {
+const Column: FC<IColumnProps> = ({ size, sizeSm, sizeMd, sizeLg, sizeXl, children }) => {
   
   const wrapperClasses = classNames({
     [classes[`col-${size}`]]: !!size,
@@ -28,12 +29,6 @@ export const Column: FC<IColumnProps> = memo(({ size, sizeSm, sizeMd, sizeLg, si
       {children}
     </div>
   )
-})
+}
 
-export const Row: FC = memo(({ children}) => {
-  return (
-    <div className={classes.row}>
-      {children}
-    </div>
-  )
-})
+export default memo(Column)

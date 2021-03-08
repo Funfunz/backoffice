@@ -1,7 +1,7 @@
 import React, { FC, memo } from 'react'
 import { Route } from 'react-router-dom'
 import classNames from 'classnames'
-import TopMenu from 'components/top-menu'
+import TopMenu from 'components/TopMenu'
 import SideMenu from 'components/side-menu'
 import style from './style.module.scss'
 

@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom'
 import { HashRouter, Route } from 'react-router-dom'
 import reportWebVitals from './reportWebVitals'
 import { Provider } from './reducers'
-import PrivateRoute from 'components/private-route'
-import Layout from 'components/layout'
-import Loading from 'components/loading'
+import PrivateRoute from 'components/PrivateRoute'
+import Layout from 'components/Layout'
+import Loading from 'views/loading'
 import 'style/index.scss'
 
 const Home = lazy(() => import('views/home'))

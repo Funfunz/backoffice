@@ -1,5 +1,5 @@
 import Entity from 'services/entity'
-import { IFieldProps, InputField, SelectField, FieldTypes, RelationSelectField } from 'components/fields'
+import { IFieldProps, InputField, SelectField, FieldTypes, RelationSelectField } from 'components/Field'
 
 export interface IMappedField {
   Component: React.ComponentType<IFieldProps>

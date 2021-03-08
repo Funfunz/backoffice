@@ -1,8 +1,8 @@
 import React, { memo, MouseEvent, FC, useCallback } from 'react'
+import { useHistory } from 'react-router-dom'
 import classNames from 'classnames'
 
 import classes from './style.module.scss'
-import { useHistory } from 'react-router-dom'
 
 export interface IButtonProps {
   disabled?: boolean

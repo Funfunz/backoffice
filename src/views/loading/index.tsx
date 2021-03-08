@@ -3,9 +3,9 @@ import classNames from 'classnames'
 import style from './style.module.scss'
 
 export interface ILoadingProps {
-  children?: ReactNode;
-  className?: string;
-};
+  children?: ReactNode
+  className?: string
+}
 
 const Loading: FC<ILoadingProps> = ({ children = null, className = '' }) => {
   const loadingClasses = classNames({

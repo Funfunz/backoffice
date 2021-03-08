@@ -6,7 +6,6 @@ import Hamburger from './components/hamburger'
 import style from './style.module.scss'
 import { desktopSize } from 'utils'
 
-
 export interface ISideMenuProps {
   isSearchable: boolean;
   visible?: number;

@@ -1,5 +1,5 @@
 import React, { FC, memo } from "react"
-import Checkbox from "components/checkbox"
+import Checkbox from "components/Checkbox"
 import classes from './style.module.scss'
 
 export interface ITableRowProps {

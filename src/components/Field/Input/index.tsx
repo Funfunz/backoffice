@@ -1,7 +1,7 @@
 import React, { useCallback } from "react"
 import { FC, memo } from "react"
-import { IFieldProps } from "components/fields"
-import FieldWrapper from 'components/fields/Wrapper'
+import { IFieldProps } from "components/Field"
+import FieldWrapper from 'components/Field/Wrapper'
 import classes from './style.module.scss'
 
 export interface IInputField extends IFieldProps {}

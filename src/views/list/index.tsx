@@ -7,15 +7,14 @@ import { useEntity } from "hooks/useEntity"
 import { useFilter } from "hooks/useFilters"
 
 import ActionButton from 'components/ActionButton'
-import PageTitle from 'components/page-title'
-import Message from 'components/message'
-import Button from 'components/button'
+import PageTitle from 'components/PageTitle'
+import Message from 'components/Message'
+import Button from 'components/Button'
 import { Table, TableHead, TableBody, TableRow } from 'components/Table'
 import Pagination from "components/Pagination"
 import Filters from "components/Filters"
 
 import classes from './style.module.scss'
-
 
 const ListView: FC = () => {
 

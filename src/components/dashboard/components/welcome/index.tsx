@@ -1,8 +1,8 @@
 import React, { useState, FC, memo } from 'react'
 import { NavLink } from 'react-router-dom'
-import Widget from './../widget'
+import Widget from '../widget'
 import style from './style.module.scss'
-import Icon from 'components/icon'
+import Icon from 'components/Icon'
 
 export interface IWelcomeProps {}
 

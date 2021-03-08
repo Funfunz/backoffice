@@ -3,16 +3,16 @@ import React, { memo, FC } from 'react'
 import classes from './style.module.scss'
 
 export interface ICheckboxProps {
-  disabled?: boolean;
-  label?: string;
-  checked?: boolean;
+  disabled?: boolean
+  label?: string
+  checked?: boolean
 }
 
 const Checkbox: FC<ICheckboxProps> = ({
   disabled,
   label,
   checked,
-  children
+  children,
 }) => {
 
   return (

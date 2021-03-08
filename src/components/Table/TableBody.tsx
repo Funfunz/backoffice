@@ -1,5 +1,5 @@
 import React, { FC, memo, ReactNode } from 'react'
-import Message from 'components/message'
+import Message from 'components/Message'
 
 export interface ITableBody {
   loading?: boolean

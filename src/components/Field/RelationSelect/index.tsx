@@ -1,7 +1,7 @@
 import React, { FC, memo } from "react"
 import { useEntity } from "hooks/useEntity"
 import { useEntries } from "hooks/useEntries"
-import Select, { ISelectField, ISelectFieldOption } from "components/fields/Select"
+import Select, { ISelectField, ISelectFieldOption } from "components/Field/Select"
 
 export interface IRelationSelectField extends ISelectField {
   relationEntityName?: string

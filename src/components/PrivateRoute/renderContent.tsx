@@ -2,7 +2,7 @@ import React, { FC, ComponentType } from 'react'
 import { Redirect, RouteProps } from 'react-router-dom'
 import auth from 'services/auth'
 
-export function renderContent<T extends RouteProps = RouteProps>(Component?: ComponentType<T>, render?: FC<T>, redirect?: string) {
+export default function renderContent<T extends RouteProps = RouteProps>(Component?: ComponentType<T>, render?: FC<T>, redirect?: string) {
   return function(props: T) {
     if (auth.isAuthenticated) {
       if (Component) {

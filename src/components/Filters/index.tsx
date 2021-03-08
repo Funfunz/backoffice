@@ -1,7 +1,7 @@
 import React, { FC, memo, useCallback, useState } from 'react'
 import classNames from 'classnames'
 
-import Button from 'components/button'
+import Button from 'components/Button'
 import { IFilter } from 'services/entry'
 
 import classes from './style.module.scss'

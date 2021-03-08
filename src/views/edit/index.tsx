@@ -1,11 +1,11 @@
 import React, { FC, memo, useCallback } from 'react'
-import Button from 'components/button'
-import PageTitle from 'components/page-title'
+import Button from 'components/Button'
+import PageTitle from 'components/PageTitle'
 import style from './style.module.scss'
 import { useParams, useHistory } from 'react-router-dom'
 import { useEntry } from 'hooks/useEntry'
 import { useEntity } from 'hooks/useEntity'
-import { Column, Row } from 'components/grid'
+import { Column, Grid } from 'components/Grid'
 import { mapFieldComponents } from 'utils/fields'
 
 const Edit: FC<{}> = () => {
@@ -48,7 +48,7 @@ const Edit: FC<{}> = () => {
       </div>
 
       <div className={style.editTableContainer}>
-        <Row>
+        <Grid>
           {mapFieldComponents(entity).map(
             ({ Component, props }, index) =>
               <Column size={6} key={index}>
@@ -59,7 +59,7 @@ const Edit: FC<{}> = () => {
                 />
               </Column>
           )}
-        </Row>
+        </Grid>
 
         <div className={style.actions}>
           <Button
