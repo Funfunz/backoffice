@@ -11,9 +11,12 @@ export interface IPaginationSelectProps {
 
 const PaginationSelect: FC<IPaginationSelectProps> = ({ itemsByPage, setItemsByPage }) => {
 
-  const handleChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
-    setItemsByPage(Number(event.currentTarget.value))
-  }, [setItemsByPage])
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLSelectElement>) => {
+      setItemsByPage(Number(event.currentTarget.value))
+    }, 
+    [setItemsByPage]
+  )
 
   return (
     <div className={style.itemsByPage}>

@@ -11,21 +11,19 @@ export interface IPaginationProps {
   setTake: (take: number) => void
   total?: number
   setSkip: (page: number) => void
-
 }
 
 const Pagination: FC<IPaginationProps> = ({ take = 10, setTake, total = 1, skip = 0, setSkip }) => {
   
-  const currentPage = useMemo(() => {
-    return Math.floor(skip / take)
-  }, [skip, take])
+  const currentPage = useMemo(() => Math.floor(skip / take), [skip, take])
 
-  const lastPage = useMemo(() => {
-    return Math.ceil(total/take) - 1
-  }, [total, take])
+  const lastPage = useMemo(() => Math.ceil(total/take) - 1, [total, take])
   
   const firstPage = useMemo(() => {
-    return Math.min(Math.max(currentPage - Math.ceil(MAX_PAGE_NUMBERS/2), 0), Math.max(lastPage - MAX_PAGE_NUMBERS, 0))
+    return Math.min(
+      Math.max(currentPage - Math.ceil(MAX_PAGE_NUMBERS/2), 0), 
+      Math.max(lastPage - MAX_PAGE_NUMBERS, 0)
+    )
   }, [currentPage, lastPage])
 
   const setPage = useCallback((page: number) => {
@@ -37,6 +35,7 @@ const Pagination: FC<IPaginationProps> = ({ take = 10, setTake, total = 1, skip 
         : page*take
     )
   }, [setSkip, lastPage, take])
+
   return (
     <div className={style.pagination}>
       <div className={style.pages}>
@@ -50,18 +49,20 @@ const Pagination: FC<IPaginationProps> = ({ take = 10, setTake, total = 1, skip 
           <i className="fas fa-chevron-left"></i>
         </PageItem>
 
-        {[...Array(MAX_PAGE_NUMBERS)].map((_, index) => {
-          const pageNum = firstPage + index
-          return pageNum <= lastPage && (
-            <PageItem
-              active={currentPage === pageNum}
-              key={index}
-              onClick={setPage.bind(null, firstPage + index)}
-            >
-              {pageNum + 1}
-            </PageItem>
-          )
-        })}
+        {[...Array(MAX_PAGE_NUMBERS)].map(
+          (_, index) => {
+            const pageNum = firstPage + index
+            return pageNum <= lastPage && (
+              <PageItem
+                active={currentPage === pageNum}
+                key={index}
+                onClick={setPage.bind(null, firstPage + index)}
+              >
+                {pageNum + 1}
+              </PageItem>
+            )
+          }
+        )}
 
         <PageItem onClick={setPage.bind(null, currentPage + 1)}>
           <i className="fas fa-chevron-right"></i>

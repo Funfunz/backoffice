@@ -17,12 +17,7 @@ const Toolbar: FC<IToolbarProps> = ({ toggleFilters }) => {
           <input type="text" placeholder="SEARCH"></input>
           <i className="fa fa-search"></i>
         </div>
-        <Button
-          prefix={<i className="fas fa-filter"></i>}
-          label="FILTERS"
-          onClick={() => toggleFilters()}
-          color='secondary'
-        />
+        
       </div>
       <NavLink to={`/new/${entityName}`} activeClassName={style.active}>
         <Button

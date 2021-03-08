@@ -1,7 +1,8 @@
-import React, { memo, MouseEvent, FC } from 'react'
+import React, { memo, MouseEvent, FC, useCallback } from 'react'
 import classNames from 'classnames'
 
 import classes from './style.module.scss'
+import { useHistory } from 'react-router-dom'
 
 export interface IButtonProps {
   disabled?: boolean
@@ -12,6 +13,7 @@ export interface IButtonProps {
   color?: string
   variant?: string
   onClick?: (event: MouseEvent) => void
+  navigateTo?: string
   style?: any
   className?: string
 }
@@ -25,6 +27,7 @@ const Button: FC<IButtonProps> = ({
   color,
   variant,
   onClick,
+  navigateTo,
   style,
   children,
   className
@@ -38,9 +41,19 @@ const Button: FC<IButtonProps> = ({
     }
   ])
 
+  const history = useHistory()
+
+  const handleClick = useCallback((event) => {
+    if (navigateTo) {
+      history.push(navigateTo)
+    } else if (onClick) {
+      onClick(event)
+    }
+  }, [navigateTo, onClick, history])
+
   return (
     <button
-      onClick={onClick}
+      onClick={handleClick}
       className={wrapperClasses}
       type="button"
       style={style}

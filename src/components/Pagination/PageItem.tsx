@@ -20,7 +20,7 @@ const PageItem: FC<IPageItemProps> = ({
   const itemWrapperClasses = classNames({
     [style.pageItem]: true,
     [style.clickable]: isClickable,
-    [style.active] : active
+    [style.active]: active
   })
 
   return (
