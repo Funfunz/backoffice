@@ -23,7 +23,9 @@ export function useEntity(entityName?: string): Entity | undefined {
         }
       ).catch(
         (error) => {
-          error[entityName] = error
+          if (entityName) {
+            error[entityName] = error
+          }
           runForceUpdate(`entities/${entityName}`)
         }
       )

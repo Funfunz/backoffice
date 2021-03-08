@@ -38,5 +38,14 @@
       padding-left: 15px;
       padding-right: 15px;
     }
+    &.actions {
+      display: flex;
+      flex-grow: 0;
+      justify-content: flex-end;
+      align-items: center;
+      & > button {
+        margin-right: 15px;
+      }
+    }
   }
 }

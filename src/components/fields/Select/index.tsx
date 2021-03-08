@@ -47,8 +47,6 @@ const SelectField: FC<ISelectField> = ({
         )}
       </select>
     </FieldWrapper>
-    
-    
   )
 }
 

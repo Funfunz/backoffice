@@ -8,20 +8,13 @@ import { useEntity } from 'hooks/useEntity'
 import { Column, Row } from 'components/grid'
 import { mapFieldComponents } from 'utils/fields'
 
-interface IParams {
-  tableName: string
-  id?: string
-}
-
 const Edit: FC<{}> = () => {
 
-  const params = useParams<IParams>()
+  const { entityName, id } = useParams<{ entityName: string, id?: string }>()
   const history = useHistory()
 
-  const isNew = !params.id
-
-  const entity = useEntity(params.tableName)
-  const { entry, setEntry, saveEntry } = useEntry(entity, params.id)
+  const entity = useEntity(entityName)
+  const { entry, setEntry, saveEntry } = useEntry(entity,id)
 
   const handleChange = useCallback(
     (name: string, value?: any) => {
@@ -35,9 +28,9 @@ const Edit: FC<{}> = () => {
 
   const goBack = useCallback(
     () => {
-      history.push(`/table/${params.tableName}`)
+      history.push(`/list/${entityName}`)
     },
-    [history, params.tableName]
+    [history,entityName]
   )
 
   const save = useCallback(
@@ -51,7 +44,7 @@ const Edit: FC<{}> = () => {
   return (
     <div className={style.editTable}>
       <div className={style.titlePage}>
-        <PageTitle text={isNew ? 'new page' : 'edit page'}/>
+        <PageTitle text={id ? 'edit page' : 'new page'}/>
       </div>
 
       <div className={style.editTableContainer}>

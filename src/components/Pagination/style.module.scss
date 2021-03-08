@@ -1,4 +1,6 @@
 @import '~style/variables';
+
+@import '~style/variables';
 @import '~style/mixins';
 
 .pagination {
@@ -48,6 +50,25 @@
       letter-spacing: 1px;
       
       color: $secondary-light;
+    }
+  }
+}
+
+.pageItem {
+  font-weight: bold;
+  border: 2px solid transparent;
+  font-size: 14px;
+  &.active {
+    border-color: $secondary-light;
+    border-radius: 3px;
+  }
+  
+  &.clickable {
+    margin-right: 15px;
+    padding: 0 5px;
+    cursor: pointer;
+    &:hover {
+      color: $primary;
     }
   }
 }

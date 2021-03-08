@@ -9,7 +9,7 @@ import Loading from 'components/loading'
 import 'style/index.scss'
 
 const Home = lazy(() => import('views/home'))
-const Table = lazy(() => import('views/table'))
+const List = lazy(() => import('views/list'))
 const Login = lazy(() => import('views/login'))
 const Logout = lazy(() => import('views/logout'))
 const Edit = lazy(() => import('views/edit'))
@@ -24,8 +24,9 @@ const App: React.FC = () => (
         <Route exact path="/logout" component={Logout} />
         <Layout>
           <PrivateRoute exact path="/" component={Home} />
-          <PrivateRoute exact path="/table/:tableName" component={Table} />
-          <PrivateRoute path="/edit/:tableName/:id?" component={Edit} />
+          <PrivateRoute exact path="/list/:entityName" component={List} />
+          <PrivateRoute path="/edit/:entityName/:id" component={Edit} />
+          <PrivateRoute path="/new/:entityName" component={Edit} />
         </Layout>
       </Suspense>
     </HashRouter>

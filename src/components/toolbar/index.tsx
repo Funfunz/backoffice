@@ -9,7 +9,7 @@ export interface IToolbarProps {
 }
 
 const Toolbar: FC<IToolbarProps> = ({ toggleFilters }) => {
-  const params = useParams<{tableName: string}>()
+  const { entityName } = useParams<{entityName: string}>()
   return (
     <div className={style.toolbar}>
       <div className={style.inputSearch}>
@@ -24,7 +24,7 @@ const Toolbar: FC<IToolbarProps> = ({ toggleFilters }) => {
           color='secondary'
         />
       </div>
-      <NavLink to={`/edit/${params.tableName}`} activeClassName={style.active}>
+      <NavLink to={`/new/${entityName}`} activeClassName={style.active}>
         <Button
           prefix={<i className="fas fa-plus"></i>}
           label="NEW"

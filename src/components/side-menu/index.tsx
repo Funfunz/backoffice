@@ -70,7 +70,7 @@ const SideMenu: FC<ISideMenuProps> = ({isSearchable, visible = 10}) => {
               tablesResult.slice(0, !isSearching ? show : tablesResult.length).map((table: any, index: number) => (
                 <NavLink
                   key={index}
-                  to={`/table/${table.name}`}
+                  to={`/list/${table.name}`}
                   activeClassName={style.active}
                 >
                   {table.layout.label}
