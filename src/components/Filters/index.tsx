@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useState } from 'react'
+import React, { FC, memo, useCallback, useState, ReactNode } from 'react'
 import classNames from 'classnames'
 
 import Button from 'components/Button'
@@ -9,9 +9,10 @@ import classes from './style.module.scss'
 export interface IFiltersProps {
   filters?: IFilter
   setFilter?: (newFilter: IFilter) => void
+  children?: ReactNode
 }
 
-const Filters: FC<IFiltersProps> = () => {
+const Filters: FC<IFiltersProps> = ({ children }) => {
 
   const [showFilters, setShowFilters] = useState(false)
   const toggle = useCallback(() => {
@@ -20,6 +21,7 @@ const Filters: FC<IFiltersProps> = () => {
 
   return <>
     <Button
+      active={showFilters}
       prefix={<i className="fas fa-filter"></i>}
       label="FILTERS"
       onClick={toggle}
@@ -29,7 +31,7 @@ const Filters: FC<IFiltersProps> = () => {
       [classes.filters]: true,
       [classes.showFilters]: showFilters
     })}>
-      Filters...
+      {children}
     </div>
   </>
 }

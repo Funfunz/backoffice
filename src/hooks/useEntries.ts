@@ -35,13 +35,14 @@ export function useEntries({
   const [oldArgs, setNewArgs] = useState<{ entity?: string, filter?: IFilter, skip?: number, take?: number }>({})
 
   const hasNewArgs = useCallback(() => {
+    console.log(filter.userId, oldArgs?.filter?.userId)
     if (
       entity?.getName() !== oldArgs.entity ||
-      !entryEquals(filter, oldArgs.filter) ||
+      !entryEquals(oldArgs.filter, filter) ||
       skip !== oldArgs.skip ||
       take !== oldArgs.take
     ) {
-      setNewArgs({ entity: entity?.getName(), filter, skip, take })
+      setNewArgs({ entity: entity?.getName(), filter: { ...filter }, skip, take })
       return true
     }
     return false

@@ -5,6 +5,7 @@ import classNames from 'classnames'
 import classes from './style.module.scss'
 
 export interface IButtonProps {
+  active?: boolean
   disabled?: boolean
   rounded?: boolean
   label?: string | JSX.Element
@@ -19,13 +20,13 @@ export interface IButtonProps {
 }
 
 const Button: FC<IButtonProps> = ({
+  active = false,
   disabled,
   prefix,
   label,
   suffix,
   rounded,
   color,
-  variant,
   onClick,
   navigateTo,
   style,
@@ -38,6 +39,7 @@ const Button: FC<IButtonProps> = ({
     {
       [classes[color || '']]: color,
       [classes.rounded]: rounded,
+      [classes.active]: active,
     }
   ])
 

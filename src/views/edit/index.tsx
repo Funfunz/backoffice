@@ -14,7 +14,7 @@ const Edit: FC<{}> = () => {
   const history = useHistory()
 
   const entity = useEntity(entityName)
-  const { entry, setEntry, saveEntry } = useEntry(entity,id)
+  const { entry, setEntry, saveEntry } = useEntry(entity, isNaN(id as any) ? id : Number(id))
 
   const handleChange = useCallback(
     (name: string, value?: any) => {

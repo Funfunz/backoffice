@@ -24,9 +24,14 @@ const SelectField: FC<ISelectField> = ({
 
   const handleChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
     if (onChange) {
-      onChange(name, event.target.value)
+      const value = event.target.value !== undefined && event.target.value !== ""
+        ? typeof options[0]?.value === 'number' 
+          ? Number(event.target.value)
+          : event.target.value
+        : undefined
+      onChange(name, value)
     }
-  }, [name, onChange])
+  }, [name, onChange, options])
 
   return (
     <FieldWrapper name={name} label={label}>
@@ -38,6 +43,9 @@ const SelectField: FC<ISelectField> = ({
         placeholder={placeholder}
         onChange={handleChange}
       >
+        <option key={-1}>
+          {placeholder}
+        </option>
         {options.map(
           (option, index) => (
             <option key={index} value={option.value}>

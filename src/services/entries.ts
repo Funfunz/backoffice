@@ -10,21 +10,27 @@ export interface IGetEntriesArgs {
   skip?: number
 }
 
+export function parseFilter(filter: IFilter) {
+  const result: any = {}
+  Object.keys(filter).forEach(
+    (key) => {
+      const value = filter[key]
+      result[key] = typeof value === 'string'
+        ? { _like: `%${value}%` }
+        : { _eq: value }
+    }
+  )
+  return result
+}
+
 export function countEntries({ entity, filter = {} }: IGetEntriesArgs): Promise<number> {
 
   const query: IGQuery = {
     operation: entity.getName() + 'Count',
     args: {
-      filter: {}
+      filter: parseFilter(filter)
     }
   }
-  Object.keys(filter).forEach(
-    (key) => {
-      (query.args as any).filter[key] = {
-        _eq: filter[key]
-      }
-    }
-  )
   return graphql.query(query).then(
     (data: any) => {
       if (data) {
@@ -46,18 +52,12 @@ export function getEntries({
     operation: entity.getName(),
     fields: entity.getProperties(view) || Object.keys(filter),
     args: {
-      filter: {},
+      filter: parseFilter(filter),
       take,
       skip
     }
   }
-  Object.keys(filter).forEach(
-    (key) => {
-      (query.args as any).filter[key] = {
-        _eq: filter[key]
-      }
-    }
-  )
+  
   return graphql.query(query).then(
     (data: any) => {
       if (data) {

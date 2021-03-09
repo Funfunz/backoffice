@@ -70,6 +70,21 @@ export async function saveEntryData(entity: Entity, data: any, filter?: IFilter)
   )
 }
 
+export function filterMatch(entry: any, filter?: IFilter) {
+  if (entry === undefined && filter === undefined) {
+    return true
+  }
+  if (!filter && entry && !Object.keys(entry).length) {
+    return true
+  }
+  return entry && filter && Object.keys(filter).reduce(
+    (result, key) => {
+      // eslint-disable-next-line eqeqeq
+      return result && entry[key] == filter[key]
+    },
+    true as boolean
+  )
+}
 
 export function entryEquals(entry: any, filter?: IFilter) {
   if (entry === undefined && filter === undefined) {
@@ -78,7 +93,7 @@ export function entryEquals(entry: any, filter?: IFilter) {
   if (!filter && entry && !Object.keys(entry).length) {
     return true
   }
-  return entry && filter && Object.keys(filter).reduce(
+  return entry && filter && Object.keys({ ...filter, ...entry }).reduce(
     (result, key) => {
       // eslint-disable-next-line eqeqeq
       return result && entry[key] == filter[key]
