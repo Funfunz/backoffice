@@ -18,10 +18,16 @@ const InputField: FC<IInputField> = ({
 
   const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
-      onChange(name, event.target.value)
+      let value: string | number | undefined = event.target.value
+      value = (value !== undefined && value !== "")
+        ? type === 'number'
+          ? Number(value)
+          : value
+        : undefined
+      onChange(name, value)
     }
-  }, [name, onChange])
-  
+  }, [name, onChange, type])
+
   return (
     <FieldWrapper name={name} label={label}>
       <input
