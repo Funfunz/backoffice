@@ -1,5 +1,5 @@
-import React, { useCallback } from "react"
-import { FC, memo } from "react"
+import React, { useCallback, FC, memo } from "react"
+import classNames from 'classnames'
 import { IFieldProps } from "components/Field"
 import FieldWrapper from 'components/Field/Wrapper'
 import classes from './style.module.scss'
@@ -25,7 +25,10 @@ const InputField: FC<IInputField> = ({
   return (
     <FieldWrapper name={name} label={label}>
       <input
-        className={classes.input}
+        className={classNames({ 
+          [classes.input]: true,
+          [classes.readOnly]: readOnly,
+        })}
         id={`field-${name}`}
         readOnly={readOnly}
         name={name}

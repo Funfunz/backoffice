@@ -63,6 +63,11 @@ const ListView: FC = () => {
                         actions={[
                           <ActionButton
                             key={0}
+                            type="view"
+                            navigateTo={`/view/${entity?.getName()}/${entry[entity?.getPk() || 'id']}`}
+                          />,
+                          <ActionButton
+                            key={0}
                             type="edit"
                             navigateTo={`/edit/${entity?.getName()}/${entry[entity?.getPk() || 'id']}`}
                           />,

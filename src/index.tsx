@@ -25,8 +25,7 @@ const App: React.FC = () => (
         <Layout>
           <PrivateRoute exact path="/" component={Home} />
           <PrivateRoute exact path="/list/:entityName" component={List} />
-          <PrivateRoute path="/edit/:entityName/:id" component={Edit} />
-          <PrivateRoute path="/new/:entityName" component={Edit} />
+          <PrivateRoute path="/:view(edit|new|view)/:entityName/:id?" component={Edit} />
         </Layout>
       </Suspense>
     </HashRouter>
