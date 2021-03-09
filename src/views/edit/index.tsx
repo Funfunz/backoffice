@@ -1,16 +1,31 @@
 import React, { FC, memo, useCallback } from 'react'
-import Button from 'components/Button'
-import PageTitle from 'components/PageTitle'
-import style from './style.module.scss'
 import { useParams, useHistory } from 'react-router-dom'
+
 import { useEntry } from 'hooks/useEntry'
 import { useEntity } from 'hooks/useEntity'
-import { Column, Grid } from 'components/Grid'
 import { mapFieldComponents } from 'utils/fields'
+
+import ActionButton from 'components/ActionButton'
+import { Column, Grid } from 'components/Grid'
+import PageTitle from 'components/PageTitle'
+
+import style from './style.module.scss'
+
+interface IParams { 
+  entityName: string
+  id?: string
+  view: 'edit' | 'view' | 'new'
+}
+
+const TITLE_BY_VIEW = {
+  'edit': 'Edit entry',
+  'new': 'New entry',
+  'view': 'View entry'
+}
 
 const Edit: FC<{}> = () => {
 
-  const { entityName, id } = useParams<{ entityName: string, id?: string }>()
+  const { entityName, id, view } = useParams<IParams>()
   const history = useHistory()
 
   const entity = useEntity(entityName)
@@ -44,7 +59,7 @@ const Edit: FC<{}> = () => {
   return (
     <div className={style.editTable}>
       <div className={style.titlePage}>
-        <PageTitle text={id ? 'edit page' : 'new page'}/>
+        <PageTitle text={TITLE_BY_VIEW[view]} />
       </div>
 
       <div className={style.editTableContainer}>
@@ -53,6 +68,7 @@ const Edit: FC<{}> = () => {
             ({ Component, props }, index) =>
               <Column size={6} key={index}>
                 <Component
+                  readOnly={view === 'view'}
                   {...props} 
                   onChange={handleChange}
                   value={entry[props.name] as string || ''}
@@ -62,20 +78,23 @@ const Edit: FC<{}> = () => {
         </Grid>
 
         <div className={style.actions}>
-          <Button
+          <ActionButton
+            type="goback"
             onClick={goBack}
-            prefix={<i className="fas fa-plus"></i>}
-            label="CANCEL"
-            color='cancel'
-            className={style.actionButton}
+            label={view === 'view' ? 'GO BACK' : 'CANCEL'}
           />
-          <Button
-            onClick={save}
-            prefix={<i className="fas fa-save"></i>}
-            label="SAVE"
-            color='primary'
-            className={style.actionButton}
-          />
+          {view === 'view'
+            ? <ActionButton 
+                type="save"
+                label="EDIT"
+                navigateTo={`/edit/${entityName}/${id}`} 
+              />
+            : <ActionButton 
+                type="save"
+                label="SAVE"
+                onClick={save}
+              />
+          }
         </div>
       </div>
     </div>
