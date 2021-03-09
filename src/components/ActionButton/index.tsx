@@ -6,7 +6,7 @@ import Icon from 'components/Icon'
 import classes from './style.module.scss'
 
 export interface IActionButtonProps {
-  type: 'edit' | 'delete' | 'view'
+  type: 'edit' | 'delete' | 'view' | 'goback' | 'save'
   onClick?: () => void
   navigateTo?: string
   label?: string
@@ -14,6 +14,18 @@ export interface IActionButtonProps {
 
 function getButtonProps(type: IActionButtonProps['type'], label: string = ''): Partial<IButtonProps> {
   switch (type) {
+    case 'goback':
+      return { 
+        prefix: <Icon name="chevron-left" />,
+        color: 'cancel',
+        label,
+      }
+    case 'save':
+      return { 
+        prefix: <Icon name="save" />,
+        color: 'primary',
+        label,
+      }
     case 'edit':
       return { 
         prefix: <Icon name="pen" />,
@@ -41,7 +53,7 @@ const ActionButton: FC<IActionButtonProps> = ({ type, onClick, label, navigateTo
       className={classes.actionButton}
       {...getButtonProps(type, label)} 
       navigateTo={navigateTo}
-      onClick={onClick} 
+      onClick={onClick}
     />
   )
 }
