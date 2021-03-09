@@ -30,11 +30,11 @@ const ListView: FC = () => {
     <div className={classes.container}>
       <div className={classes.toolbar}>
         <PageTitle text={entity?.getLabel() || '...'}/>
-        <Filters>
+        <Filters filters={debouncedFilter}>
           <Grid>
-          {mapFieldComponents(entity).map(
+          {mapFieldComponents(entity).filter(f => !f.props.readOnly && f.props.type !== 'password').map(
             ({ Component, props }, index) =>
-              <Column size={6} key={index}>
+              <Column size={4} key={index}>
                 <Component
                   {...props} 
                   onChange={setFilter}
