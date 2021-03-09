@@ -17,9 +17,12 @@ interface IUseFilter {
 
 export function useFilter(entity?: Entity): IUseFilter {
   
+  const [debouncedFilter, setDebouncedFilter] = useDebouncedValue(filter)
+
   if (entity && entity?.getName() !== entityToFilter?.getName()) {
     entityToFilter = entity
     filter = {}
+    setDebouncedFilter(filter)
   }
 
   const setFilter = useCallback((filterOrName: IFilter|string, value: any) => {
@@ -48,8 +51,6 @@ export function useFilter(entity?: Entity): IUseFilter {
   }, [])
 
   useForceUpdate('filters')
-
-  const debouncedFilter = useDebouncedValue(filter)
 
   return {
     filter,
