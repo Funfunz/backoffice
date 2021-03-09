@@ -15,21 +15,36 @@ import Pagination from "components/Pagination"
 import Filters from "components/Filters"
 
 import classes from './style.module.scss'
+import { mapFieldComponents } from "utils/fields"
+import { Column, Grid } from "components/Grid"
 
 const ListView: FC = () => {
 
   const { entityName = '' } = useParams<{ entityName: string }>()
   const entity = useEntity(entityName)
   const {skip, setSkip, take, setTake } = usePagination()
-  const [filter] = useFilter(entity)
-  const { entries, loading, error, total } = useEntries({ entity, filter, skip, take })
+  const {filter, setFilter, debouncedFilter } = useFilter(entity)
+  const { entries, loading, error, total } = useEntries({ entity, filter: debouncedFilter, skip, take })
 
   return (
     <div className={classes.container}>
       <div className={classes.toolbar}>
         <PageTitle text={entity?.getLabel() || '...'}/>
-        <Filters />
-        <div className={classes.spacer}></div>
+        <Filters filters={debouncedFilter}>
+          <Grid>
+          {mapFieldComponents(entity).filter(f => !f.props.readOnly && f.props.type !== 'password').map(
+            ({ Component, props }, index) =>
+              <Column size={4} key={index}>
+                <Component
+                  {...props} 
+                  onChange={setFilter}
+                  value={filter[props.name] as string || ''}
+                />
+              </Column>
+          )}
+          </Grid>
+        </Filters>
+        <div className={classes.toolbarSpacer}></div>
         <Button
           navigateTo={`/new/${entityName}`}
           prefix={<i className="fas fa-plus"></i>}

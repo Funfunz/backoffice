@@ -13,6 +13,7 @@ export function mapFieldComponents(entity?: Entity): IMappedField[] {
       const props: IFieldProps = {
         name: propertyName,
         label: entity.getPropertyLabel(propertyName),
+        readOnly: entity.getPk() === propertyName,
         type: (
           entity.getPropertyEditFieldType(propertyName) || 
           entity.getPropertyRelationType(propertyName) || 

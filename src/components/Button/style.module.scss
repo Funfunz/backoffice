@@ -14,11 +14,11 @@
   -moz-transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
   -o-transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
   
-  &:hover {
+  &:hover, &.active {
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
     background: transparent;
   }
-
+  
   &:focus {
     outline: none;
   }
@@ -32,7 +32,7 @@
     -moz-transition: color, background-color 0.3s;
     -o-transition: color, background-color 0.3s;
 
-    &:hover {
+    &:hover, &.active {
       background: transparent;
       color: $primary;
       border: 2px solid $primary;
@@ -41,7 +41,7 @@
   }
   
   &.secondary{
-    padding: 0;
+    padding: 0 0.5rem;
     background-color: transparent;
     color: $secondary-light;
     text-transform: uppercase;
@@ -50,7 +50,7 @@
     -moz-transition: color 0.3s;
     -o-transition: color 0.3s;
 
-    &:hover {
+    &:hover, &.active {
       color: $primary;
       box-shadow: none;    
     }

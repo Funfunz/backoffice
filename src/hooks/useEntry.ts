@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 import Entity from "services/entity"
-import { entryDiff, entryEquals, getEntryData, IEntryData, IFilter, saveEntryData } from "services/entry"
+import { entryDiff, entryEquals, filterMatch, getEntryData, IEntryData, IFilter, saveEntryData } from "services/entry"
 
 export interface IUseEntry {
   entry: IEntryData,
@@ -48,7 +48,7 @@ export function useEntry(entity?: Entity, filterOrPk?: IFilter | string | number
       getEntryData(entity, filter).then(
         (data) => {
           setLoading(false)
-          if (data && entryEquals(data, filter as IFilter)) {
+          if (data && filterMatch(data, filter as IFilter)) {
             setFetchedEntry(data)
             setModifiedEntry(data)
             setError(false)

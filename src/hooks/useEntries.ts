@@ -37,11 +37,11 @@ export function useEntries({
   const hasNewArgs = useCallback(() => {
     if (
       entity?.getName() !== oldArgs.entity ||
-      !entryEquals(filter, oldArgs.filter) ||
+      !entryEquals(oldArgs.filter, filter) ||
       skip !== oldArgs.skip ||
       take !== oldArgs.take
     ) {
-      setNewArgs({ entity: entity?.getName(), filter, skip, take })
+      setNewArgs({ entity: entity?.getName(), filter: { ...filter }, skip, take })
       return true
     }
     return false
