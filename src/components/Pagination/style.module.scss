@@ -1,0 +1,74 @@
+@import '~style/variables';
+
+@import '~style/variables';
+@import '~style/mixins';
+
+.pagination {
+  display: flex;
+  justify-content: flex-start;
+  padding: 30px 15px;
+  position: relative;
+  color: $secondary-light;
+
+  @include screen(md) {
+    justify-content: center;
+  }
+  .pages {
+    display: flex;
+    .item {
+      font-weight: bold;
+      border: 2px solid transparent;
+      font-size: 14px;
+      margin-right: 15px;
+      cursor: pointer;
+      &:hover {
+        color: $primary;
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+  .itemsByPage {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: 15px;
+
+    span{
+      font-size: 12px;
+      text-transform: uppercase;
+      margin-right: 5px;
+      letter-spacing: 1px;
+    }
+
+    select{
+      background: none;
+      border: none;
+      font-size: 14px;
+      letter-spacing: 1px;
+      
+      color: $secondary-light;
+    }
+  }
+}
+
+.pageItem {
+  font-weight: bold;
+  border: 2px solid transparent;
+  font-size: 14px;
+  &.active {
+    border-color: $secondary-light;
+    border-radius: 3px;
+  }
+  
+  &.clickable {
+    margin-right: 15px;
+    padding: 0 5px;
+    cursor: pointer;
+    &:hover {
+      color: $primary;
+    }
+  }
+}

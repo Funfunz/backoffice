@@ -1,51 +1,52 @@
-import type { IEntity, IRelation } from "services/entity"
-import { IProperty } from "services/table"
-import { IFieldProps, InputField, SelectField, FieldTypes, RelationSelectField } from 'components/fields'
+import Entity from 'services/entity'
+import { IFieldProps, InputField, SelectField, FieldTypes, RelationSelectField } from 'components/Field'
 
 export interface IMappedField {
   Component: React.ComponentType<IFieldProps>
   props: IFieldProps
 }
 
-export function mapFieldComponents(entity: IEntity): IMappedField[] {
-  return entity.properties
-    ? entity.properties.map(
-        (property: IProperty & { relation?: IRelation }) => {
-          
-          property.relation = entity.relations?.find(r => r.foreignKey === property.name)
+export function mapFieldComponents(entity?: Entity): IMappedField[] {
+  return entity?.getProperties().map(
+    (propertyName: string) => {
 
-          let Component
-          let props: IFieldProps = {
-            name: property.name,
-            label: property.layout?.label || property.name,
-            type: (property.layout?.editField?.type || property.relation?.type || property.model?.type || 'text') as FieldTypes,
-          }
+      const props: IFieldProps = {
+        name: propertyName,
+        label: entity.getPropertyLabel(propertyName),
+        type: (
+          entity.getPropertyEditFieldType(propertyName) || 
+          entity.getPropertyRelationType(propertyName) || 
+          entity.getPropertyModelType(propertyName) ||
+          'text'
+        ) as FieldTypes,
+        ...(entity.getPropertyEditField(propertyName)),
+      }
 
-          switch (props.type) {
-            case 'n:1':
-            case 'n:m':
-              props.relation = property.relation
-              Component = RelationSelectField
-              break
-            case 'select':
-              Component = SelectField 
-              break
-            case 'text':
-            case 'number':
-            case 'password':
-            default:
-              Component = InputField
-              break
-          }
-
-          return { 
-            Component,
+      switch (props.type) {
+        case 'n:1':
+        case 'n:m':
+          return {
+            Component: RelationSelectField,
             props: {
-              ...props,
-              ...(property.layout?.editField || {})
+              relationType: props.type,
+              relationEntityName: entity.getPropertyRelationEntityName(propertyName),
+              ...props, 
             }
           }
-        }
-      )
-    : []
+        case 'select':
+          return {
+            Component: SelectField,
+            props,
+          }
+        case 'text':
+        case 'number':
+        case 'password':
+        default:
+          return {
+            Component: InputField,
+            props,
+          }
+      }
+    }
+  ) || []
 }

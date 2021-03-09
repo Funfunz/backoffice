@@ -1,27 +1,20 @@
 import React, { FC, memo, useCallback } from 'react'
-import Button from 'components/button'
-import PageTitle from 'components/page-title'
+import Button from 'components/Button'
+import PageTitle from 'components/PageTitle'
 import style from './style.module.scss'
 import { useParams, useHistory } from 'react-router-dom'
 import { useEntry } from 'hooks/useEntry'
 import { useEntity } from 'hooks/useEntity'
-import { Column, Row } from 'components/grid'
+import { Column, Grid } from 'components/Grid'
 import { mapFieldComponents } from 'utils/fields'
-
-interface IParams {
-  tableName: string
-  id?: string
-}
 
 const Edit: FC<{}> = () => {
 
-  const params = useParams<IParams>()
+  const { entityName, id } = useParams<{ entityName: string, id?: string }>()
   const history = useHistory()
 
-  const isNew = !params.id
-
-  const entity = useEntity(params.tableName)
-  const {entry, setEntry, saveEntry } = useEntry(entity, params.id)
+  const entity = useEntity(entityName)
+  const { entry, setEntry, saveEntry } = useEntry(entity,id)
 
   const handleChange = useCallback(
     (name: string, value?: any) => {
@@ -34,19 +27,16 @@ const Edit: FC<{}> = () => {
   )
 
   const goBack = useCallback(
-    async () => {
-      history.push({
-        pathname: `/table/${params.tableName}`,
-        state: { reload: true } 
-      })
+    () => {
+      history.push(`/list/${entityName}`)
     },
-    [history, params.tableName]
+    [history,entityName]
   )
 
   const save = useCallback(
     async () => {
       await saveEntry()
-      goBack()
+      goBack() 
     },
     [saveEntry, goBack]
   )
@@ -54,11 +44,11 @@ const Edit: FC<{}> = () => {
   return (
     <div className={style.editTable}>
       <div className={style.titlePage}>
-        <PageTitle text={isNew ? 'new page' : 'edit page'}/>
+        <PageTitle text={id ? 'edit page' : 'new page'}/>
       </div>
 
       <div className={style.editTableContainer}>
-        <Row>
+        <Grid>
           {mapFieldComponents(entity).map(
             ({ Component, props }, index) =>
               <Column size={6} key={index}>
@@ -69,7 +59,7 @@ const Edit: FC<{}> = () => {
                 />
               </Column>
           )}
-        </Row>
+        </Grid>
 
         <div className={style.actions}>
           <Button

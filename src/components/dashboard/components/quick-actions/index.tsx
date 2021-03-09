@@ -1,5 +1,5 @@
 import React, { memo, FC } from 'react'
-import Widget from './../widget'
+import Widget from '../widget'
 import style from './style.module.scss'
 
 export interface IQuickActionsProps {}

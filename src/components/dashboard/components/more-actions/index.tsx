@@ -1,6 +1,6 @@
 import React, { memo, FC } from 'react'
 import { NavLink } from 'react-router-dom'
-import Widget from './../widget'
+import Widget from '../widget'
 import style from './style.module.scss'
 
 export interface IMoreActionsProps {}
