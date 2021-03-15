@@ -6,7 +6,7 @@ export interface IProperty {
     type: string,
     allowNull: boolean,
   },
-  layout?: {
+  backoffice?: {
     label?: string,
     editField?: {
       type: 'text' | 'number' | 'password',
@@ -38,8 +38,8 @@ export interface IProperty {
 export interface IRelation {
   type: "n:1" | "n:m"
   foreignKey: string
-  relationalTable: string
-  remoteTable: string
+  relationalEntity: string
+  remoteEntity: string
 }
 
 export interface IEntity {
@@ -47,7 +47,7 @@ export interface IEntity {
   loading?: boolean
   name: string
   properties?: IProperty[]
-  layout: {
+  backoffice: {
     label: string
   },
   relations?: IRelation[]

@@ -3,9 +3,9 @@ import { useForceUpdate, runForceUpdate } from 'react-forceupdate'
 import { listEntities } from "services/entities"
 
 let entities: { name: string, label: string }[] = []
-let loading = false
+let loading: boolean
 
-export function useEntities(): { name: string, label: string }[] {
+export function useEntities(filter: string = '') {
   
   useEffect(() => {
     if (entities.length === 0 && !loading) {
@@ -22,5 +22,8 @@ export function useEntities(): { name: string, label: string }[] {
   // subscribe to `entities` so that we can re-render if there are changes
   useForceUpdate('entities')
 
-  return entities
+  return {
+    entities: entities.filter(e => e.name.toLowerCase().includes(filter.toLowerCase())),
+    loading: loading === undefined ? true : loading
+  }
 }
