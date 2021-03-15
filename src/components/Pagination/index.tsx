@@ -27,7 +27,6 @@ const Pagination: FC<IPaginationProps> = ({ take = 10, setTake, total = 1, skip 
   }, [currentPage, lastPage])
 
   const setPage = useCallback((page: number) => {
-    console.log({ page })
     setSkip(page <= 0
       ? 0
       : page > lastPage

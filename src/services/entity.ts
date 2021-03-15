@@ -13,15 +13,15 @@ export default class Entity {
     return this.entity.properties?.find(p => p.model?.isPk)?.name || 'id'
   }
   getLabel() {
-    return this.entity.layout.label || this.entity.name
+    return this.entity.backoffice?.label || this.entity.name
   }
   getProperties(view: 'list' | 'edit' | 'relation' = 'list') {
     return this.entity.properties?.filter(p => {
       switch (view) {
         case 'relation':
-          return p.model?.isPk || p.layout?.visible?.relation
+          return p.model?.isPk || p.backoffice?.visible?.relation !== false
         case 'edit':
-          return p.model?.isPk || p.layout?.visible?.entityPage
+          return p.model?.isPk || p.backoffice?.visible?.entityPage !== false
         case 'list':
         default:
           return true
@@ -29,7 +29,7 @@ export default class Entity {
     }).map(p => p.name) || []
   }
   getPropertyToBeUsedAsLabel() {
-    return this.entity.properties?.find(p => p.layout?.visible?.relation)?.name || this.getPk()
+    return this.entity.properties?.find(p => p.backoffice?.visible?.relation)?.name || this.getPk()
   }
   private getPropertyByName(propertyName: string) {
     return this.entity.properties?.find(p => p.name === propertyName)
@@ -47,11 +47,11 @@ export default class Entity {
   }
   getPropertyRelationEntityName(propertyName: string) {
     const relation = this.getPropertyRelation(propertyName)
-    return relation?.remoteTable
+    return relation?.remoteEntity
   }
   getPropertyEditField(propertyName: string): Record<string, string|number|boolean> {
     const property = this.getPropertyByName(propertyName)
-    return property?.layout?.editField || {}
+    return property?.backoffice?.editField || {}
   }
   getPropertyEditFieldType(propertyName: string) {
     const editField = this.getPropertyEditField(propertyName)
@@ -59,7 +59,7 @@ export default class Entity {
   }
   getPropertyLabel(propertyName: string) {
     const property = this.getPropertyByName(propertyName)
-    return property?.layout?.label || property?.name || propertyName
+    return property?.backoffice?.label || property?.name || propertyName
   }
   static fetchEntity(entityName: string) {
     return graphql.query({

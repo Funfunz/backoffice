@@ -76,18 +76,15 @@ const ListView: FC = () => {
                         columns={entity.getProperties()}
                         data={entry}
                         actions={[
-                          <ActionButton
-                            key={0}
+                          <ActionButton key={0}
                             type="view"
                             navigateTo={`/view/${entity?.getName()}/${entry[entity?.getPk() || 'id']}`}
                           />,
-                          <ActionButton
-                            key={0}
+                          <ActionButton key={1}
                             type="edit"
                             navigateTo={`/edit/${entity?.getName()}/${entry[entity?.getPk() || 'id']}`}
                           />,
-                          <ActionButton
-                            key={1}
+                          <ActionButton key={2}
                             type="delete"
                           />
                         ]}

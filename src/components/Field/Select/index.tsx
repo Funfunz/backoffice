@@ -25,6 +25,8 @@ const SelectField: FC<ISelectField> = ({
   readOnly,
 }) => {
 
+  console.log({ name, value, options })
+
   const handleChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
     if (onChange) {
       const value = event.target.value !== undefined && event.target.value !== ""
