@@ -8,6 +8,9 @@
       border: 2px solid $primary;
       color: $primary;
     }
+    &.active {
+      color: $primary;
+    }
   }
   &.secondary {
     background-color: $neutral-dark;
@@ -16,6 +19,10 @@
       color: $neutral-dark;
       background-color: $table-background;
       border: 2px solid $neutral-dark;
+    }
+    &.active {
+      color: $neutral-dark;
+      background-color: $table-background;
     }
   }
   &.danger {

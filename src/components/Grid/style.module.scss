@@ -1,0 +1,27 @@
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: -10px;
+  margin-right: -10px;
+  &.center {
+    justify-content: center;
+  }
+}
+
+.col {
+  padding: 10px;
+}
+
+$columns: 12;
+@mixin col-x-list {
+  @for $i from 1 through $columns {
+    .col-#{$i} { 
+      @extend .col;
+      width: #{100/($columns/$i)}#{'%'};
+    }
+  }
+}
+@include col-x-list;

@@ -67,7 +67,7 @@ export function query(options: IGQuery | IGQuery[], type: 'query' | 'mutation' =
   }
   const query = `${type} {
     ${options.map((options) => `
-      ${options.operation} ${options.args ? `(${generateArgs(options.args)})` : ''} ${options.fields ? `{
+      ${options.operation} ${options.args && !!Object.keys(options.args).length ? `(${generateArgs(options.args)})` : ''} ${options.fields ? `{
         ${generateFields(options.fields)}
       }` : ''}
     `).join('')}

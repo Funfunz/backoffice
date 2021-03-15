@@ -14,18 +14,15 @@
 
 .editTableContainer {
   background-color: $table-background;
-  padding: 25px;
-  .columns:first-child {
-    padding: 0 0 15px;
-  }
-}
-
-.columns {
-  padding: 15px 0;
+  padding: 20px;
 }
 
 .actions {
+  margin-top: 25px;
   text-align: right;
+  & > * {
+    margin-left: 20px;
+  }
 }
 
 .actionButton {

@@ -1,8 +1,5 @@
-import { useCallback, useEffect, useState } from "react"
-import { dispatch, useSelector } from "reducers"
-import { FETCH_ENTRY_FULFILLED, FETCH_ENTRY_PENDING, FETCH_ENTRY_REJECTED } from "reducers/entry"
+import Entity from "services/entity"
 import graphql, { IGQuery } from "./graphql"
-import { IEntity } from "./table"
 
 export interface IFilter {
   [key: string]: string | number | boolean
@@ -11,12 +8,15 @@ export interface IEntryData {
   [key: string]: string | number | boolean | undefined
 }
 
-export function getEntryData(entityName: string, filter: IFilter, fields?: string[]): Promise<IEntryData> {
-  dispatch({ type: FETCH_ENTRY_PENDING })
-  console.log(fields)
+export function getEntryData(entity: Entity, filter?: IFilter): Promise<IEntryData> {
+  const fields = entity.getProperties('edit')
+  if (!filter) {
+    const payload = {}
+    return Promise.resolve(payload)
+  }
   const query: IGQuery = {
-    operation: entityName,
-    fields: (fields && !!fields.length) ? fields : Object.keys(filter),
+    operation: entity.getName(),
+    fields: !!fields.length ? fields : Object.keys(filter),
     args: {
       filter: {}
     }
@@ -31,47 +31,69 @@ export function getEntryData(entityName: string, filter: IFilter, fields?: strin
   return graphql.query(query).then(
     (data: any) => {
       if (data) {
-        dispatch({ 
-          type: FETCH_ENTRY_FULFILLED,
-          payload: data && data[0],
-        })
         return data && data[0]
       }
     }
-  ).catch(
-    (error) => {
-      dispatch({ 
-        type: FETCH_ENTRY_REJECTED,
-        payload: error
-      })
-    }
   )
 }
 
-export async function saveEntryData(entityName: string, filter: IFilter, data: any): Promise<void> {
-  const fields = Object.keys(data)
-  return graphql.mutation({
-    operation: 'update' + entityName[0].toUpperCase() + entityName.substr(1),
+export async function saveEntryData(entity: Entity, data: any, filter?: IFilter): Promise<void> {
+  const entityName = entity.getName()
+  const mutation: IGQuery = {
+    operation: entityName[0].toUpperCase() + entityName.substr(1),
     args: {
-      filter: Object.keys(filter).reduce((res, key) => ({
-        ...res,
-        [key]: {
-          _eq: filter[key]
-        }
-      }), {}),
-      data,
+      data
     },
-    fields: !!fields.length ? fields : Object.keys(filter)
-  }).then(
+    fields: Object.keys(data)
+  }
+  if (filter && mutation.args) {
+    mutation.operation = 'update' + mutation.operation
+    mutation.args.filter = Object.keys(filter).reduce((res, key) => ({
+      ...res,
+      [key]: {
+        _eq: filter[key]
+      }
+    }), {})
+    if (!mutation.fields?.length) {
+      mutation.fields = Object.keys(filter)
+    }
+  } else {
+    mutation.operation = 'add' + mutation.operation
+  }
+  return graphql.mutation(mutation).then(
     (data) => {
-      console.log(data)
+      const payload = Array.isArray(data)
+        ? data[0]
+        : data
+      return payload
     }
   )
 }
 
-
-export function entryEquals(entry: any, filter: IFilter) {
+export function filterMatch(entry: any, filter?: IFilter) {
+  if (entry === undefined && filter === undefined) {
+    return true
+  }
+  if (!filter && entry && !Object.keys(entry).length) {
+    return true
+  }
   return entry && filter && Object.keys(filter).reduce(
+    (result, key) => {
+      // eslint-disable-next-line eqeqeq
+      return result && entry[key] == filter[key]
+    },
+    true as boolean
+  )
+}
+
+export function entryEquals(entry: any, filter?: IFilter) {
+  if (entry === undefined && filter === undefined) {
+    return true
+  }
+  if (!filter && entry && !Object.keys(entry).length) {
+    return true
+  }
+  return entry && filter && Object.keys({ ...filter, ...entry }).reduce(
     (result, key) => {
       // eslint-disable-next-line eqeqeq
       return result && entry[key] == filter[key]
@@ -93,7 +115,7 @@ export function entryDiff(entry: any, newEntry: any) {
     return undefined
   }
   const result: IEntryData = {}
-  Object.keys(entry).forEach(
+  Object.keys({ ...entry, ...newEntry }).forEach(
     (key) => {
       const tmp = entryDiff(entry[key], newEntry[key])
       if (tmp !== undefined) {
@@ -102,34 +124,4 @@ export function entryDiff(entry: any, newEntry: any) {
     }
   )
   return result
-}
-
-/*
- * To be used on Create, View and Edit pages to get and set entry values
- */
-export function useEntry(entity: IEntity, filter: IFilter): [IEntryData, React.Dispatch<React.SetStateAction<IEntryData>>, () => Promise<void>] {
-  const entry = useSelector((state) => state.entry) as IEntryData
-  const loading = useSelector((state) => state.loadingEntry)
-  const error = useSelector((state) => state.errorEntry)
-  const [modifiedEntry, setEntry] = useState(entry || {})
-  
-  useEffect(() => {
-    if (!entryEquals(entry, filter) && !loading && !error && entity.properties?.length) {
-      getEntryData(
-        entity.name,
-        filter,
-        entity.properties?.filter(p => p.layout?.visible?.entityPage).map(p => p.name)
-      ).then(
-        (data) => {
-          setEntry(data)
-        }
-      )
-    } 
-  }, [entity, filter, loading, error, entry])
-
-  const saveEntry = useCallback(() => {
-    return saveEntryData(entity.name, filter, entryDiff(entry, modifiedEntry))
-  }, [entity, filter, modifiedEntry, entry])
-
-  return [modifiedEntry, setEntry, saveEntry]
 }

@@ -1,0 +1,18 @@
+@import "~style/variables.scss";
+
+.select {
+  width: 100%;
+  background-color: transparent;
+  border: 1px solid $neutral-light;
+  outline: none;
+  border-radius: 3px;
+  padding: 7.5px;
+  font-size: 18px;
+  &.readOnly {
+    appearance: none;
+    border: none;
+    padding-left: 0;
+    padding-right: 0;
+    color: $secondary-light;
+  }
+}
