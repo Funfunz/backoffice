@@ -1,34 +1,34 @@
 export interface IProperty {
-  name: string,
-  searchable: boolean,
-  model?: {
-    isPk?: boolean,
-    type: string,
-    allowNull: boolean,
-  },
+  name: string
+  searchable: boolean
+  isPk?: boolean
+  readOnly?: true
+  type: string
+  required?: boolean
+  filterable?: boolean | string[]
   backoffice?: {
-    label?: string,
+    label?: string
     editField?: {
-      type: 'text' | 'number' | 'password',
+      type: string
     },
     entityPage?: {
       filterable?: {
-        type: string,
+        type: string
         inputType: 'checkbox'
         checked: unknown
         unChecked: unknown
       } | {
-        type: string,
-        inputType: 'select',
+        type: string
+        inputType: 'select'
         content: {
-          label: string,
-          value: unknown,
+          label: string
+          value: unknown
         }[]
       },
     },
     visible?: {
-      entityPage: boolean,
-      detail: boolean,
+      entityPage: boolean
+      detail: boolean
       relation: boolean
     },
     [key: string]: unknown
@@ -47,6 +47,7 @@ export interface IEntity {
   loading?: boolean
   name: string
   properties?: IProperty[]
+  visible?: boolean
   backoffice: {
     label: string
   },

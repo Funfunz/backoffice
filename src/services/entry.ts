@@ -9,7 +9,7 @@ export interface IEntryData {
 }
 
 export function getEntryData(entity: Entity, filter?: IFilter): Promise<IEntryData> {
-  const fields = entity.getProperties('edit')
+  const fields = entity.getProperties('view')
   if (!filter) {
     const payload = {}
     return Promise.resolve(payload)
@@ -44,8 +44,9 @@ export async function saveEntryData(entity: Entity, data: any, filter?: IFilter)
     args: {
       data
     },
-    fields: Object.keys(data)
+    fields: Object.keys(data),
   }
+  
   if (filter && mutation.args) {
     mutation.operation = 'update' + mutation.operation
     mutation.args.filter = Object.keys(filter).reduce((res, key) => ({
@@ -103,7 +104,7 @@ export function entryEquals(entry: any, filter?: IFilter) {
 }
 
 export function entryDiff(entry: any, newEntry: any) {
-  if (typeof entry === 'string' || typeof newEntry === 'string' || typeof entry === 'number' || typeof newEntry === 'number' || typeof entry === 'boolean' || typeof newEntry === 'boolean') {
+  if (entry instanceof File || newEntry instanceof File || typeof newEntry === 'string' || typeof entry === 'number' || typeof newEntry === 'number' || typeof entry === 'boolean' || typeof newEntry === 'boolean') {
     return entry !== newEntry ? newEntry : undefined
   }
   if (Array.isArray(entry) || Array.isArray(newEntry)) {

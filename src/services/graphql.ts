@@ -15,6 +15,8 @@ function generateArgs(args: IArgs): string {
             return `"${v}"`
           } else if (typeof value === 'boolean' || typeof value === 'number' || typeof value === 'undefined') {
             return `${v}`
+          } else if (value instanceof File) {
+            return `$${argName}`
           } else {
             return `{${generateArgs(v)}}`
           }
@@ -23,11 +25,50 @@ function generateArgs(args: IArgs): string {
         return `${argName}: "${value}"` 
       } else if (typeof value === 'boolean' || typeof value === 'number' || typeof value === 'undefined') {
         return `${argName}: ${value}`
-      } else {
+      } else if (value instanceof File) {
+        return `${argName}: $${argName}`
+      } else if (Object.keys(value).length) {
         return `${argName}: {${generateArgs(value)}}`
+      } else {
+        return undefined
       }
     }
-  ).join(', ')
+  ).filter(v => v !== undefined).join(', ')
+}
+
+function generateVariables(options: Partial<IGQuery>[] | IArgs) {
+  let typings: Record<string, string> = {}
+  let variables: Record<string, any> = {}
+  if (!Array.isArray(options)) {
+    options = [{ args: options }]
+  }
+  options.forEach(({ args }) => {
+    if (!args) return
+    Object.keys(args).forEach(
+      (argName) => {
+        const value = args[argName]
+        if (Array.isArray(value)) {
+          (value as any[]).filter(v => v instanceof File).forEach((v) => {
+            typings[argName] = 'Upload'
+          })
+        } else if (value instanceof File) {
+          typings[argName] = 'Upload'
+          variables[argName] = value 
+        } else if (typeof value === 'object'){
+          const { typings: newTypigns, variables: newVariables } = generateVariables(args[argName] as IArgs)
+          typings = {
+            ...typings,
+            ...newTypigns
+          }
+          variables = {
+            ...variables,
+            ...newVariables,
+          }
+        }
+      }
+    )
+  })
+  return { typings, variables } 
 }
 
 function generateFields(fields: IFields | string): string {
@@ -53,6 +94,15 @@ function generateFields(fields: IFields | string): string {
     )
   }
 }
+function generateMap(variables: Record<string, any>) {
+  const fields: any[] = []
+  const map: Record<string, string[]> = {}
+  Object.keys(variables).forEach((varName, index) => {
+    fields.push(variables[varName])
+    map[`${index}`] = [`variables.${varName}`]
+  })
+  return { fields, map }
+}
 
 export interface IGQuery {
   operation: string
@@ -65,18 +115,40 @@ export function query(options: IGQuery | IGQuery[], type: 'query' | 'mutation' =
     resultKey = options.operation
     options = [options]
   }
-  const query = `${type} {
-    ${options.map((options) => `
-      ${options.operation} ${options.args && !!Object.keys(options.args).length ? `(${generateArgs(options.args)})` : ''} ${options.fields ? `{
-        ${generateFields(options.fields)}
-      }` : ''}
-    `).join('')}
+  const { typings, variables } = generateVariables(options)
+
+  const query = `${type} ${Object.keys(typings).length 
+    ? `(${Object.keys(typings).map((varName) => `$${varName}: ${typings[varName]}`).join(', ')})`
+    : ''
+  } {
+    ${options.map((options) => {
+      const args = options.args && generateArgs(options.args)
+      return `
+        ${options.operation} ${args ? `(${args})` : ''} ${options.fields ? `{
+          ${generateFields(options.fields)}
+        }` : ''}
+      `
+    }).join('')}
   }`
+
+  let body: FormData | string
+  let contentType: string | undefined
+  if (Object.keys(typings).length) {
+    body = new FormData()
+    body.append("operations", JSON.stringify({ query }))
+    const { map, fields } = generateMap(variables)
+    body.append("map", JSON.stringify(map))
+    fields.forEach((field, index) => (body as FormData).append(`${index}`, field))
+    contentType = undefined
+  } else {
+    body = JSON.stringify({ query })
+    contentType = 'application/json'
+  }
   return http.post('/graphql?', {
-    body: JSON.stringify({ query }),
-    headers: {
-      'Content-Type': 'application/json'
-    }
+    body,
+    headers: contentType ? {
+      'Content-Type': contentType
+    } : {}
   }).then(
     (body: any) => {
       if (body.error) {

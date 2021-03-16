@@ -32,11 +32,12 @@ const ListView: FC = () => {
         <PageTitle text={entity?.getLabel() || '...'}/>
         <Filters filters={debouncedFilter}>
           <Grid>
-          {mapFieldComponents(entity).filter(f => !f.props.readOnly && f.props.type !== 'password').map(
+          {mapFieldComponents(entity, 'filter').map(
             ({ Component, props }, index) =>
               <Column size={4} key={index}>
                 <Component
-                  {...props} 
+                  {...props}
+                  readOnly={false}
                   onChange={setFilter}
                   value={filter[props.name] as string || ''}
                 />
@@ -60,7 +61,7 @@ const ListView: FC = () => {
             : entity && entries && <>
               <Table>
                 <TableHead 
-                  columns={entity.getProperties().map(
+                  columns={entity.getProperties('list').map(
                     (propertyName) => ({
                       name: propertyName,
                       label: entity.getPropertyLabel(propertyName)
