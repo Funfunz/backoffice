@@ -1,19 +1,26 @@
 import Entity from 'services/entity'
-import { IFieldProps, InputField, SelectField, FieldTypes, RelationSelectField } from 'components/Field'
+import { 
+  IFieldProps,
+  InputField,
+  SelectField,
+  FieldTypes,
+  RelationSelectField,
+  FileField
+} from 'components/Field'
 
 export interface IMappedField {
   Component: React.ComponentType<IFieldProps>
   props: IFieldProps
 }
 
-export function mapFieldComponents(entity?: Entity): IMappedField[] {
-  return entity?.getProperties().map(
+export function mapFieldComponents(entity?: Entity, view: 'new' | 'edit' | 'view' | 'filter' = 'view'): IMappedField[] {
+  return entity?.getProperties(view).map(
     (propertyName: string) => {
 
       const props: IFieldProps = {
         name: propertyName,
         label: entity.getPropertyLabel(propertyName),
-        readOnly: entity.getPk() === propertyName,
+        readOnly: entity.isPropertyReadOnly(propertyName),
         type: (
           entity.getPropertyEditFieldType(propertyName) || 
           entity.getPropertyRelationType(propertyName) || 
@@ -38,6 +45,11 @@ export function mapFieldComponents(entity?: Entity): IMappedField[] {
           return {
             Component: SelectField,
             props,
+          }
+        case 'file':
+          return {
+            Component: FileField,
+            props
           }
         case 'text':
         case 'number':
