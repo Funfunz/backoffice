@@ -64,12 +64,12 @@ const Edit: FC<{}> = () => {
 
       <div className={style.editTableContainer}>
         <Grid>
-          {mapFieldComponents(entity).map(
+          {mapFieldComponents(entity, view).map(
             ({ Component, props }, index) =>
               <Column size={6} key={index}>
                 <Component
+                  {...props}
                   readOnly={view === 'view'}
-                  {...props} 
                   onChange={handleChange}
                   value={entry[props.name] as string || ''}
                 />
