@@ -1,0 +1,50 @@
+@import "~style/variables.scss";
+
+.modalWrapper {
+  position: fixed;
+  display: none;
+  &.modalVisible {
+    display: block
+  }
+  background: rgba(0,0,0,0.5);
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+}
+.modalContainer {
+  background: white;
+  padding: 40px 40px 30px 40px;
+  min-width: 400px;
+  border: 1px solid $neutral-light;
+  top: 200px;
+  left: 50%;
+  transform: translateX(-50%);
+  position: absolute;
+  
+  .modalClose {
+    position: absolute;
+    top: 5px;
+    right: 2px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 20px;
+  }
+  .modalHeader {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  .modalBody {
+  }
+  .modalFooter {
+    margin-top: 40px;
+    display: flex;
+    justify-content: flex-end;
+    & > * {
+      margin-left: 10px;
+    }
+
+  }
+}
