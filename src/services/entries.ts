@@ -40,6 +40,25 @@ export function countEntries({ entity, filter = {} }: IGetEntriesArgs): Promise<
   )
 }
 
+export function deleteEntries(entity: Entity, filter: IFilter) {
+  const entityName = entity.getName()
+
+  const query = {
+    operation: `delete${entityName[0].toUpperCase() + entityName.substr(1)}`,
+    args: {
+      filter: parseFilter(filter),
+    },
+    fields: ['deleted'],
+  }
+  return graphql.mutation(query).then(
+    (data: any) => {
+      if (data) {
+        return data
+      }
+    }
+  )
+}
+
 export function getEntries({
   entity,
   filter = {},
