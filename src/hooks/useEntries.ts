@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import Entity from "services/entity"
-import { countEntries, getEntries } from "services/entries"
+import { countEntries, getEntries, deleteEntries } from "services/entries"
 import { entryEquals, IEntryData, IFilter } from "services/entry"
 
 export interface IUseEntriesArgs {
@@ -15,6 +15,7 @@ export interface IUseEntriesRet {
   error?: boolean
   loading?: boolean
   total: number
+  deleteEntry: (pk: number | string) => void
 }
 
 /* Return list of entries for one entity based on a filter */
@@ -34,6 +35,38 @@ export function useEntries({
 
   const [oldArgs, setNewArgs] = useState<{ entity?: string, filter?: IFilter, skip?: number, take?: number }>({})
 
+  const fetchEntries = useCallback(() => {
+    if (!entity) return 
+    setLoading(true)
+    return Promise.all([
+      getEntries({ entity, filter, skip, take, view }),
+      countEntries({ entity, filter })
+    ]).then(
+      ([data, total]) => {
+        setLoading(false)
+        if (data) {
+          setEntries(data)
+          setTotal(total)
+        } else {
+          setError(true)
+        }
+      }
+    ).catch(
+      () => {
+        setLoading(false)
+        setError(true)
+      }
+    )
+  }, [entity, filter, skip, view, take])
+
+  const deleteEntry = useCallback((pk: string | number) => {
+    if (entity) {
+      return deleteEntries(entity, {
+        [entity?.getPk() || 'id']: pk 
+      }).then(fetchEntries)
+    }
+  }, [entity, fetchEntries])
+
   const hasNewArgs = useCallback(() => {
     if (
       entity?.getName() !== oldArgs.entity ||
@@ -48,33 +81,10 @@ export function useEntries({
   }, [entity, oldArgs, filter, skip, take])
 
   useEffect(() => {
-    if (
-      hasNewArgs() &&
-      !loading && !error && 
-      entity
-    ) {
-      setLoading(true)
-      Promise.all([
-        getEntries({ entity, filter, skip, take }),
-        countEntries({ entity, filter })
-      ]).then(
-        ([data, total]) => {
-          setLoading(false)
-          if (data) {
-            setEntries(data)
-            setTotal(total)
-          } else {
-            setError(true)
-          }
-        }
-      ).catch(
-        () => {
-          setLoading(false)
-          setError(true)
-        }
-      )
+    if (hasNewArgs() && !loading && !error) {
+      fetchEntries()
     } 
-  }, [filter, loading, error, setEntries, entity, hasNewArgs, view, skip, take])
+  }, [loading, error, hasNewArgs, fetchEntries])
 
-  return { entries, error, loading, total }
+  return { entries, error, loading, total, deleteEntry }
 }
