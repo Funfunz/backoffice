@@ -35,7 +35,9 @@ export default class Entity {
     }).map(p => p.name) || []
   }
   getPropertyToBeUsedAsLabel() {
-    return this.entity.properties?.find(p => p.backoffice?.visible?.relation)?.name || this.getPk()
+    return this.entity.properties?.find(p => p.backoffice?.visible?.relation)?.name || 
+    this.getPropertyByName('name')?.name  ||
+    this.getPk()
   }
   private getPropertyByName(propertyName: string) {
     return this.entity.properties?.find(p => p.name === propertyName)
