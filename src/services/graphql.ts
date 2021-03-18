@@ -11,11 +11,11 @@ function generateArgs(args: IArgs): string {
       const value = args[argName]
       if (Array.isArray(value)) {
         return `${argName}: [${(value as any[]).map((v) => {
-          if (typeof value === 'string') {
+          if (typeof v === 'string') {
             return `"${v}"`
-          } else if (typeof value === 'boolean' || typeof value === 'number' || typeof value === 'undefined') {
+          } else if (typeof v === 'boolean' || typeof v === 'number' || typeof v === 'undefined') {
             return `${v}`
-          } else if (value instanceof File) {
+          } else if (v instanceof File) {
             return `$${argName}`
           } else {
             return `{${generateArgs(v)}}`
