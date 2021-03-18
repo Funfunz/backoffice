@@ -123,7 +123,7 @@ export function entryDiff(entry: any, newEntry: any) {
   }
   if (Array.isArray(entry) || Array.isArray(newEntry)) {
     for (let i=0; i<Math.max(entry?.length || 0, newEntry?.length || 0); i++) {
-      if (entry[i] !== newEntry[i]) {
+      if (entry?.[i] !== newEntry?.[i]) {
         return newEntry
       }
     }
