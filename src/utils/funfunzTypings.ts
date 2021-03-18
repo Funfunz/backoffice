@@ -36,7 +36,7 @@ export interface IProperty {
 }
 
 export interface IRelation {
-  type: "n:1" | "n:m"
+  type: "n:1" | "n:m" | "m:n"
   foreignKey: string
   relationalEntity: string
   remoteEntity: string

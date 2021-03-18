@@ -26,13 +26,22 @@ export default class Entity {
           return p.isPk || p.backoffice?.visible?.detail !== false
         case 'new':
         case 'edit':
-          return !this.isPropertyReadOnly(p.name) || (p.backoffice?.visible?.detail !== undefined && p.backoffice?.visible?.detail)
+          return !this.isPropertyReadOnly(p.name) || 
+            (p.backoffice?.visible?.detail !== undefined && p.backoffice?.visible?.detail) ||
+            this.getMnRelations()
         case 'list':
         case 'filter':
         default:
           return p.backoffice?.visible?.entityPage !== false
       }
     }).map(p => p.name) || []
+  }
+  getMnRelations() {
+    return this.entity.relations?.filter((relation) => {
+      return relation.type === 'm:n' || relation.type === 'n:m'
+    }).map((relation) => {
+      return relation.remoteEntity
+    }) || []
   }
   getPropertyToBeUsedAsLabel() {
     return this.entity.properties?.find(p => p.backoffice?.visible?.relation)?.name || 
@@ -51,7 +60,10 @@ export default class Entity {
     return property?.type || 'text'
   }
   private getPropertyRelation(propertyName: string) {
-    return this.entity.relations?.find(r => r.foreignKey === propertyName)
+    return this.entity.relations?.find((relation) => {
+      return relation.foreignKey === propertyName || 
+        relation.remoteEntity === propertyName
+    })
   }
   getPropertyRelationType(propertyName: string) {
     const relation = this.getPropertyRelation(propertyName)
