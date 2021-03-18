@@ -11,6 +11,7 @@ export type FieldTypes =
   | 'switch'
   | 'n:1'
   | 'n:m'
+  | 'm:n'
   | 'file'
   | 'select'
 
