@@ -8,8 +8,21 @@ export interface IEntryData {
   [key: string]: string | number | boolean | undefined
 }
 
-export function getEntryData(entity: Entity, filter?: IFilter): Promise<IEntryData> {
-  const fields = entity.getProperties('view')
+export async function getEntryData(entity: Entity, filter?: IFilter): Promise<IEntryData> {
+  const mnFields = await Promise.all(entity.getMnRelations().map((field) => {
+    return graphql.query({
+      operation: `__type`,
+      args: { name: field },
+      fields: { fields: ['name', { type: ['name']}]},
+    }).then(({ fields }) => ({
+      [field]: fields.filter((field: any) => {
+        return field.type.name
+      }).map((field: any) => {
+        return field.name
+      })
+    }))
+  }))
+  const fields = [ ...entity.getProperties('edit'), ...mnFields]
   if (!filter) {
     const payload = {}
     return Promise.resolve(payload)
@@ -39,6 +52,7 @@ export function getEntryData(entity: Entity, filter?: IFilter): Promise<IEntryDa
 
 export async function saveEntryData(entity: Entity, data: any, filter?: IFilter): Promise<void> {
   const entityName = entity.getName()
+  console.log({ data })
   const mutation: IGQuery = {
     operation: entityName[0].toUpperCase() + entityName.substr(1),
     args: {
@@ -55,7 +69,7 @@ export async function saveEntryData(entity: Entity, data: any, filter?: IFilter)
         _eq: filter[key]
       }
     }), {})
-    if (!mutation.fields?.length) {
+    if (mutation.fields?.length) {
       mutation.fields = Object.keys(filter)
     }
   } else {

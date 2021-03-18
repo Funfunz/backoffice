@@ -66,7 +66,7 @@ export function getEntries({
   take = 10,
   skip = 0,
 }: IGetEntriesArgs): Promise<IEntryData[]> {
-
+  
   const query: IGQuery = {
     operation: entity.getName(),
     fields: entity.getProperties(view) || Object.keys(filter),
