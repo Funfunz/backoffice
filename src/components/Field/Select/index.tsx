@@ -1,18 +1,17 @@
 import React, { useCallback, FC, memo } from 'react'
-import classNames from 'classnames'
+import Select from 'react-select'
 
 import { IFieldProps } from 'components/Field'
 import FieldWrapper from 'components/Field/Wrapper'
 
-import classes from './style.module.scss'
-
 export interface ISelectFieldOption {
   value: string | number
-  label?: string
+  label: string | number
 }
   
 export interface ISelectField extends IFieldProps {
   options?: ISelectFieldOption[]
+  isMulti?: boolean
 }
 
 const SelectField: FC<ISelectField> = ({ 
@@ -23,46 +22,35 @@ const SelectField: FC<ISelectField> = ({
   onChange,
   options = [],
   readOnly,
+  isMulti = false
 }) => {
 
-  console.log({ name, value, options })
-
-  const handleChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleChange = useCallback((selected: ISelectFieldOption | ISelectFieldOption[]) => {
     if (onChange) {
-      const value = event.target.value !== undefined && event.target.value !== ""
-        ? typeof options[0]?.value === 'number' 
-          ? Number(event.target.value)
-          : event.target.value
-        : undefined
+      const value = typeof options[0]?.value === 'number' 
+        ? Array.isArray(selected) ? selected.map(s => Number(s.value)) : selected && Number(selected.value)
+        : Array.isArray(selected) ? selected.map(s => s.value) : selected?.value
       onChange(name, value)
     }
   }, [name, onChange, options])
 
   return (
     <FieldWrapper name={name} label={label}>
-      <select
-        disabled={readOnly}
-        className={classNames({
-          [classes.select]: true,
-          [classes.readOnly]: readOnly,
-        })}
-        id={`field-${name}`}
-        name={name}
-        value={value}
+      <Select
+        onChange={handleChange as any}
         placeholder={placeholder}
-        onChange={handleChange}
-      >
-        <option key={-1}>
-          {placeholder}
-        </option>
-        {options.map(
-          (option, index) => (
-            <option key={index} value={option.value}>
-              {option.label || option.value}
-            </option>
-          )
-        )}
-      </select>
+        name={name}
+        isMulti={isMulti}
+        value={isMulti 
+          ? options.filter(o => value.includes(o.value))
+          : options.find(o => o.value === value)
+        }
+        isDisabled={readOnly}
+        options={options.map((o) => ({ 
+          label: o.label || o.value,
+          value: o.value,
+        }))} 
+      />
     </FieldWrapper>
   )
 }
