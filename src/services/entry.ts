@@ -1,5 +1,5 @@
-import Entity from "services/entity"
-import graphql, { IGQuery } from "./graphql"
+import Entity from './entity'
+import graphql, { IGQuery } from './graphql'
 
 export interface IFilter {
   [key: string]: string | number | boolean
@@ -9,46 +9,54 @@ export interface IEntryData {
 }
 
 export async function getEntryData(entity: Entity, filter?: IFilter): Promise<IEntryData> {
-  const mnFields = await Promise.all(entity.getMnRelations().map((entityName) => {
-    return Entity.fetchEntity(entityName).then((entity) => ({
-      [entityName]: entity?.getProperties('relation') as string[]
-    }))
+  const relationEntities = await Promise.all(entity.getMnRelations().map((entityName) => {
+    return Entity.fetchEntity(entityName)
   }))
-  const fields = [ ...entity.getProperties('edit'), ...mnFields]
+  const fields = [
+    ...entity.getProperties('edit'), 
+    ...relationEntities.map((entity) => ({
+      [entity.getName()]: entity.getProperties('relation') as string[],
+    })),
+  ]
   if (!filter) {
     const payload = {}
     return Promise.resolve(payload)
   }
   const query: IGQuery = {
     operation: entity.getName(),
-    fields: !!fields.length ? fields : Object.keys(filter),
+    fields: fields.length ? fields : Object.keys(filter),
     args: {
-      filter: {}
-    }
+      filter: {},
+    },
   }
-  Object.keys(filter).forEach(
-    (key) => {
-      (query.args as any).filter[key] = {
-        _eq: filter[key]
-      }
+  Object.keys(filter).forEach((key) => {
+    (query.args as any).filter[key] = {
+      _eq: filter[key],
     }
-  )
-  return graphql.query(query).then(
-    (data: any) => {
-      if (data) {
-        return data && data[0]
-      }
+  })
+  return graphql.query(query).then((data: any) => {
+    if (data) {
+      return data && data[0]
     }
-  )
+  }).then((data) => {
+    relationEntities.forEach((entity) => {
+      data[entity.getName()] = data[entity.getName()].map((entry: Record<string, number | string>) => {
+        return entry[entity.getPk()]
+      })
+    })
+    return data
+  })
 }
 
 export async function saveEntryData(entity: Entity, data: any, filter?: IFilter): Promise<void> {
+  if (!data || !Object.keys(data).length) {
+    return Promise.resolve()
+  }
   const entityName = entity.getName()
-  console.log({ data })
   const mutation: IGQuery = {
     operation: entityName[0].toUpperCase() + entityName.substr(1),
     args: {
-      data
+      data,
     },
     fields: Object.keys(data),
   }
@@ -58,8 +66,8 @@ export async function saveEntryData(entity: Entity, data: any, filter?: IFilter)
     mutation.args.filter = Object.keys(filter).reduce((res, key) => ({
       ...res,
       [key]: {
-        _eq: filter[key]
-      }
+        _eq: filter[key],
+      },
     }), {})
     if (mutation.fields?.length) {
       mutation.fields = Object.keys(filter)
@@ -73,7 +81,7 @@ export async function saveEntryData(entity: Entity, data: any, filter?: IFilter)
         ? data[0]
         : data
       return payload
-    }
+    },
   )
 }
 
@@ -89,7 +97,7 @@ export function filterMatch(entry: any, filter?: IFilter) {
       // eslint-disable-next-line eqeqeq
       return result && entry[key] == filter[key]
     },
-    true as boolean
+    true as boolean,
   )
 }
 
@@ -105,12 +113,12 @@ export function entryEquals(entry: any, filter?: IFilter) {
       // eslint-disable-next-line eqeqeq
       return result && entry[key] == filter[key]
     },
-    true as boolean
+    true as boolean,
   )
 }
 
 export function entryDiff(entry: any, newEntry: any) {
-  if (entry instanceof File || newEntry instanceof File || typeof newEntry === 'string' || typeof entry === 'number' || typeof newEntry === 'number' || typeof entry === 'boolean' || typeof newEntry === 'boolean') {
+  if (/*entry instanceof File || newEntry instanceof File || */typeof newEntry === 'string' || typeof entry === 'number' || typeof newEntry === 'number' || typeof entry === 'boolean' || typeof newEntry === 'boolean') {
     return entry !== newEntry ? newEntry : undefined
   }
   if (Array.isArray(entry) || Array.isArray(newEntry)) {
@@ -122,13 +130,11 @@ export function entryDiff(entry: any, newEntry: any) {
     return undefined
   }
   const result: IEntryData = {}
-  Object.keys({ ...entry, ...newEntry }).forEach(
-    (key) => {
-      const tmp = entryDiff(entry[key], newEntry[key])
-      if (tmp !== undefined) {
-        result[key] = tmp
-      }
+  Object.keys({ ...entry, ...newEntry }).forEach((key) => {
+    const tmp = entryDiff(entry[key], newEntry[key])
+    if (tmp !== undefined) {
+      result[key] = tmp
     }
-  )
+  })
   return result
 }

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { runForceUpdate, useForceUpdate } from 'react-forceupdate'
-import Entity from 'services/entity'
+import Entity from '../services/entity'
 
 function shouldFetchEntity(entityName?: string) {
   return entityName &&
@@ -16,11 +16,9 @@ export function useEntity(entityName?: string): Entity | undefined {
 
   useEffect(() => { 
     if (shouldFetchEntity(entityName)) {
-      Entity.fetchEntity(entityName as string).then(
-        () => {
-          runForceUpdate(`entities/${entityName}`)
-        }
-      )
+      Entity.fetchEntity(entityName as string).then(() => {
+        runForceUpdate(`entities/${entityName}`)
+      })
     } 
   }, [entityName])
 

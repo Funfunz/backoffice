@@ -1,6 +1,6 @@
-import graphql from 'services/graphql'
-import { friendlyName } from 'utils'
-import { IEntity } from 'utils/funfunzTypings'
+import graphql from './graphql'
+import { friendlyName } from '../utils'
+import { IEntity } from '../utils/funfunzTypings'
 
 export default class Entity {
   private static entities: Record<string, Entity> = {}
@@ -23,19 +23,19 @@ export default class Entity {
   getProperties(view: 'view' | 'new' |'list' | 'edit' | 'relation' | 'filter' = 'list') {
     return this.entity.properties?.filter(p => {
       switch (view) {
-        case 'relation':
-          return p.isPk || p.backoffice?.visible?.relation !== false
-        case 'view':
-          return p.isPk || p.backoffice?.visible?.detail !== false
-        case 'new':
-        case 'edit':
-          return !this.isPropertyReadOnly(p.name) || 
-            (p.backoffice?.visible?.detail !== undefined && p.backoffice?.visible?.detail) ||
-            this.getMnRelations()
-        case 'list':
-        case 'filter':
-        default:
-          return p.backoffice?.visible?.entityPage !== false
+      case 'relation':
+        return p.isPk || p.backoffice?.visible?.relation !== false
+      case 'view':
+        return p.isPk || p.backoffice?.visible?.detail !== false
+      case 'new':
+      case 'edit':
+        return !this.isPropertyReadOnly(p.name) || 
+          (p.backoffice?.visible?.detail !== undefined && p.backoffice?.visible?.detail) ||
+          this.getMnRelations()
+      case 'list':
+      case 'filter':
+      default:
+        return p.backoffice?.visible?.entityPage !== false
       }
     }).map(p => p.name) || []
   }
@@ -104,7 +104,7 @@ export default class Entity {
     Entity.loading[entityName] = true
     const config = await graphql.query({
       operation: 'config',
-      fields: [entityName]
+      fields: [entityName],
     })
     if (config[entityName]) {
       Entity.entities[entityName] = new Entity(config[entityName])

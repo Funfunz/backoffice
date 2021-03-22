@@ -1,4 +1,4 @@
-import { API_ADDRESS } from 'constants/api'
+import { API_ADDRESS } from '../constants/api'
 
 type FetchMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
 
@@ -48,6 +48,7 @@ export class HTTP {
       ])
     }).then(([response, body]) => {
       if (!response.ok) {
+        console.log(response, body)
         throw new HttpError({
           status: response.status,
           statusText: response.statusText,

@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState } from "react"
-import Entity from "services/entity"
-import { countEntries, getEntries, deleteEntries } from "services/entries"
-import { entryEquals, IEntryData, IFilter } from "services/entry"
+import { useCallback, useEffect, useState } from 'react'
+import Entity from '../services/entity'
+import { countEntries, getEntries, deleteEntries } from '../services/entries'
+import { entryEquals, IEntryData, IFilter } from '../services/entry'
 
 export interface IUseEntriesArgs {
   entity?: Entity
@@ -9,6 +9,7 @@ export interface IUseEntriesArgs {
   view?: Parameters<Entity['getProperties']>[0]
   skip?: number
   take?: number
+  request?: boolean
 }
 export interface IUseEntriesRet {
   entries: IEntryData[]
@@ -25,6 +26,7 @@ export function useEntries({
   view = 'list',
   skip = 0,
   take = 10,
+  request = true,
 }: IUseEntriesArgs): IUseEntriesRet {
 
   const [entries, setEntries] = useState<IEntryData[]>([])
@@ -36,33 +38,29 @@ export function useEntries({
   const [oldArgs, setNewArgs] = useState<{ entity?: string, filter?: IFilter, skip?: number, take?: number }>({})
 
   const fetchEntries = useCallback(() => {
-    if (!entity) return 
+    if (!entity || !request) return
     setLoading(true)
     return Promise.all([
       getEntries({ entity, filter, skip, take, view }),
-      countEntries({ entity, filter })
-    ]).then(
-      ([data, total]) => {
-        setLoading(false)
-        if (data) {
-          setEntries(data)
-          setTotal(total)
-        } else {
-          setError(true)
-        }
-      }
-    ).catch(
-      () => {
-        setLoading(false)
+      countEntries({ entity, filter }),
+    ]).then(([data, total]) => {
+      setLoading(false)
+      if (data) {
+        setEntries(data)
+        setTotal(total)
+      } else {
         setError(true)
       }
-    )
-  }, [entity, filter, skip, view, take])
+    }).catch(() => {
+      setLoading(false)
+      setError(true)
+    })
+  }, [entity, filter, skip, view, take, request])
 
   const deleteEntry = useCallback((pk: string | number) => {
     if (entity) {
       return deleteEntries(entity, {
-        [entity?.getPk() || 'id']: pk 
+        [entity?.getPk() || 'id']: pk,
       }).then(fetchEntries)
     }
   }, [entity, fetchEntries])
