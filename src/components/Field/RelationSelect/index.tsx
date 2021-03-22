@@ -11,13 +11,6 @@ const RelationSelectField: FC<IRelationSelectField> = (props) => {
   const entity = useEntity(props.relationEntityName)
   const isMulti = props.type === 'm:n' || props.type === 'n:m'
   const { entries } = useEntries({ entity, view: 'relation' })
-  useEffect(() => {
-    if (props.onChange && Array.isArray(props.value) && typeof props.value[0] === 'object') {
-      props.onChange(props.name, props.value.map((entry: any) => {
-        return entry?.[entity?.getPk() || 'id']
-      }))
-    }
-  }, [props, entity])
   return (
     <Select
       isMulti={isMulti}

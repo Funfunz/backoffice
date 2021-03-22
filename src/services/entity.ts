@@ -1,8 +1,11 @@
-import graphql from 'services/graphql'
-import { friendlyName } from 'utils'
-import { IEntity } from 'utils/funfunzTypings'
+import graphql from './graphql'
+import { friendlyName } from '../utils'
+import { IEntity } from '../utils/funfunzTypings'
 
 export default class Entity {
+  private static entities: Record<string, Entity> = {}
+  private static loading: Record<string, boolean> = {}
+  private static errors: Record<string, boolean> = {}
   private entity: IEntity
   constructor(entity: IEntity) {
     this.entity = entity
@@ -20,19 +23,19 @@ export default class Entity {
   getProperties(view: 'view' | 'new' |'list' | 'edit' | 'relation' | 'filter' = 'list') {
     return this.entity.properties?.filter(p => {
       switch (view) {
-        case 'relation':
-          return p.isPk || p.backoffice?.visible?.relation !== false
-        case 'view':
-          return p.isPk || p.backoffice?.visible?.detail !== false
-        case 'new':
-        case 'edit':
-          return !this.isPropertyReadOnly(p.name) || 
-            (p.backoffice?.visible?.detail !== undefined && p.backoffice?.visible?.detail) ||
-            this.getMnRelations()
-        case 'list':
-        case 'filter':
-        default:
-          return p.backoffice?.visible?.entityPage !== false
+      case 'relation':
+        return p.isPk || p.backoffice?.visible?.relation !== false
+      case 'view':
+        return p.isPk || p.backoffice?.visible?.detail !== false
+      case 'new':
+      case 'edit':
+        return !this.isPropertyReadOnly(p.name) || 
+          (p.backoffice?.visible?.detail !== undefined && p.backoffice?.visible?.detail) ||
+          this.getMnRelations()
+      case 'list':
+      case 'filter':
+      default:
+        return p.backoffice?.visible?.entityPage !== false
       }
     }).map(p => p.name) || []
   }
@@ -85,18 +88,33 @@ export default class Entity {
     const property = this.getPropertyByName(propertyName)
     return property?.backoffice?.label || friendlyName(property?.name || propertyName)
   }
-  static fetchEntity(entityName: string) {
-    return graphql.query({
+  static isError(entityName: string) {
+    return Entity.errors[entityName] ? true : false
+  }
+  static isLoading(entityName: string) {
+    return Entity.loading[entityName] || false
+  }
+  static getEntity(entityName: string) {
+    return Entity.entities[entityName]
+  }
+  static async fetchEntity(entityName: string) {
+    if (Entity.entities[entityName]) {
+      return Entity.entities[entityName]
+    }
+    Entity.loading[entityName] = true
+    const config = await graphql.query({
       operation: 'config',
-      fields: [entityName]
-    }).then(
-      (config: any) => {
-        if (config[entityName]) {
-          return new Entity(config[entityName])
-        } else {
-          throw new Error(`Entity ${entityName} not found`)
-        }
-      }
-    )
+      fields: [entityName],
+    })
+    if (config[entityName]) {
+      Entity.entities[entityName] = new Entity(config[entityName])
+      Entity.loading[entityName] = false
+      Entity.errors[entityName] = false
+      return Entity.entities[entityName]
+    } else {
+      Entity.loading[entityName] = false
+      Entity.errors[entityName] = true
+      throw new Error(`Entity ${entityName} not found`)
+    }
   }
 }

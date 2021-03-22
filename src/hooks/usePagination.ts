@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from 'react'
 
 const DEFAULT_SKIP = 0
 const DEFAULT_TAKE = 10

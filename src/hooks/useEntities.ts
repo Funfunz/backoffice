@@ -1,6 +1,6 @@
-import { useEffect } from "react"
+import { useEffect } from 'react'
 import { useForceUpdate, runForceUpdate } from 'react-forceupdate'
-import { listEntities } from "services/entities"
+import { listEntities } from '../services/entities'
 
 let entities: { name: string, label: string }[] = []
 let loading: boolean
@@ -24,6 +24,6 @@ export function useEntities(filter: string = '') {
 
   return {
     entities: entities.filter(e => e.name.toLowerCase().includes(filter.toLowerCase())),
-    loading: loading === undefined ? true : loading
+    loading: loading === undefined ? true : loading,
   }
 }
