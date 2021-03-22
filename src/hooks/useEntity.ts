@@ -2,9 +2,12 @@ import { useEffect } from 'react'
 import { runForceUpdate, useForceUpdate } from 'react-forceupdate'
 import Entity from 'services/entity'
 
-const entities: Record<string, Entity> = {}
-const loading: Record<string, boolean> = {}
-const errors: Record<string, boolean | any> = {}
+function shouldFetchEntity(entityName?: string) {
+  return entityName &&
+    !Entity.getEntity(entityName) && 
+    !Entity.isLoading(entityName) && 
+    !Entity.isError(entityName)
+}
 
 /* Get entity config by entity name */
 export function useEntity(entityName?: string): Entity | undefined {
@@ -12,25 +15,14 @@ export function useEntity(entityName?: string): Entity | undefined {
   useForceUpdate(`entities/${entityName}`)
 
   useEffect(() => { 
-    if (entityName && !entities[entityName] && !loading[entityName] && !errors[entityName]) {
-      loading[entityName] = true
-      Entity.fetchEntity(entityName).then(
-        (entity) => {
-          entities[entityName] = entity
-          loading[entityName] = false
-          errors[entityName] = false
-          runForceUpdate(`entities/${entityName}`)
-        }
-      ).catch(
-        (error) => {
-          if (entityName) {
-            errors[entityName] = error
-          }
+    if (shouldFetchEntity(entityName)) {
+      Entity.fetchEntity(entityName as string).then(
+        () => {
           runForceUpdate(`entities/${entityName}`)
         }
       )
     } 
   }, [entityName])
 
-  return entityName ? entities[entityName] : undefined
+  return entityName ? Entity.getEntity(entityName) : undefined
 }

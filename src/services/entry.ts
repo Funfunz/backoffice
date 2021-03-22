@@ -9,17 +9,9 @@ export interface IEntryData {
 }
 
 export async function getEntryData(entity: Entity, filter?: IFilter): Promise<IEntryData> {
-  const mnFields = await Promise.all(entity.getMnRelations().map((field) => {
-    return graphql.query({
-      operation: `__type`,
-      args: { name: field },
-      fields: { fields: ['name', { type: ['name']}]},
-    }).then(({ fields }) => ({
-      [field]: fields.filter((field: any) => {
-        return field.type.name
-      }).map((field: any) => {
-        return field.name
-      })
+  const mnFields = await Promise.all(entity.getMnRelations().map((entityName) => {
+    return Entity.fetchEntity(entityName).then((entity) => ({
+      [entityName]: entity?.getProperties('relation') as string[]
     }))
   }))
   const fields = [ ...entity.getProperties('edit'), ...mnFields]
