@@ -1,4 +1,4 @@
-import React, { FC, memo, useEffect } from "react"
+import React, { FC, memo } from "react"
 import { useEntity } from "hooks/useEntity"
 import { useEntries } from "hooks/useEntries"
 import Select, { ISelectField, ISelectFieldOption } from "components/Field/Select"
