@@ -1,4 +1,4 @@
-import { API_ADDRESS } from '../constants/api'
+import { API_ADDRESS, API_PASS, API_USER } from '../constants/api'
 
 type FetchMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
 
@@ -40,6 +40,9 @@ export class HTTP {
       ...options,
       method,
       body: options.body,
+    }
+    if (API_USER && API_PASS) {
+      (mergedOptions.headers as Record<string, string>)['Authorization'] = `Basic ${btoa(`${API_USER}:${API_PASS}`)}`
     }
     return fetch(url, mergedOptions).then((response) => {
       return Promise.all([
