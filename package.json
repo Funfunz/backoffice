@@ -33,7 +33,7 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "merge-github": "git remote add github https://github.com/Funfunz/backoffice.git && git fetch github master:github && git merge github",
+    "merge-github": "(git remote add github https://github.com/Funfunz/backoffice.git | true) && git fetch github master:github && git merge github",
     "start": "react-scripts start",
     "build": "CI= react-scripts build",
     "test": "react-scripts test",
