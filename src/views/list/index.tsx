@@ -75,7 +75,7 @@ const ListView: FC = () => {
       </div>
       <div className={classes.tableContainer}>
         {error 
-          ? <Message error={!!error} text={error + ''} />
+          ? <Message error={!!error} text={'No items available'} />
           : loading
             ? <Message loading />
             : entity && entries && <>
