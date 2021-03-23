@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState } from "react"
-import Entity from "services/entity"
-import { countEntries, getEntries } from "services/entries"
-import { entryEquals, IEntryData, IFilter } from "services/entry"
+import { useCallback, useEffect, useState } from 'react'
+import Entity from '../services/entity'
+import { countEntries, getEntries, deleteEntries } from '../services/entries'
+import { entryEquals, IEntryData, IFilter } from '../services/entry'
 
 export interface IUseEntriesArgs {
   entity?: Entity
@@ -9,12 +9,14 @@ export interface IUseEntriesArgs {
   view?: Parameters<Entity['getProperties']>[0]
   skip?: number
   take?: number
+  request?: boolean
 }
 export interface IUseEntriesRet {
   entries: IEntryData[]
   error?: boolean
   loading?: boolean
   total: number
+  deleteEntry: (pk: number | string) => void
 }
 
 /* Return list of entries for one entity based on a filter */
@@ -24,6 +26,7 @@ export function useEntries({
   view = 'list',
   skip = 0,
   take = 10,
+  request = true,
 }: IUseEntriesArgs): IUseEntriesRet {
 
   const [entries, setEntries] = useState<IEntryData[]>([])
@@ -33,6 +36,34 @@ export function useEntries({
   const [error, setError] = useState(false)
 
   const [oldArgs, setNewArgs] = useState<{ entity?: string, filter?: IFilter, skip?: number, take?: number }>({})
+
+  const fetchEntries = useCallback(() => {
+    if (!entity || !request) return
+    setLoading(true)
+    return Promise.all([
+      getEntries({ entity, filter, skip, take, view }),
+      countEntries({ entity, filter }),
+    ]).then(([data, total]) => {
+      setLoading(false)
+      if (data) {
+        setEntries(data)
+        setTotal(total)
+      } else {
+        setError(true)
+      }
+    }).catch(() => {
+      setLoading(false)
+      setError(true)
+    })
+  }, [entity, filter, skip, view, take, request])
+
+  const deleteEntry = useCallback((pk: string | number) => {
+    if (entity) {
+      return deleteEntries(entity, {
+        [entity?.getPk() || 'id']: pk,
+      }).then(fetchEntries)
+    }
+  }, [entity, fetchEntries])
 
   const hasNewArgs = useCallback(() => {
     if (
@@ -48,33 +79,10 @@ export function useEntries({
   }, [entity, oldArgs, filter, skip, take])
 
   useEffect(() => {
-    if (
-      hasNewArgs() &&
-      !loading && !error && 
-      entity
-    ) {
-      setLoading(true)
-      Promise.all([
-        getEntries({ entity, filter, skip, take }),
-        countEntries({ entity, filter })
-      ]).then(
-        ([data, total]) => {
-          setLoading(false)
-          if (data) {
-            setEntries(data)
-            setTotal(total)
-          } else {
-            setError(true)
-          }
-        }
-      ).catch(
-        () => {
-          setLoading(false)
-          setError(true)
-        }
-      )
+    if (hasNewArgs() && !loading && !error) {
+      fetchEntries()
     } 
-  }, [filter, loading, error, setEntries, entity, hasNewArgs, view, skip, take])
+  }, [loading, error, hasNewArgs, fetchEntries])
 
-  return { entries, error, loading, total }
+  return { entries, error, loading, total, deleteEntry }
 }

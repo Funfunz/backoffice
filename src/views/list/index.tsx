@@ -1,4 +1,4 @@
-import React, { FC, memo } from "react"
+import React, { FC, memo, useCallback, useState } from "react"
 import { useParams } from 'react-router-dom'
 
 import { usePagination } from "hooks/usePagination"
@@ -17,6 +17,7 @@ import Filters from "components/Filters"
 import classes from './style.module.scss'
 import { mapFieldComponents } from "utils/fields"
 import { Column, Grid } from "components/Grid"
+import Modal from "components/Modal"
 
 const ListView: FC = () => {
 
@@ -24,19 +25,39 @@ const ListView: FC = () => {
   const entity = useEntity(entityName)
   const {skip, setSkip, take, setTake } = usePagination()
   const {filter, setFilter, debouncedFilter } = useFilter(entity)
-  const { entries, loading, error, total } = useEntries({ entity, filter: debouncedFilter, skip, take })
+  const { entries, loading, error, total, deleteEntry } = useEntries({ entity, filter: debouncedFilter, skip, take })
 
-  return (
+  const [toDelete, setToDelete] = useState<number | string | undefined>(undefined)
+  const deleteRow = useCallback(() => {
+    if(toDelete) {
+      deleteEntry(toDelete)
+      setToDelete(undefined)
+    }
+  }, [deleteEntry, setToDelete, toDelete])
+  const closeModal = useCallback(() => setToDelete(undefined), [])
+
+  return <>
+    <Modal 
+      visible={toDelete !== undefined}
+      title="Delete entry?"
+      description={`${entries.find(e => toDelete && e[entity?.getPk() || 'id'] === toDelete)?.[entity?.getPropertyToBeUsedAsLabel() || 'id']}`}
+      onClose={closeModal}
+      actions={[
+        <ActionButton key={0} type="goback" onClick={closeModal} />,
+        <ActionButton key={1} type="delete" onClick={deleteRow} />,
+      ]}
+    />
     <div className={classes.container}>
       <div className={classes.toolbar}>
         <PageTitle text={entity?.getLabel() || '...'}/>
         <Filters filters={debouncedFilter}>
           <Grid>
-          {mapFieldComponents(entity).filter(f => !f.props.readOnly && f.props.type !== 'password').map(
+          {mapFieldComponents(entity, 'filter').map(
             ({ Component, props }, index) =>
               <Column size={4} key={index}>
                 <Component
-                  {...props} 
+                  {...props}
+                  readOnly={false}
                   onChange={setFilter}
                   value={filter[props.name] as string || ''}
                 />
@@ -60,7 +81,7 @@ const ListView: FC = () => {
             : entity && entries && <>
               <Table>
                 <TableHead 
-                  columns={entity.getProperties().map(
+                  columns={entity.getProperties('list').map(
                     (propertyName) => ({
                       name: propertyName,
                       label: entity.getPropertyLabel(propertyName)
@@ -76,19 +97,17 @@ const ListView: FC = () => {
                         columns={entity.getProperties()}
                         data={entry}
                         actions={[
-                          <ActionButton
-                            key={0}
+                          <ActionButton key={0}
                             type="view"
                             navigateTo={`/view/${entity?.getName()}/${entry[entity?.getPk() || 'id']}`}
                           />,
-                          <ActionButton
-                            key={0}
+                          <ActionButton key={1}
                             type="edit"
                             navigateTo={`/edit/${entity?.getName()}/${entry[entity?.getPk() || 'id']}`}
                           />,
-                          <ActionButton
-                            key={1}
+                          <ActionButton key={2}
                             type="delete"
+                            onClick={() => setToDelete(entry[entity?.getPk() || 'id'] as number | string)}
                           />
                         ]}
                       />
@@ -107,7 +126,7 @@ const ListView: FC = () => {
         }
       </div>
     </div>
-  )
+  </>
 }
 
 export default memo(ListView)

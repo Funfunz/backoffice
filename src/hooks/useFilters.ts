@@ -1,10 +1,10 @@
-import { useCallback } from "react"
-import { runForceUpdate, useForceUpdate } from "react-forceupdate"
+import { useCallback } from 'react'
+import { runForceUpdate, useForceUpdate } from 'react-forceupdate'
 
-import { useDebouncedValue } from "hooks/useDebounce"
+import { useDebouncedValue } from './useDebounce'
 
-import { IFilter } from "services/entry"
-import Entity from "services/entity"
+import { IFilter } from '../services/entry'
+import Entity from '../services/entity'
 
 let filter: IFilter
 let entityToFilter: Entity
@@ -28,20 +28,20 @@ export function useFilter(entity?: Entity): IUseFilter {
   const setFilter = useCallback((filterOrName: IFilter|string, value: any) => {
     if (filterOrName) {
       if (typeof filterOrName === 'string') {
-        if (value === "" || value === undefined || value === null) {
+        if (value === '' || value === undefined || value === null) {
           delete filter[filterOrName]
           filter = { ...filter }
         } else {
           filter = {
             ...filter,
-            [filterOrName]: value
+            [filterOrName]: value,
           }
         }
         
       } else {
         filter = {
           ...filter,
-          ...filterOrName
+          ...filterOrName,
         }
       }
     } else {
@@ -55,6 +55,6 @@ export function useFilter(entity?: Entity): IUseFilter {
   return {
     filter,
     debouncedFilter,
-    setFilter
+    setFilter,
   }
 }

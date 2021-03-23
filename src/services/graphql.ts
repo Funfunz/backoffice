@@ -1,8 +1,15 @@
-import http, { HttpError } from 'services/http'
+import http, { HttpError } from './http'
 
 export type IFields = Array<string | { [key: string]: IFields }> | { [key: string]: IFields }
 export interface IArgs {
   [key: string]: IArgs | string | number | boolean | undefined | IArgs[] | string[] | number[] | boolean[]
+}
+
+function isFile(file: any = {}) {
+  return typeof file.lastModified === 'number' && 
+    typeof file.name === 'string' &&
+    typeof file.size === 'number' &&
+    typeof file.type === 'string'
 }
 
 function generateArgs(args: IArgs): string {
@@ -11,10 +18,12 @@ function generateArgs(args: IArgs): string {
       const value = args[argName]
       if (Array.isArray(value)) {
         return `${argName}: [${(value as any[]).map((v) => {
-          if (typeof value === 'string') {
+          if (typeof v === 'string') {
             return `"${v}"`
-          } else if (typeof value === 'boolean' || typeof value === 'number' || typeof value === 'undefined') {
+          } else if (typeof v === 'boolean' || typeof v === 'number' || typeof v === 'undefined') {
             return `${v}`
+          } else if (isFile(v)) {
+            return `$${argName}`
           } else {
             return `{${generateArgs(v)}}`
           }
@@ -23,11 +32,50 @@ function generateArgs(args: IArgs): string {
         return `${argName}: "${value}"` 
       } else if (typeof value === 'boolean' || typeof value === 'number' || typeof value === 'undefined') {
         return `${argName}: ${value}`
-      } else {
+      } else if (isFile(value)) {
+        return `${argName}: $${argName}`
+      } else if (Object.keys(value).length) {
         return `${argName}: {${generateArgs(value)}}`
+      } else {
+        return undefined
       }
-    }
-  ).join(', ')
+    },
+  ).filter(v => v !== undefined).join(', ')
+}
+
+function generateVariables(options: Partial<IGQuery>[] | IArgs) {
+  let typings: Record<string, string> = {}
+  let variables: Record<string, any> = {}
+  if (!Array.isArray(options)) {
+    options = [{ args: options }]
+  }
+  options.forEach(({ args }) => {
+    if (!args) return
+    Object.keys(args).forEach(
+      (argName) => {
+        const value = args[argName]
+        if (Array.isArray(value)) {
+          (value as any[]).filter(v => isFile(v)).forEach(() => {
+            typings[argName] = 'Upload'
+          })
+        } else if (isFile(value)) {
+          typings[argName] = 'Upload'
+          variables[argName] = value
+        } else if (typeof value === 'object'){
+          const { typings: newTypigns, variables: newVariables } = generateVariables(args[argName] as IArgs)
+          typings = {
+            ...typings,
+            ...newTypigns,
+          }
+          variables = {
+            ...variables,
+            ...newVariables,
+          }
+        }
+      },
+    )
+  })
+  return { typings, variables } 
 }
 
 function generateFields(fields: IFields | string): string {
@@ -39,7 +87,7 @@ function generateFields(fields: IFields | string): string {
         return `${result}
           ${generateFields(field)}
         `
-      },''
+      },'',
     )
   } else {
     return Object.keys(fields).reduce(
@@ -49,9 +97,18 @@ function generateFields(fields: IFields | string): string {
             ${generateFields(fields[fieldName])}
           }
         `
-      },''
+      },'',
     )
   }
+}
+function generateMap(variables: Record<string, any>) {
+  const fields: any[] = []
+  const map: Record<string, string[]> = {}
+  Object.keys(variables).forEach((varName, index) => {
+    fields.push(variables[varName])
+    map[`${index}`] = [`variables.${varName}`]
+  })
+  return { fields, map }
 }
 
 export interface IGQuery {
@@ -65,34 +122,52 @@ export function query(options: IGQuery | IGQuery[], type: 'query' | 'mutation' =
     resultKey = options.operation
     options = [options]
   }
-  const query = `${type} {
-    ${options.map((options) => `
-      ${options.operation} ${options.args && !!Object.keys(options.args).length ? `(${generateArgs(options.args)})` : ''} ${options.fields ? `{
+  const { typings, variables } = generateVariables(options)
+
+  const query = `${type} ${Object.keys(typings).length 
+    ? `(${Object.keys(typings).map((varName) => `$${varName}: ${typings[varName]}`).join(', ')})`
+    : ''
+  } {
+    ${options.map((options) => {
+    const args = options.args && generateArgs(options.args)
+    return `
+      ${options.operation} ${args ? `(${args})` : ''} ${options.fields ? `{
         ${generateFields(options.fields)}
       }` : ''}
-    `).join('')}
+    `
+  }).join('')}
   }`
+
+  let body: FormData | string
+  let contentType: string | undefined
+  if (Object.keys(typings).length) {
+    body = new FormData()
+    body.append('operations', JSON.stringify({ query }))
+    const { map, fields } = generateMap(variables)
+    body.append('map', JSON.stringify(map))
+    fields.forEach((field, index) => (body as FormData).append(`${index}`, field))
+    contentType = undefined
+  } else {
+    body = JSON.stringify({ query })
+    contentType = 'application/json'
+  }
   return http.post('/graphql?', {
-    body: JSON.stringify({ query }),
-    headers: {
-      'Content-Type': 'application/json'
+    body,
+    headers: contentType ? {
+      'Content-Type': contentType,
+    } : {},
+  }).then((body: any) => {
+    if (body.error) {
+      throw body.error
     }
-  }).then(
-    (body: any) => {
-      if (body.error) {
-        throw body.error
-      }
-      return body.data && (
-        resultKey
-          ? body.data[resultKey]
-          : body.data
-      )
-    }
-  ).catch(
-    (httpError: HttpError) => {
-      throw httpError?.body?.errors?.[0]?.message || httpError?.body?.error?.message || httpError
-    }
-  )
+    return body.data && (
+      resultKey
+        ? body.data[resultKey]
+        : body.data
+    )
+  }).catch((httpError: HttpError) => {
+    throw httpError?.body?.errors?.[0]?.message || httpError?.body?.error?.message || httpError
+  })
 }
 
 export function mutation(options: IGQuery | IGQuery[]) {

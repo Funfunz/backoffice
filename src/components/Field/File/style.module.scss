@@ -1,6 +1,6 @@
 @import "~style/variables.scss";
 
-.select {
+.input {
   width: 100%;
   background-color: transparent;
   border: 1px solid $neutral-light;
@@ -9,10 +9,14 @@
   padding: 7.5px;
   font-size: 18px;
   &.readOnly {
-    appearance: none;
     border: none;
     padding-left: 0;
     padding-right: 0;
     color: $secondary-light;
   }
+}
+
+.renderImage {
+  width: 100%;
+  height: auto;
 }

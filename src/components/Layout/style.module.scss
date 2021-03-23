@@ -1,6 +1,6 @@
 @import 'style/mixins';
 
-.layout {
+.container {
   display: flex;
   & > .main {
     flex-grow: 1;

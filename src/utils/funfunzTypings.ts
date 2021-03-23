@@ -1,34 +1,34 @@
 export interface IProperty {
-  name: string,
-  searchable: boolean,
-  model?: {
-    isPk?: boolean,
-    type: string,
-    allowNull: boolean,
-  },
-  layout?: {
-    label?: string,
+  name: string
+  searchable: boolean
+  isPk?: boolean
+  readOnly?: true
+  type: string
+  required?: boolean
+  filterable?: boolean | string[]
+  backoffice?: {
+    label?: string
     editField?: {
-      type: 'text' | 'number' | 'password',
+      type: string
     },
     entityPage?: {
       filterable?: {
-        type: string,
+        type: string
         inputType: 'checkbox'
         checked: unknown
         unChecked: unknown
       } | {
-        type: string,
-        inputType: 'select',
+        type: string
+        inputType: 'select'
         content: {
-          label: string,
-          value: unknown,
+          label: string
+          value: unknown
         }[]
       },
     },
     visible?: {
-      entityPage: boolean,
-      detail: boolean,
+      entityPage: boolean
+      detail: boolean
       relation: boolean
     },
     [key: string]: unknown
@@ -36,10 +36,10 @@ export interface IProperty {
 }
 
 export interface IRelation {
-  type: "n:1" | "n:m"
+  type: "n:1" | "n:m" | "m:n"
   foreignKey: string
-  relationalTable: string
-  remoteTable: string
+  relationalEntity: string
+  remoteEntity: string
 }
 
 export interface IEntity {
@@ -47,7 +47,8 @@ export interface IEntity {
   loading?: boolean
   name: string
   properties?: IProperty[]
-  layout: {
+  visible?: boolean
+  backoffice: {
     label: string
   },
   relations?: IRelation[]

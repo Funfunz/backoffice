@@ -31,7 +31,7 @@ const Welcome: FC<IWelcomeProps> = () => {
           <p className={style.firstSteps}>First steps</p>
           <ul className={style.linksList}>
             <NavLink to={`/todo/`}>
-              View Families
+              View Nequaerat 
             </NavLink>
             <NavLink to={`/todo/`}>
               Add new item

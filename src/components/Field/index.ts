@@ -11,6 +11,8 @@ export type FieldTypes =
   | 'switch'
   | 'n:1'
   | 'n:m'
+  | 'm:n'
+  | 'file'
   | 'select'
 
 export interface IFieldProps {
@@ -26,4 +28,5 @@ export interface IFieldProps {
 
 export { default as InputField } from './Input'
 export { default as SelectField } from './Select'
+export { default as FileField } from './File'
 export { default as RelationSelectField } from './RelationSelect'

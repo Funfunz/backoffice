@@ -9,9 +9,11 @@ export interface IRelationSelectField extends ISelectField {
 
 const RelationSelectField: FC<IRelationSelectField> = (props) => {
   const entity = useEntity(props.relationEntityName)
+  const isMulti = props.type === 'm:n' || props.type === 'n:m'
   const { entries } = useEntries({ entity, view: 'relation' })
   return (
     <Select
+      isMulti={isMulti}
       options={entries.map((entry) => {
         return {
           label: entry[entity?.getPropertyToBeUsedAsLabel() || 'name'],

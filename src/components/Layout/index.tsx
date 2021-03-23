@@ -2,8 +2,10 @@ import React, { FC, memo } from 'react'
 import { Route } from 'react-router-dom'
 import classNames from 'classnames'
 import TopMenu from 'components/TopMenu'
-import SideMenu from 'components/side-menu'
 import style from './style.module.scss'
+import Hamburger from 'components/Hamburger'
+import Logo from 'components/Logo'
+import SideBar from 'components/SideBar'
 
 export interface ILayoutProps {
   children?: any[] | any;
@@ -12,12 +14,14 @@ export interface ILayoutProps {
 
 const Layout: FC<ILayoutProps> = ({ children, className = '' }) => {
   const layoutClasses = classNames({
-    [style.layout]: true,
+    [style.container]: true,
     [className]: className,
   })
   return (
     <div className={layoutClasses}>
-      <SideMenu isSearchable visible={10}/>
+      <Hamburger />
+      <Logo />
+      <SideBar />
       <TopMenu />
       <div className={style.main}>
         <div className={style.children}>{children}</div>
