@@ -1,0 +1,28 @@
+@import "~style/variables.scss";
+
+.toggleField {
+  width: 70px;
+  height: 38px;
+  border-radius: 17px;
+  border: 1px solid $neutral-light;
+  position: relative;
+  .toggleIndicator {
+    height: 30px;
+    background: $text-light;
+    width: 30px;
+    border-radius: 50%;
+    display: block;
+    content: "";
+    position: absolute;
+    top: 3px;
+    right: 3px;
+  }
+  input[type=checkbox] {
+    display: none;
+  }
+  input[type=checkbox]:checked ~ .toggleIndicator {
+    left: unset;
+    left: 3px;
+    background: $success;
+  }
+}

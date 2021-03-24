@@ -14,6 +14,7 @@ export type FieldTypes =
   | 'm:n'
   | 'file'
   | 'select'
+  | 'toggle'
 
 export interface IFieldProps {
   name: string
@@ -30,3 +31,4 @@ export { default as InputField } from './Input'
 export { default as SelectField } from './Select'
 export { default as FileField } from './File'
 export { default as RelationSelectField } from './RelationSelect'
+export { default as ToggleField } from './Toggle'
