@@ -2,6 +2,7 @@ export type FieldTypes =
   | 'text'
   | 'password'
   | 'number'
+  | 'datetime'
   | 'date'
   | 'time'
   | 'email'
@@ -26,6 +27,7 @@ export interface IFieldProps {
   [key: string]: any  
 }
 
+export { default as DatetimeField } from './Datetime'
 export { default as InputField } from './Input'
 export { default as SelectField } from './Select'
 export { default as FileField } from './File'
