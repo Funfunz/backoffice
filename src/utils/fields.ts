@@ -35,6 +35,7 @@ export function mapFieldComponents(entity?: Entity, view: 'new' | 'edit' | 'view
       }
 
       switch (props.type) {
+        case 'boolean':
         case 'toggle':
           return {
             Component: ToggleField,

@@ -2,19 +2,16 @@ export type FieldTypes =
   | 'text'
   | 'password'
   | 'number'
+  | 'email'
+  | 'boolean'
+  | 'toggle'
   | 'date'
   | 'time'
-  | 'email'
-  | 'checkbox'
-  | 'radio'
-  | 'checkbox-group'
-  | 'switch'
+  | 'select'
   | 'n:1'
   | 'n:m'
   | 'm:n'
   | 'file'
-  | 'select'
-  | 'toggle'
 
 export interface IFieldProps {
   name: string
