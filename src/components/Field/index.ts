@@ -2,18 +2,17 @@ export type FieldTypes =
   | 'text'
   | 'password'
   | 'number'
+  | 'email'
+  | 'boolean'
+  | 'toggle'
+  | 'datetime'
   | 'date'
   | 'time'
-  | 'email'
-  | 'checkbox'
-  | 'radio'
-  | 'checkbox-group'
-  | 'switch'
+  | 'select'
   | 'n:1'
   | 'n:m'
   | 'm:n'
   | 'file'
-  | 'select'
 
 export interface IFieldProps {
   name: string
@@ -26,7 +25,9 @@ export interface IFieldProps {
   [key: string]: any  
 }
 
+export { default as DatetimeField } from './Datetime'
 export { default as InputField } from './Input'
 export { default as SelectField } from './Select'
 export { default as FileField } from './File'
 export { default as RelationSelectField } from './RelationSelect'
+export { default as ToggleField } from './Toggle'

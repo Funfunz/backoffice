@@ -1,0 +1,17 @@
+@import "~style/variables.scss";
+
+.rdtPicker {
+  border: 1px solid $border-color;
+  box-shadow: none;
+  border-radius: 3px;
+}
+
+.rdtPicker td.rdtActive, .rdtPicker td.rdtActive:hover {
+  text-shadow: none;
+  background-color: #2684ff;
+  border-radius: 2px;
+}
+
+.rdtPicker td.rdtToday:before {
+  border-bottom-color: #2684ff;
+}
