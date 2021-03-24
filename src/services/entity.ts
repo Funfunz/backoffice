@@ -60,7 +60,7 @@ export default class Entity {
   }
   getPropertyModelType(propertyName: string) {
     const property = this.getPropertyByName(propertyName)
-    return property?.type || 'text'
+    return property?.type || 'string'
   }
   private getPropertyRelation(propertyName: string) {
     return this.entity.relations?.find((relation) => {

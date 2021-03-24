@@ -5,7 +5,8 @@ import {
   SelectField,
   FieldTypes,
   RelationSelectField,
-  FileField
+  FileField,
+  ToggleField,
 } from 'components/Field'
 
 export interface IMappedField {
@@ -34,6 +35,12 @@ export function mapFieldComponents(entity?: Entity, view: 'new' | 'edit' | 'view
       }
 
       switch (props.type) {
+        case 'boolean':
+        case 'toggle':
+          return {
+            Component: ToggleField,
+            props,
+          }
         case 'n:1':
         case 'n:m':
         case 'm:n':
