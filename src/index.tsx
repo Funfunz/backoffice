@@ -2,7 +2,6 @@ import React, { lazy, Suspense } from 'react'
 import ReactDOM from 'react-dom'
 import { HashRouter, Route } from 'react-router-dom'
 import reportWebVitals from './reportWebVitals'
-import { Provider } from './reducers'
 import PrivateRoute from 'components/PrivateRoute'
 import Layout from 'components/Layout'
 import Loading from 'views/loading'
@@ -16,20 +15,18 @@ const Edit = lazy(() => import('views/edit'))
 const Playground = lazy(() => import('views/playground'))
 
 const App: React.FC = () => (
-  <Provider>
-    <HashRouter>
-      <Suspense fallback={<Loading />}>
-        <Route exact path="/playground" component={Playground} />
-        <Route exact path="/login" component={Login} />
-        <Route exact path="/logout" component={Logout} />
-        <Layout>
-          <PrivateRoute exact path="/" component={Home} />
-          <PrivateRoute exact path="/list/:entityName" component={List} />
-          <PrivateRoute path="/:view(edit|new|view)/:entityName/:id?" component={Edit} />
-        </Layout>
-      </Suspense>
-    </HashRouter>
-  </Provider>
+  <HashRouter>
+    <Suspense fallback={<Loading />}>
+      <Route exact path="/playground" component={Playground} />
+      <Route exact path="/login" component={Login} />
+      <Layout>
+        <PrivateRoute exact path="/" component={Home} />
+        <PrivateRoute exact path="/list/:entityName" component={List} />
+        <PrivateRoute path="/:view(edit|new|view)/:entityName/:id?" component={Edit} />
+        <PrivateRoute exact path="/logout" component={Logout} />
+      </Layout>
+    </Suspense>
+  </HashRouter>
 )
 
 ReactDOM.render(<App />, document.getElementById('root'))

@@ -25,6 +25,12 @@
     span{
       margin-right: 15px;
     }
+    :global {
+      i.fas {
+        width: 20px;
+        display: inline-block;
+      }
+    }
   }
 
   .accountOptions{
@@ -34,6 +40,11 @@
     padding: 20px 30px;
     box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.31) 0px 0px 1px;
     color: $text-dark;
+
+    a {
+      text-decoration: none;
+      color: $text-dark;
+    }
 
     span{
       margin-right: 15px;
