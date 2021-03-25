@@ -19,11 +19,11 @@ const App: React.FC = () => (
     <Suspense fallback={<Loading />}>
       <Route exact path="/playground" component={Playground} />
       <Route exact path="/login" component={Login} />
-      <Route exact path="/logout" component={Logout} />
       <Layout>
         <PrivateRoute exact path="/" component={Home} />
         <PrivateRoute exact path="/list/:entityName" component={List} />
         <PrivateRoute path="/:view(edit|new|view)/:entityName/:id?" component={Edit} />
+        <PrivateRoute exact path="/logout" component={Logout} />
       </Layout>
     </Suspense>
   </HashRouter>

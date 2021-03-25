@@ -1,7 +1,9 @@
+import { API_ADDRESS } from 'constants/api'
 import graphql from 'services/graphql'
 
 export interface IUser {
   id: number | string
+  email?: string
 }
 
 let user: IUser | undefined | null
@@ -23,7 +25,7 @@ export async function getCurrentUser() {
     loading = true
     try {
       // TODO: remove this hardcoded user and let graphql query real user
-      user = await new Promise((cb) => setTimeout(() => cb({ id: 1 }), 1000)) || await graphql.query({
+      user = await new Promise((cb) => setTimeout(() => cb({ id: 1, email: 'joaogsleite@gmail.com' }), 1000)) || await graphql.query({
         operation: 'me',
         fields: ['id']
       }) 
@@ -41,7 +43,7 @@ export async function getCurrentUser() {
 }
 
 export async function login() {
-  window.location.href = '/login/oauth'
+  window.location.href = `${API_ADDRESS}/login/oauth`
 }
 
 export async function logout() {
@@ -49,5 +51,4 @@ export async function logout() {
   await graphql.mutation({
     operation: 'logout'
   })
-  window.location.href = '/'
 }
