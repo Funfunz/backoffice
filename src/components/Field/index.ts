@@ -5,6 +5,7 @@ export type FieldTypes =
   | 'email'
   | 'boolean'
   | 'toggle'
+  | 'datetime'
   | 'date'
   | 'time'
   | 'select'
@@ -24,6 +25,7 @@ export interface IFieldProps {
   [key: string]: any  
 }
 
+export { default as DatetimeField } from './Datetime'
 export { default as InputField } from './Input'
 export { default as SelectField } from './Select'
 export { default as FileField } from './File'

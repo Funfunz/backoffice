@@ -1,10 +1,12 @@
 import React, { FC, ComponentType } from 'react'
 import { Redirect, RouteProps } from 'react-router-dom'
-import auth from 'services/auth'
+import { isAuthenticated, isLoading } from 'services/auth'
+import Message from 'components/Message'
+
 
 export default function renderContent<T extends RouteProps = RouteProps>(Component?: ComponentType<T>, render?: FC<T>, redirect?: string) {
   return function(props: T) {
-    if (auth.isAuthenticated) {
+    if (isAuthenticated()) {
       if (Component) {
         return (
           <Component {...props} />
@@ -16,6 +18,10 @@ export default function renderContent<T extends RouteProps = RouteProps>(Compone
       } else {
         return null
       }
+    } else if (isLoading()) {
+      return (
+        <Message loading />
+      )
     } else {
       const to = {
         pathname: '/login',

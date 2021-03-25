@@ -1,5 +1,8 @@
-import React, { FC, ComponentType } from 'react'
+import React, { FC, ComponentType, useEffect } from 'react'
+import { runForceUpdate, useForceUpdate } from 'react-forceupdate'
 import { Route, useLocation } from 'react-router-dom'
+
+import { getCurrentUser, isAuthenticated } from 'services/auth'
 import renderContent from './renderContent'
 
 export interface IPrivateRoute {
@@ -13,7 +16,18 @@ const PrivateRouter: FC<IPrivateRoute> = ({
   render: privateRender,
   ...rest
 }) => {
+
   const location = useLocation()
+
+  useForceUpdate('PrivateRoute')
+
+  useEffect(() => {
+    if (!isAuthenticated()) {
+      getCurrentUser().catch(console.log).then(() => {
+        runForceUpdate('PrivateRoute')
+      })
+    }
+  }, [])
 
   return (
     <Route

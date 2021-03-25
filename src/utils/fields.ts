@@ -6,6 +6,7 @@ import {
   FieldTypes,
   RelationSelectField,
   FileField,
+  DatetimeField,
   ToggleField,
 } from 'components/Field'
 
@@ -61,6 +62,13 @@ export function mapFieldComponents(entity?: Entity, view: 'new' | 'edit' | 'view
           return {
             Component: FileField,
             props
+          }
+        case 'date':
+        case 'datetime':
+        case 'time':
+          return {
+            Component: DatetimeField,
+            props,
           }
         case 'text':
         case 'number':
