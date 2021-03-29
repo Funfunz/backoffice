@@ -6,7 +6,7 @@ on:
       - master
 
 env:
-  REACT_APP_API_URL: https://funfunz.herokuapp.com/graphql
+  REACT_APP_API_URL: https://funfunz.herokuapp.com
   PUBLIC_URL: /backoffice/
   REACT_APP_PUBLIC_URL: /backoffice
 
