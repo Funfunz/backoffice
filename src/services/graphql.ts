@@ -5,8 +5,9 @@ export interface IArgs {
   [key: string]: IArgs | string | number | boolean | undefined | IArgs[] | string[] | number[] | boolean[]
 }
 
-function isFile(file: any = {}) {
-  return typeof file.lastModified === 'number' && 
+function isFile(file: any) {
+  return file !== null && file !== undefined &&
+    typeof file.lastModified === 'number' && 
     typeof file.name === 'string' &&
     typeof file.size === 'number' &&
     typeof file.type === 'string'
