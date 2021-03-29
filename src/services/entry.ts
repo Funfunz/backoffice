@@ -53,12 +53,21 @@ export async function saveEntryData(entity: Entity, data: any, filter?: IFilter)
     return Promise.resolve()
   }
   const entityName = entity.getName()
+  const relationEntities = await Promise.all(entity.getMnRelations().map((entityName) => {
+    return Entity.fetchEntity(entityName)
+  }))
+  const fields = [
+    ...entity.getProperties('edit'), 
+    ...relationEntities.map((entity) => ({
+      [entity.getName()]: entity.getProperties('relation') as string[],
+    })),
+  ]
   const mutation: IGQuery = {
     operation: entityName[0].toUpperCase() + entityName.substr(1),
     args: {
       data,
     },
-    fields: Object.keys(data),
+    fields,
   }
   
   if (filter && mutation.args) {
