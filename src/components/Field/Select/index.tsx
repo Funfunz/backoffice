@@ -30,9 +30,9 @@ const SelectField: FC<ISelectField> = ({
       const value = typeof options[0]?.value === 'number' 
         ? Array.isArray(selected) ? selected.map(s => Number(s.value)) : selected && Number(selected.value)
         : Array.isArray(selected) ? selected.map(s => s.value) : selected?.value
-      onChange(name, value)
+      onChange(name, (value === null && isMulti) ? [] : value)
     }
-  }, [name, onChange, options])
+  }, [name, onChange, options, isMulti])
 
   return (
     <FieldWrapper name={name} label={label}>
