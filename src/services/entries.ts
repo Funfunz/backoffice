@@ -8,16 +8,24 @@ export interface IGetEntriesArgs {
   view?: Parameters<Entity['getProperties']>[0]
   take?: number
   skip?: number
+  search?: string
 }
 
-export function parseFilter(filter: IFilter) {
+export function parseFilter(entity: Entity, filter: IFilter, search?: string) {
   const result: any = {}
-  Object.keys(filter).forEach((key) => {
+  Object.keys(filter).filter((key) => filter[key]).forEach((key) => {
     const value = filter[key]
     result[key] = typeof value === 'string'
       ? { _like: `%${value}%` }
-      : { _eq: value }
+      : (typeof value === 'object' && Object.keys(value).find(exp => exp.startsWith('_')))
+        ? value
+        : { _eq: value }
   })
+  if (search) {
+    result[entity.getPropertyToBeUsedAsLabel()] = {
+      _like: `%${search}%`
+    }
+  }
   return result
 }
 
@@ -26,7 +34,7 @@ export function countEntries({ entity, filter = {} }: IGetEntriesArgs): Promise<
   const query: IGQuery = {
     operation: entity.getName() + 'Count',
     args: {
-      filter: parseFilter(filter),
+      filter: parseFilter(entity, filter),
     },
   }
   return graphql.query(query).then((data: any) => {
@@ -42,7 +50,7 @@ export function deleteEntries(entity: Entity, filter: IFilter) {
   const query = {
     operation: `delete${entityName[0].toUpperCase() + entityName.substr(1)}`,
     args: {
-      filter: parseFilter(filter),
+      filter: parseFilter(entity, filter),
     },
     fields: ['deleted'],
   }
@@ -59,13 +67,16 @@ export function getEntries({
   view = 'list',
   take = 10,
   skip = 0,
+  search,
 }: IGetEntriesArgs): Promise<IEntryData[]> {
-  
+
+  console.log('getEntries', filter)
+
   const query: IGQuery = {
     operation: entity.getName(),
     fields: entity.getProperties(view) || Object.keys(filter),
     args: {
-      filter: parseFilter(filter),
+      filter: parseFilter(entity, filter, search),
       take,
       skip,
     },
