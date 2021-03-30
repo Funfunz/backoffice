@@ -69,7 +69,7 @@ const Edit: FC<{}> = () => {
               <Column size={6} key={index}>
                 <Component
                   {...props}
-                  readOnly={view === 'view'}
+                  readOnly={props.readOnly || view === 'view'}
                   onChange={handleChange}
                   value={entry[props.name] as string || ''}
                 />
