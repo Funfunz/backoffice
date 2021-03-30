@@ -38,8 +38,6 @@ const RelationSelectField: FC<IRelationSelectField> = (props) => {
     })
   })
 
-  console.log({ mergedEntries, entries, selectedEntries })
-
   return (
     <Select
       onSearch={handleSearch}

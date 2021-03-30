@@ -22,8 +22,6 @@ const FileField: FC<IFileField> = ({
     }
   }, [name, onChange])
 
-  console.log({ readOnly })
-
   return (
     <FieldWrapper name={name} label={label}>
       {readOnly
