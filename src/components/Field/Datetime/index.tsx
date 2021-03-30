@@ -26,7 +26,9 @@ const DatetimeField: FC<IDatetimeField> = ({
   const handleChange = useCallback((value) => {
     if (onChange) {
       try {
-        value = new Date(value).toISOString()
+        // TODO: update sql data connector
+        //value = new Date(value).toISOString().substring(0,10)
+        value = new Date(value).toISOString().substring(0,10)
       } catch {
       }
       onChange(name, value)
