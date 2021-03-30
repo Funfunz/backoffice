@@ -33,8 +33,6 @@ const DatetimeField: FC<IDatetimeField> = ({
     }
   }, [onChange, name])
   
-  console.log({ value })
-
   return (
     <FieldWrapper name={name} label={label}>
       <Datetime

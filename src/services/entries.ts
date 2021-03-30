@@ -70,8 +70,6 @@ export function getEntries({
   search,
 }: IGetEntriesArgs): Promise<IEntryData[]> {
 
-  console.log('getEntries', filter)
-
   const query: IGQuery = {
     operation: entity.getName(),
     fields: entity.getProperties(view) || Object.keys(filter),

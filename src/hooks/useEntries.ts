@@ -31,8 +31,6 @@ export function useEntries({
   search,
 }: IUseEntriesArgs): IUseEntriesRet {
 
-  console.log('useEntries', filter)
-
   const [entries, setEntries] = useState<IEntryData[]>([])
   const [total, setTotal] = useState(0)
 

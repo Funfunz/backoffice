@@ -54,7 +54,6 @@ export function useEntry(entity?: Entity, filterOrPk?: IFilter | string | number
     ) {
       setLoading(true)
       getEntryData(entity, filter).then((data) => {
-        console.log({ data })
         setLoading(false)
         if (data && filterMatch(data, filter as IFilter)) {
           setFetchedEntry(data)
