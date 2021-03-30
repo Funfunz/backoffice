@@ -1,4 +1,4 @@
-import React, { FC, memo } from "react"
+import React, { FC, memo, useCallback, useState } from "react"
 import { useEntity } from "hooks/useEntity"
 import { useEntries } from "hooks/useEntries"
 import Select, { ISelectField, ISelectFieldOption } from "components/Field/Select"
@@ -8,19 +8,47 @@ export interface IRelationSelectField extends ISelectField {
 }
 
 const RelationSelectField: FC<IRelationSelectField> = (props) => {
-  const entity = useEntity(props.relationEntityName)
   const isMulti = props.type === 'm:n' || props.type === 'n:m'
-  const { entries } = useEntries({ entity, view: 'relation' })
+
+  const [search, setSearch] = useState<string>()
+  const handleSearch = useCallback((newValue: string) => {
+    setSearch(newValue)
+  }, [])
+  
+  const entity = useEntity(props.relationEntityName)
+  const { entries } = useEntries({ entity, view: 'relation', search })
+
+  const pk = entity?.getPk() || 'id'
+  const labelKey = entity?.getPropertyToBeUsedAsLabel() || 'name'
+
+  const { entries: selectedEntries } = useEntries({ 
+    entity,
+    view: 'relation',
+    filter: props.value && {
+      [pk]: isMulti ? { _in: props.value } : props.value
+    }
+  })
+  
+  const mergedEntries = [
+    ...entries,
+    ...selectedEntries,
+  ].filter((item, index, array) => {
+    return item[pk] && index === array.findIndex((arrayItem) => {
+      return arrayItem[pk] === item[pk]
+    })
+  })
+
+  console.log({ mergedEntries, entries, selectedEntries })
+
   return (
     <Select
+      onSearch={handleSearch}
       isMulti={isMulti}
-      options={entries.map((entry) => {
+      options={mergedEntries.map((entry) => {
         return {
-          label: entry[entity?.getPropertyToBeUsedAsLabel() || 'name'],
-          value: entry[entity?.getPk() || 'name'],
+          label: entry[labelKey],
+          value: entry[pk],
         } as ISelectFieldOption
-      }).filter((option) => {
-        return option.value
       })}
       {...props} 
     /> 

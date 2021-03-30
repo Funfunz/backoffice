@@ -10,6 +10,7 @@ export interface IUseEntriesArgs {
   skip?: number
   take?: number
   request?: boolean
+  search?: string
 }
 export interface IUseEntriesRet {
   entries: IEntryData[]
@@ -27,7 +28,10 @@ export function useEntries({
   skip = 0,
   take = 10,
   request = true,
+  search,
 }: IUseEntriesArgs): IUseEntriesRet {
+
+  console.log('useEntries', filter)
 
   const [entries, setEntries] = useState<IEntryData[]>([])
   const [total, setTotal] = useState(0)
@@ -35,13 +39,13 @@ export function useEntries({
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
 
-  const [oldArgs, setNewArgs] = useState<{ entity?: string, filter?: IFilter, skip?: number, take?: number }>({})
+  const [oldArgs, setNewArgs] = useState<{ entity?: string, filter?: IFilter, skip?: number, take?: number, search?: string }>({})
 
   const fetchEntries = useCallback(() => {
     if (!entity || !request) return
     setLoading(true)
     return Promise.all([
-      getEntries({ entity, filter, skip, take, view }),
+      getEntries({ entity, filter, skip, take, view, search }),
       countEntries({ entity, filter }),
     ]).then(([data, total]) => {
       setLoading(false)
@@ -55,7 +59,7 @@ export function useEntries({
       setLoading(false)
       setError(true)
     })
-  }, [entity, filter, skip, view, take, request])
+  }, [entity, filter, skip, view, take, request, search])
 
   const deleteEntry = useCallback((pk: string | number) => {
     if (entity) {
@@ -70,18 +74,19 @@ export function useEntries({
       entity?.getName() !== oldArgs.entity ||
       !entryEquals(oldArgs.filter, filter) ||
       skip !== oldArgs.skip ||
-      take !== oldArgs.take
+      take !== oldArgs.take ||
+      search !== oldArgs.search
     ) {
-      setNewArgs({ entity: entity?.getName(), filter: { ...filter }, skip, take })
+      setNewArgs({ entity: entity?.getName(), filter: { ...filter }, skip, take, search })
       return true
     }
     return false
-  }, [entity, oldArgs, filter, skip, take])
+  }, [entity, oldArgs, filter, skip, take, search])
 
   useEffect(() => {
-    if (hasNewArgs() && !loading && !error) {
+    if (hasNewArgs() && !error) {
       fetchEntries()
-    } 
+    }
   }, [loading, error, hasNewArgs, fetchEntries])
 
   return { entries, error, loading, total, deleteEntry }

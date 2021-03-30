@@ -1,5 +1,5 @@
 import React, { useCallback, FC, memo } from 'react'
-import Select from 'react-select'
+import Select, { InputActionMeta } from 'react-select'
 
 import { IFieldProps } from 'components/Field'
 import FieldWrapper from 'components/Field/Wrapper'
@@ -12,6 +12,7 @@ export interface ISelectFieldOption {
 export interface ISelectField extends IFieldProps {
   options?: ISelectFieldOption[]
   isMulti?: boolean
+  onSearch?: (value: string) => void
 }
 
 const SelectField: FC<ISelectField> = ({ 
@@ -22,6 +23,7 @@ const SelectField: FC<ISelectField> = ({
   onChange,
   options = [],
   readOnly,
+  onSearch,
   isMulti = false
 }) => {
 
@@ -34,9 +36,16 @@ const SelectField: FC<ISelectField> = ({
     }
   }, [name, onChange, options, isMulti])
 
+  const handleSearch = useCallback((newValue: string, actionMeta: InputActionMeta) => {
+    if (onSearch) {
+      onSearch(newValue)
+    }
+  }, [onSearch])
+
   return (
     <FieldWrapper name={name} label={label}>
       <Select
+        onInputChange={handleSearch}
         onChange={handleChange as any}
         placeholder={placeholder}
         name={name}
