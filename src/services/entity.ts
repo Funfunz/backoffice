@@ -20,7 +20,10 @@ export default class Entity {
     return this.entity.backoffice?.label || this.entity.name
   }
   
-  getProperties(view: 'view' | 'new' |'list' | 'edit' | 'relation' | 'filter' = 'list') {
+  getProperties(view: 'view' | 'new' |'list' | 'edit' | 'relation' | 'filter' | 'all' = 'list') {
+    if (view === 'all') {
+      return this.entity.properties?.map(p => p.name) || []
+    }
     return this.entity.properties?.filter(p => {
       switch (view) {
       case 'relation':
@@ -60,7 +63,7 @@ export default class Entity {
   }
   getPropertyModelType(propertyName: string) {
     const property = this.getPropertyByName(propertyName)
-    return property?.type || 'string'
+    return property?.type || 'text'
   }
   private getPropertyRelation(propertyName: string) {
     return this.entity.relations?.find((relation) => {
@@ -70,9 +73,7 @@ export default class Entity {
   }
   getPropertyRelationType(propertyName: string) {
     const relation = this.getPropertyRelation(propertyName)
-    if (this.getPk() !== propertyName) {
-      return relation?.type
-    }
+    return relation?.type
   }
   getPropertyRelationEntityName(propertyName: string) {
     const relation = this.getPropertyRelation(propertyName)
