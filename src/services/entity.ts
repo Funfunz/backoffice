@@ -70,7 +70,9 @@ export default class Entity {
   }
   getPropertyRelationType(propertyName: string) {
     const relation = this.getPropertyRelation(propertyName)
-    return relation?.type
+    if (this.getPk() !== propertyName) {
+      return relation?.type
+    }
   }
   getPropertyRelationEntityName(propertyName: string) {
     const relation = this.getPropertyRelation(propertyName)
