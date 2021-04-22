@@ -33,8 +33,7 @@ export default class Entity {
       case 'new':
       case 'edit':
         return !this.isPropertyReadOnly(p.name) || 
-          (p.backoffice?.visible?.detail !== undefined && p.backoffice?.visible?.detail) ||
-          this.getMnRelations()
+          (p.backoffice?.visible?.detail !== undefined ? p.backoffice?.visible?.detail : true)
       case 'list':
       case 'filter':
       default:
@@ -45,6 +44,13 @@ export default class Entity {
   getMnRelations() {
     return this.entity.relations?.filter((relation) => {
       return relation.type === 'm:n' || relation.type === 'n:m'
+    }).map((relation) => {
+      return relation.remoteEntity
+    }) || []
+  }
+  get1nRelations() {
+    return this.entity.relations?.filter((relation) => {
+      return relation.type === '1:n'
     }).map((relation) => {
       return relation.remoteEntity
     }) || []
