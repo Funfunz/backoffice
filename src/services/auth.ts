@@ -8,6 +8,11 @@ export interface IUser {
 
 let user: IUser | undefined | null
 let loading: boolean
+let accessToken: string | undefined
+
+export function getAccessToken() {
+  return accessToken
+}
 
 export function isAuthenticated() {
   return user ? true : false

@@ -1,4 +1,5 @@
 import { API_ADDRESS, API_PASS, API_USER } from '../constants/api'
+import { getAccessToken } from './auth'
 
 type FetchMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
 
@@ -44,6 +45,13 @@ export class HTTP {
     if (API_USER && API_PASS) {
       (mergedOptions.headers as Record<string, string>)['Authorization'] = `Basic ${btoa(`${API_USER}:${API_PASS}`)}`
     }
+    const accessToken = getAccessToken()
+    if (accessToken) {
+      mergedOptions.headers = {
+        ...(mergedOptions.headers || {}),
+        'Authorization': `Bearer ${accessToken}`,
+      }
+    }
     return fetch(url, mergedOptions).then((response) => {
       return Promise.all([
         response, 
@@ -51,7 +59,6 @@ export class HTTP {
       ])
     }).then(([response, body]) => {
       if (!response.ok) {
-        console.log(response, body)
         throw new HttpError({
           status: response.status,
           statusText: response.statusText,
