@@ -5,12 +5,10 @@ export interface IArgs {
   [key: string]: IArgs | string | number | boolean | undefined | IArgs[] | string[] | number[] | boolean[]
 }
 
-function isFile(file: any) {
-  return file !== null && file !== undefined &&
-    typeof file.lastModified === 'number' && 
-    typeof file.name === 'string' &&
-    typeof file.size === 'number' &&
-    typeof file.type === 'string'
+function isFile(file: any = {}) {
+  return file && typeof file.name === 'string' &&
+    typeof file.type === 'string' &&
+    (typeof file.size === 'number' || typeof file.uri === 'string')
 }
 
 function generateArgs(args: IArgs): string {
@@ -21,7 +19,7 @@ function generateArgs(args: IArgs): string {
         return `${argName}: [${(value as any[]).map((v) => {
           if (typeof v === 'string') {
             return `"${v}"`
-          } else if (typeof v === 'boolean' || typeof v === 'number' || typeof v === 'undefined') {
+          } else if (typeof v === 'boolean' || typeof v === 'number' || typeof v === 'undefined' || v === null) {
             return `${v}`
           } else if (isFile(v)) {
             return `$${argName}`
@@ -31,7 +29,7 @@ function generateArgs(args: IArgs): string {
         }).join(',')}]`
       } else if (typeof value === 'string') {
         return `${argName}: "${value}"` 
-      } else if (typeof value === 'boolean' || typeof value === 'number' || typeof value === 'undefined') {
+      } else if (typeof value === 'boolean' || typeof value === 'number' || typeof value === 'undefined' || value === null) {
         return `${argName}: ${value}`
       } else if (isFile(value)) {
         return `${argName}: $${argName}`
@@ -158,6 +156,9 @@ export function query(options: IGQuery | IGQuery[], type: 'query' | 'mutation' =
       'Content-Type': contentType,
     } : {},
   }).then((body: any) => {
+    if (!body) {
+      throw new Error('connection error')
+    }
     if (body.error) {
       throw body.error
     }
