@@ -18,7 +18,7 @@ export interface IMappedField {
 export function mapFieldComponents(entity?: Entity, view: 'new' | 'edit' | 'view' | 'filter' = 'view'): IMappedField[] {
   return entity ? [
     ...entity.getProperties(view),
-    //...entity.getMnRelations(),
+    ...entity.getMnRelations(),
     ...entity.get1nRelations(),
   ].map(
     (propertyName: string) => {
