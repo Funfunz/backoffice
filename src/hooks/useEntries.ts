@@ -77,7 +77,7 @@ export function useEntries({
       !entryEquals(oldArgs.filter, filter) ||
       skip !== oldArgs.skip ||
       take !== oldArgs.take ||
-      search !== oldArgs.search
+      (search || "") !== (oldArgs.search || "")
     ) {
       setNewArgs({ entity: entity?.getName(), filter: { ...filter }, skip, take })
       return true

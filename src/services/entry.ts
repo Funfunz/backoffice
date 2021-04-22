@@ -9,7 +9,10 @@ export interface IEntryData {
 }
 
 export async function getEntryData(entity: Entity, filter?: IFilter, fields?: IFields): Promise<IEntryData> {
-  const relationEntities = await Promise.all(entity.getMnRelations().map((entityName) => {
+  const relationEntities = await Promise.all([
+    ...entity.getMnRelations(),
+    ...entity.get1nRelations(),
+  ].map((entityName) => {
     return Entity.fetchEntity(entityName)
   }))
   fields = fields || [
@@ -110,20 +113,27 @@ export function filterMatch(entry: any, filter?: IFilter) {
   )
 }
 
-export function entryEquals(entry: any, filter?: IFilter) {
+export function entryEquals(entry: any, filter?: IFilter): boolean {
   if (entry === undefined && filter === undefined) {
     return true
   }
   if (!filter && entry && !Object.keys(entry).length) {
     return true
   }
-  return entry && filter && Object.keys({ ...filter, ...entry }).reduce(
+  return (entry && filter && Object.keys({ ...filter, ...entry }).reduce(
     (result, key) => {
       // eslint-disable-next-line eqeqeq
-      return result && entry[key] == filter[key]
+      if (typeof entry[key] === 'object' || typeof filter[key] === 'object') {
+        return result && entryEquals(entry[key], filter[key] as IFilter)
+      } else if (Array.isArray(entry[key]) || Array.isArray(filter[key])) {
+        return result && entry[key].length === ((filter as any)[key] as any[])?.length
+      } else {
+        // eslint-disable-next-line eqeqeq
+        return result && entry[key] == filter[key]
+      }
     },
     true as boolean,
-  )
+  )) || false
 }
 
 export function entryDiff(entry: any, newEntry: any) {
