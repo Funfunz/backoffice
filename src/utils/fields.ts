@@ -16,10 +16,9 @@ export interface IMappedField {
 }
 
 export function mapFieldComponents(entity?: Entity, view: 'new' | 'edit' | 'view' | 'filter' = 'view'): IMappedField[] {
-  console.log(entity&& entity.get1nRelations())
   return entity ? [
     ...entity.getProperties(view),
-    ...entity.getMnRelations(),
+    //...entity.getMnRelations(),
     ...entity.get1nRelations(),
   ].map(
     (propertyName: string) => {
@@ -45,6 +44,15 @@ export function mapFieldComponents(entity?: Entity, view: 'new' | 'edit' | 'view
             props,
           }
         case '1:n':
+          console.log('1:n', propertyName, props)
+          return {
+            Component: RelationSelectField,
+            props: {
+              relationType: props.type,
+              relationEntityName: propertyName,
+              ...props, 
+            }
+          }
         case 'n:1':
         case 'n:m':
         case 'm:n':

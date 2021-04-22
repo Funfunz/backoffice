@@ -8,7 +8,8 @@ export interface IRelationSelectField extends ISelectField {
 }
 
 const RelationSelectField: FC<IRelationSelectField> = (props) => {
-  const isMulti = props.type === 'm:n' || props.type === 'n:m'
+  
+  const isMulti = props.type === 'm:n' || props.type === 'n:m' || props.type === '1:n'
 
   const [search, setSearch] = useState<string>()
   const handleSearch = useCallback((newValue: string) => {
@@ -17,16 +18,20 @@ const RelationSelectField: FC<IRelationSelectField> = (props) => {
   
   const entity = useEntity(props.relationEntityName)
   const { entries } = useEntries({ entity, view: 'relation', search })
-
+  
   const pk = entity?.getPk() || 'id'
   const labelKey = entity?.getPropertyToBeUsedAsLabel() || 'name'
+
+  const filter = props.value ? {
+    [pk]: isMulti ? { _in: props.value } : props.value
+  } : {}
 
   const { entries: selectedEntries } = useEntries({ 
     entity,
     view: 'relation',
-    filter: props.value && {
-      [pk]: isMulti ? { _in: props.value } : props.value
-    }
+    filter,
+    request: Object.keys(filter).length > 0,
+    take: 0
   })
   
   const mergedEntries = [
