@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { IFields } from '../services/graphql'
 import Entity from '../services/entity'
 import { 
   entryDiff,
@@ -10,6 +11,13 @@ import {
   saveEntryData,
 } from '../services/entry'
 
+export interface IUseEntryArgs {
+  entity?: Entity
+  filter?: IFilter
+  pk?: string | number
+  fields?: IFields
+  initialData?: IEntryData
+}
 export interface IUseEntry {
   entry: IEntryData,
   setEntry: React.Dispatch<React.SetStateAction<IEntryData>>,
@@ -18,20 +26,24 @@ export interface IUseEntry {
 }
 
 /* Get entry data based on a filter */
-export function useEntry(entity?: Entity, filterOrPk?: IFilter | string | number): IUseEntry {
+export function useEntry({
+  entity,
+  filter,
+  pk,
+  fields,
+  initialData = {},
+}: IUseEntryArgs): IUseEntry {
 
-  const [fetchedEntry, setFetchedEntry] = useState<IEntryData>({})
-  const [modifiedEntry, setModifiedEntry] = useState<IEntryData>({})
+  const [fetchedEntry, setFetchedEntry] = useState<IEntryData>(initialData)
+  const [modifiedEntry, setModifiedEntry] = useState<IEntryData>(initialData)
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
-  
-  const filter = useMemo(() => {
-    return (typeof filterOrPk === 'string' || typeof filterOrPk === 'number')
-      ? { [entity?.getPk() as string]: filterOrPk }
-      : filterOrPk
-  }, [filterOrPk, entity])
 
+  if (!filter) {
+    filter = { [entity?.getPk() as string]: pk }
+  }
+  
   const [oldArgs, setNewArgs] = useState<{ entity?: string, filter?: IFilter }>({})
 
   const hasNewArgs = useCallback(() => {
@@ -53,7 +65,7 @@ export function useEntry(entity?: Entity, filterOrPk?: IFilter | string | number
       entity
     ) {
       setLoading(true)
-      getEntryData(entity, filter).then((data) => {
+      getEntryData(entity, filter, fields).then((data) => {
         setLoading(false)
         if (data && filterMatch(data, filter as IFilter)) {
           setFetchedEntry(data)
@@ -67,7 +79,7 @@ export function useEntry(entity?: Entity, filterOrPk?: IFilter | string | number
         setError(true)
       })
     } 
-  }, [entity, loading, filter, error, fetchedEntry, hasNewArgs])
+  }, [entity, loading, filter, error, fetchedEntry, hasNewArgs, fields])
 
   const saveEntry = useCallback(() => {
     return saveEntryData(

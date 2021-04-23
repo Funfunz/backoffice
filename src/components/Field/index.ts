@@ -9,6 +9,7 @@ export type FieldTypes =
   | 'date'
   | 'time'
   | 'select'
+  | '1:n'
   | 'n:1'
   | 'n:m'
   | 'm:n'

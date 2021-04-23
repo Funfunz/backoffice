@@ -7,8 +7,8 @@ import { mapFieldComponents } from 'utils/fields'
 const Playground: FC = () => {
   const entities = useEntities()
   const entity = useEntity('products')
-  const { entry, setEntry, saveEntry } = useEntry(entity, { id: 1 })
-  const { entry: newEntry, setEntry: setNewEntry, saveEntry: addEntry } = useEntry(entity)
+  const { entry, setEntry, saveEntry } = useEntry({entity, pk: 1 })
+  const { entry: newEntry, setEntry: setNewEntry, saveEntry: addEntry } = useEntry({ entity })
 
   return (
     <div>

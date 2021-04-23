@@ -1,6 +1,6 @@
 import { IEntryData, IFilter } from './entry'
 import Entity from './entity'
-import graphql, { IGQuery } from './graphql'
+import graphql, { IFields, IGQuery } from './graphql'
 
 export interface IGetEntriesArgs {
   entity: Entity
@@ -9,17 +9,22 @@ export interface IGetEntriesArgs {
   take?: number
   skip?: number
   search?: string
+  fields?: IFields
 }
 
 export function parseFilter(entity: Entity, filter: IFilter, search?: string) {
   const result: any = {}
   Object.keys(filter).filter((key) => filter[key]).forEach((key) => {
     const value = filter[key]
-    result[key] = typeof value === 'string'
-      ? { _like: `%${value}%` }
-      : (typeof value === 'object' && Object.keys(value).find(exp => exp.startsWith('_')))
-        ? value
-        : { _eq: value }
+    if (typeof value === 'string') {
+      result[key] = { _like: `%${value}%` }
+    } else if (Array.isArray(value)){
+      result[key] = { _in: value }
+    } else if (typeof value === 'number' || typeof value === 'boolean') {
+      result[key] = { _eq: value }
+    } else {
+      result[key] = value
+    }
   })
   if (search) {
     result[entity.getPropertyToBeUsedAsLabel()] = {
@@ -29,12 +34,12 @@ export function parseFilter(entity: Entity, filter: IFilter, search?: string) {
   return result
 }
 
-export function countEntries({ entity, filter = {} }: IGetEntriesArgs): Promise<number> {
+export function countEntries({ entity, filter = {}, search }: IGetEntriesArgs): Promise<number> {
 
   const query: IGQuery = {
     operation: entity.getName() + 'Count',
     args: {
-      filter: parseFilter(entity, filter),
+      filter: parseFilter(entity, filter, search),
     },
   }
   return graphql.query(query).then((data: any) => {
@@ -68,18 +73,19 @@ export function getEntries({
   take = 10,
   skip = 0,
   search,
+  fields,
 }: IGetEntriesArgs): Promise<IEntryData[]> {
-
+  
   const query: IGQuery = {
     operation: entity.getName(),
-    fields: entity.getProperties(view) || Object.keys(filter),
+    fields: fields || entity.getProperties(view) || Object.keys(filter),
     args: {
       filter: parseFilter(entity, filter, search),
       take,
       skip,
     },
   }
-  
+
   return graphql.query(query).then((data: any) => {
     if (data) {
       return data

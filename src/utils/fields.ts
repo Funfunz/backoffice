@@ -19,6 +19,7 @@ export function mapFieldComponents(entity?: Entity, view: 'new' | 'edit' | 'view
   return entity ? [
     ...entity.getProperties(view),
     ...entity.getMnRelations(),
+    ...entity.get1nRelations(),
   ].map(
     (propertyName: string) => {
 
@@ -41,6 +42,16 @@ export function mapFieldComponents(entity?: Entity, view: 'new' | 'edit' | 'view
           return {
             Component: ToggleField,
             props,
+          }
+        case '1:n':
+          console.log('1:n', propertyName, props)
+          return {
+            Component: RelationSelectField,
+            props: {
+              relationType: props.type,
+              relationEntityName: propertyName,
+              ...props, 
+            }
           }
         case 'n:1':
         case 'n:m':

@@ -29,7 +29,10 @@ const Edit: FC<{}> = () => {
   const history = useHistory()
 
   const entity = useEntity(entityName)
-  const { entry, setEntry, saveEntry } = useEntry(entity, isNaN(id as any) ? id : Number(id))
+  const { entry, setEntry, saveEntry } = useEntry({ 
+    entity, 
+    pk: isNaN(id as any) ? id : Number(id),
+  })
 
   const handleChange = useCallback(
     (name: string, value?: any) => {

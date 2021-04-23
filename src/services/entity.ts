@@ -20,7 +20,10 @@ export default class Entity {
     return this.entity.backoffice?.label || this.entity.name
   }
   
-  getProperties(view: 'view' | 'new' |'list' | 'edit' | 'relation' | 'filter' = 'list') {
+  getProperties(view: 'view' | 'new' |'list' | 'edit' | 'relation' | 'filter' | 'all' = 'list') {
+    if (view === 'all') {
+      return this.entity.properties?.map(p => p.name) || []
+    }
     return this.entity.properties?.filter(p => {
       switch (view) {
       case 'relation':
@@ -30,8 +33,7 @@ export default class Entity {
       case 'new':
       case 'edit':
         return !this.isPropertyReadOnly(p.name) || 
-          (p.backoffice?.visible?.detail !== undefined && p.backoffice?.visible?.detail) ||
-          this.getMnRelations()
+          (p.backoffice?.visible?.detail !== undefined ? p.backoffice?.visible?.detail : true)
       case 'list':
       case 'filter':
       default:
@@ -42,6 +44,13 @@ export default class Entity {
   getMnRelations() {
     return this.entity.relations?.filter((relation) => {
       return relation.type === 'm:n' || relation.type === 'n:m'
+    }).map((relation) => {
+      return relation.remoteEntity
+    }) || []
+  }
+  get1nRelations() {
+    return this.entity.relations?.filter((relation) => {
+      return relation.type === '1:n'
     }).map((relation) => {
       return relation.remoteEntity
     }) || []
@@ -60,7 +69,7 @@ export default class Entity {
   }
   getPropertyModelType(propertyName: string) {
     const property = this.getPropertyByName(propertyName)
-    return property?.type || 'string'
+    return property?.type || 'text'
   }
   private getPropertyRelation(propertyName: string) {
     return this.entity.relations?.find((relation) => {
@@ -70,9 +79,7 @@ export default class Entity {
   }
   getPropertyRelationType(propertyName: string) {
     const relation = this.getPropertyRelation(propertyName)
-    if (this.getPk() !== propertyName) {
-      return relation?.type
-    }
+    return relation?.type
   }
   getPropertyRelationEntityName(propertyName: string) {
     const relation = this.getPropertyRelation(propertyName)

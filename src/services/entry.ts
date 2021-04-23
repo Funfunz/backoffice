@@ -1,18 +1,21 @@
 import Entity from './entity'
-import graphql, { IGQuery } from './graphql'
+import graphql, { IFields, IGQuery } from './graphql'
 
 export interface IFilter {
-  [key: string]: string | number | boolean | IFilter
+  [key: string]: string | number | boolean | IFilter | undefined
 }
 export interface IEntryData {
-  [key: string]: string | number | boolean | undefined
+  [key: string]: string | number | boolean | undefined | IEntryData
 }
 
-export async function getEntryData(entity: Entity, filter?: IFilter): Promise<IEntryData> {
-  const relationEntities = await Promise.all(entity.getMnRelations().map((entityName) => {
+export async function getEntryData(entity: Entity, filter?: IFilter, fields?: IFields): Promise<IEntryData> {
+  const relationEntities = await Promise.all([
+    ...entity.getMnRelations(),
+    ...entity.get1nRelations(),
+  ].map((entityName) => {
     return Entity.fetchEntity(entityName)
   }))
-  const fields = [
+  fields = fields || [
     ...entity.getProperties('edit'), 
     ...relationEntities.map((entity) => ({
       [entity.getName()]: entity.getProperties('relation') as string[],
@@ -117,17 +120,20 @@ export function entryEquals(entry: any, filter?: IFilter): boolean {
   if (!filter && entry && !Object.keys(entry).length) {
     return true
   }
-  return entry && !!filter && Object.keys({ ...filter, ...entry }).reduce(
+  return (entry && filter && Object.keys({ ...filter, ...entry }).reduce(
     (result, key) => {
-      if (typeof entry[key] === 'object' && typeof filter[key] === 'object') {
-        return result && entryEquals(entry[key], filter[key] as { [key: string]: IFilter })
+      // eslint-disable-next-line eqeqeq
+      if (typeof entry[key] === 'object' || typeof filter[key] === 'object') {
+        return result && entryEquals(entry[key], filter[key] as IFilter)
+      } else if (Array.isArray(entry[key]) || Array.isArray(filter[key])) {
+        return result && entry[key].length === ((filter as any)[key] as any[])?.length
       } else {
         // eslint-disable-next-line eqeqeq
         return result && entry[key] == filter[key]
       }
     },
     true as boolean,
-  )
+  )) || false
 }
 
 export function entryDiff(entry: any, newEntry: any) {
