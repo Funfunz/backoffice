@@ -1,7 +1,5 @@
 import Message from 'components/Message'
-import React, { FC, memo, useEffect } from 'react'
-import { runForceUpdate, useForceUpdate } from 'react-forceupdate'
-import { Redirect } from 'react-router-dom'
+import { FC, memo, useEffect } from 'react'
 
 import { logout, isAuthenticated } from 'services/auth'
 
@@ -11,19 +9,15 @@ export interface ILogoutProps {};
 
 const Logout: FC<ILogoutProps> = () => {
 
-  useForceUpdate('Logout')
-
   useEffect(() => {
-    logout().then(() => {
-      runForceUpdate('Logout')
-    })
+    logout()
   }, )
 
   return (
     <div className={style.loginContainer}>
       {isAuthenticated()
         ? <Message loading />
-        : <Redirect to="/" />
+        : null
       }
     </div>
     

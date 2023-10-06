@@ -1,10 +1,9 @@
-import React, { FC, memo } from 'react'
 import { useEntities } from 'hooks/useEntities'
 import { useEntity } from 'hooks/useEntity'
 import { useEntry } from 'hooks/useEntry'
 import { mapFieldComponents } from 'utils/fields'
 
-const Playground: FC = () => {
+export const Component = () => {
   const entities = useEntities()
   const entity = useEntity('products')
   const { entry, setEntry, saveEntry } = useEntry(entity, { id: 1 })
@@ -55,5 +54,3 @@ const Playground: FC = () => {
     </div>
   )
 }
-
-export default memo(Playground)

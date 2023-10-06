@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useState } from 'react'
+import React, { ChangeEventHandler, FC, memo, useCallback, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 
 import { useEntities } from 'hooks/useEntities'
@@ -13,7 +13,7 @@ export interface ISideBarProps {
 const SideBar: FC<ISideBarProps> = ({ isSearchable = true, visible = 10 }) => {
 
   const [searchTerm, setSearch] = useState('')
-  const handleSearch = useCallback((event) => setSearch(event.target.value), [])
+  const handleSearch: ChangeEventHandler<HTMLInputElement>  = useCallback((event) => setSearch(event.target.value), [])
 
   const { loading, entities } = useEntities(searchTerm)
   
@@ -47,7 +47,9 @@ const SideBar: FC<ISideBarProps> = ({ isSearchable = true, visible = 10 }) => {
                 <NavLink
                   key={index}
                   to={`/list/${entity.name}`}
-                  activeClassName={style.active}
+                  className={({ isActive }) =>
+                    isActive ? style.active : ""
+                  }
                 >
                   {entity.label}
                 </NavLink>

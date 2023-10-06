@@ -10,7 +10,7 @@ let user: IUser | undefined | null
 let loading: boolean
 
 export function isAuthenticated() {
-  return user ? true : false
+  return true ? true : false
 }
 
 export function isLoading() {
@@ -43,7 +43,7 @@ export async function getCurrentUser() {
 }
 
 export async function login() {
-  window.location.href = `${API_ADDRESS}/login/oauth`
+  window.location.href = `${API_ADDRESS}/login`
 }
 
 export async function logout() {

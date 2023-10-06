@@ -1,4 +1,4 @@
-import React, { FC, memo } from 'react'
+import { FC } from 'react'
 import style from './style.module.scss'
 
 import Dashboard from 'components/dashboard'
@@ -10,7 +10,7 @@ import PageTitle from 'components/PageTitle'
 
 export interface IHomeProps {}
 
-const Home: FC<IHomeProps> = () => {
+export const Component: FC<IHomeProps> = () => {
 
   return (
     <div className={style.homeContainer}>
@@ -24,5 +24,3 @@ const Home: FC<IHomeProps> = () => {
     </div>
   )
 }
-
-export default memo(Home)

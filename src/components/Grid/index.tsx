@@ -2,7 +2,11 @@ import React, { FC } from 'react'
 
 import classes from './style.module.scss'
 
-export const Grid: FC = ({ children}) => {
+type Props = {
+  children: React.ReactNode;
+}
+
+export const Grid: FC<Props> = ({ children }) => {
   return (
     <div className={classes.row}>
       {children}

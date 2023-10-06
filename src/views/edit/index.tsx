@@ -1,5 +1,5 @@
-import React, { FC, memo, useCallback } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import { FC, useCallback } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 
 import { useEntry } from 'hooks/useEntry'
 import { useEntity } from 'hooks/useEntity'
@@ -11,7 +11,7 @@ import PageTitle from 'components/PageTitle'
 
 import style from './style.module.scss'
 
-interface IParams { 
+type TParams = { 
   entityName: string
   id?: string
   view: 'edit' | 'view' | 'new'
@@ -23,10 +23,10 @@ const TITLE_BY_VIEW = {
   'view': 'View entry'
 }
 
-const Edit: FC<{}> = () => {
-
-  const { entityName, id, view } = useParams<IParams>()
-  const history = useHistory()
+export const Component: FC<{}> = () => {
+  console.log('export const Component:')
+  const { entityName, id, view } = useParams<TParams>()
+  const history = useNavigate()
 
   const entity = useEntity(entityName)
   const { entry, setEntry, saveEntry } = useEntry(entity, isNaN(id as any) ? id : Number(id))
@@ -43,7 +43,7 @@ const Edit: FC<{}> = () => {
 
   const goBack = useCallback(
     () => {
-      history.push(`/list/${entityName}`)
+      history(`/list/${entityName}`)
     },
     [history,entityName]
   )
@@ -59,7 +59,7 @@ const Edit: FC<{}> = () => {
   return (
     <div className={style.editTable}>
       <div className={style.titlePage}>
-        <PageTitle text={TITLE_BY_VIEW[view]} />
+        <PageTitle text={TITLE_BY_VIEW[view || 'view']} />
       </div>
 
       <div className={style.editTableContainer}>
@@ -100,5 +100,3 @@ const Edit: FC<{}> = () => {
     </div>
   )
 }
-
-export default memo(Edit)

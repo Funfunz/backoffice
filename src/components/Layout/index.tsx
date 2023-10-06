@@ -1,5 +1,5 @@
-import React, { FC, memo } from 'react'
-import { Route } from 'react-router-dom'
+import { FC } from 'react'
+import { Outlet } from 'react-router-dom'
 import classNames from 'classnames'
 import TopMenu from 'components/TopMenu'
 import style from './style.module.scss'
@@ -8,11 +8,10 @@ import Logo from 'components/Logo'
 import SideBar from 'components/SideBar'
 
 export interface ILayoutProps {
-  children?: any[] | any;
   className?: string;
 }
 
-const Layout: FC<ILayoutProps> = ({ children, className = '' }) => {
+export const Layout: FC<ILayoutProps> = ({ className = '' }) => {
   const layoutClasses = classNames({
     [style.container]: true,
     [className]: className,
@@ -24,16 +23,9 @@ const Layout: FC<ILayoutProps> = ({ children, className = '' }) => {
       <SideBar />
       <TopMenu />
       <div className={style.main}>
-        <div className={style.children}>{children}</div>
+        <div className={style.children}><Outlet/></div>
       </div>
     </div>
   )
 }
 
-export default memo((props: ILayoutProps) => {
-  const path = Array.isArray(props.children)
-    ? props.children.map((route: any) => route.props.path)
-    : props.children.props.path
-  const render = () => <Layout {...props} />
-  return <Route exact path={path} render={render} />
-})
