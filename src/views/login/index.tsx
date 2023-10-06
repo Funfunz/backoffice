@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback } from 'react'
+import { useCallback } from 'react'
 
 import Button from 'components/Button'
 import PageTitle from 'components/PageTitle'
@@ -9,7 +9,7 @@ import style from './style.module.scss'
 
 export interface ILoginProps {};
 
-const Login: FC<ILoginProps> = () => {
+export const Component = () => {
   const handleClick = useCallback(() => {
     login()
   }, [])
@@ -25,4 +25,4 @@ const Login: FC<ILoginProps> = () => {
   )
 }
 
-export default memo(Login)
+Component.displayName = "Login"

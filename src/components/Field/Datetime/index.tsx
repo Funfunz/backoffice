@@ -1,4 +1,4 @@
-import React, { useCallback, FC, memo } from 'react'
+import { useCallback, FC, memo } from 'react'
 import classNames from 'classnames'
 import Datetime from 'react-datetime'
 import 'react-datetime/css/react-datetime.css'
@@ -23,15 +23,21 @@ const DatetimeField: FC<IDatetimeField> = ({
   placeholder = `${dateFormat || ''} ${timeFormat || ''}`,
 }) => {
 
-  const handleChange = useCallback((value) => {
+  const handleChange = useCallback((value: string | moment.Moment) => {
     if (onChange) {
+      let date: string = '' 
       try {
         // TODO: update sql data connector
         //value = new Date(value).toISOString().substring(0,10)
-        value = new Date(value).toISOString().substring(0,10)
+        if (typeof value === 'string') {
+          date = new Date(value).toISOString().substring(0,10)
+        } else {
+          date = new Date(value.toDate()).toISOString().substring(0,10)
+        }
+        
       } catch {
       }
-      onChange(name, value)
+      onChange(name, date)
     }
   }, [onChange, name])
   

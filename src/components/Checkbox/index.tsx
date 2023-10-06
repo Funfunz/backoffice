@@ -1,4 +1,4 @@
-import React, { memo, FC } from 'react'
+import { memo, FC, ReactNode } from 'react'
 
 import classes from './style.module.scss'
 
@@ -6,6 +6,7 @@ export interface ICheckboxProps {
   disabled?: boolean
   label?: string
   checked?: boolean
+  children?: ReactNode
 }
 
 const Checkbox: FC<ICheckboxProps> = ({

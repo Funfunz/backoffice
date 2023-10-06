@@ -1,11 +1,11 @@
-import React, { FC, ComponentType } from 'react'
-import { Redirect, RouteProps } from 'react-router-dom'
+import { FC, ComponentType } from 'react'
+import { redirect } from 'react-router-dom'
 import { isAuthenticated, isLoading } from 'services/auth'
 import Message from 'components/Message'
 
 
-export default function renderContent<T extends RouteProps = RouteProps>(Component?: ComponentType<T>, render?: FC<T>, redirect?: string) {
-  return function(props: T) {
+export default function renderContent(Component?: ComponentType, render?: FC, redirected?: string): FC {
+  return function(props) {
     if (isAuthenticated()) {
       if (Component) {
         return (
@@ -23,12 +23,9 @@ export default function renderContent<T extends RouteProps = RouteProps>(Compone
         <Message loading />
       )
     } else {
-      const to = {
-        pathname: '/login',
-        search: `?redirect=${redirect}`,
-      }
+      redirect(`/login?redirect=${redirected}`)
       return (
-        <Redirect to={to} />
+        null
       )
     }
   }

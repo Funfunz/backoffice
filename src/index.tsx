@@ -1,35 +1,68 @@
-import React, { lazy, Suspense } from 'react'
-import ReactDOM from 'react-dom'
-import { HashRouter, Route } from 'react-router-dom'
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { createHashRouter, createRoutesFromElements, RouterProvider, Route, useRouteError, redirect } from 'react-router-dom'
 import reportWebVitals from './reportWebVitals'
 import PrivateRoute from 'components/PrivateRoute'
-import Layout from 'components/Layout'
-import Loading from 'views/loading'
+import { Layout } from 'components/Layout'
 import 'style/index.scss'
+import { isAuthenticated } from 'services/auth'
 
-const Home = lazy(() => import('views/home'))
-const List = lazy(() => import('views/list'))
-const Login = lazy(() => import('views/login'))
-const Logout = lazy(() => import('views/logout'))
-const Edit = lazy(() => import('views/edit'))
-const Playground = lazy(() => import('views/playground'))
+function ErrorBoundary() {
+  let error = useRouteError()
+  console.error(error)
+  return <div>Dang!</div>
+}
 
-const App: React.FC = () => (
-  <HashRouter>
-    <Suspense fallback={<Loading />}>
-      <Route exact path="/playground" component={Playground} />
-      <Route exact path="/login" component={Login} />
-      <Layout>
-        <PrivateRoute exact path="/" component={Home} />
-        <PrivateRoute exact path="/list/:entityName" component={List} />
-        <PrivateRoute path="/:view(edit|new|view)/:entityName/:id?" component={Edit} />
-        <PrivateRoute exact path="/logout" component={Logout} />
-      </Layout>
-    </Suspense>
-  </HashRouter>
+const router = createHashRouter(
+  createRoutesFromElements(
+    <Route ErrorBoundary={ErrorBoundary}>
+      <Route path="/login" lazy={() => import("./views/login")} />
+      <Route element={<Layout />}>
+        <Route path="/" lazy={() => import("./views/home")} loader={async () => {
+          if (!isAuthenticated()) {
+            return redirect("/login")
+          }
+          return null
+        }}/>
+        <Route path="/playground" lazy={() => import("./views/playground")} loader={async () => {
+          if (!isAuthenticated()) {
+            return redirect("/login")
+          }
+          return null
+        }}/>
+        <Route path="/list/:entityName" lazy={() => import("views/list")} loader={async () => {
+          if (!isAuthenticated()) {
+            return redirect("/login")
+          }
+          return null
+        }}/>
+        <Route path="/:view/:entityName/:id?" lazy={() => import("views/edit")} loader={async () => {
+            if (!isAuthenticated()) {
+              return redirect("/login")
+            }
+            return null
+          }}/>
+      <Route path="/logout" element={
+        <PrivateRoute lazy={"views/logout"} />
+      } />
+      </Route>
+    </Route>
+    
+  )
 )
 
-ReactDOM.render(<App />, document.getElementById('root'))
+const App = () => (
+  <RouterProvider router={router} />
+)
+
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
+)
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+)
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

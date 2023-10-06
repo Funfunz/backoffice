@@ -45,6 +45,7 @@ const SelectField: FC<ISelectField> = ({
   return (
     <FieldWrapper name={name} label={label}>
       <Select
+        isClearable={true}
         onInputChange={handleSearch}
         onChange={handleChange as any}
         placeholder={placeholder}
@@ -52,7 +53,7 @@ const SelectField: FC<ISelectField> = ({
         isMulti={isMulti}
         value={isMulti 
           ? options.filter(o => value.includes(o.value))
-          : options.find(o => o.value === value)
+          : options.find(o => o.value === value) || ''
         }
         isDisabled={readOnly}
         options={options.map((o) => ({ 
