@@ -1,8 +1,12 @@
-import React, { FC } from 'react'
+import { FC, ReactNode } from 'react'
 
 import classes from './style.module.scss'
 
-export const Table: FC = ({ children }) => {
+export interface ITableProps {
+  children?: ReactNode
+}
+
+export const Table: FC<ITableProps> = ({ children }) => {
   return (
     <table className={classes.table}>
       {children}

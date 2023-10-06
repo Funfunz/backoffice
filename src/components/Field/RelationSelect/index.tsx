@@ -14,7 +14,6 @@ const RelationSelectField: FC<IRelationSelectField> = (props) => {
   const handleSearch = useCallback((newValue: string) => {
     setSearch(newValue)
   }, [])
-  
   const entity = useEntity(props.relationEntityName)
   const { entries } = useEntries({ entity, view: 'relation', search })
 

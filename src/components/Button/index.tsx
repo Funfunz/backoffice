@@ -1,5 +1,5 @@
-import React, { memo, MouseEvent, FC, useCallback } from 'react'
-import { useHistory } from 'react-router-dom'
+import React, { memo, MouseEvent, FC, useCallback, ReactNode, MouseEventHandler } from 'react'
+import { useNavigate } from 'react-router-dom'
 import classNames from 'classnames'
 
 import classes from './style.module.scss'
@@ -17,6 +17,7 @@ export interface IButtonProps {
   navigateTo?: string
   style?: any
   className?: string
+  children?: ReactNode
 }
 
 const Button: FC<IButtonProps> = ({
@@ -43,11 +44,11 @@ const Button: FC<IButtonProps> = ({
     }
   ])
 
-  const history = useHistory()
+  const history = useNavigate()
 
-  const handleClick = useCallback((event) => {
+  const handleClick: MouseEventHandler<HTMLButtonElement> = useCallback((event) => {
     if (navigateTo) {
-      history.push(navigateTo)
+      history(navigateTo)
     } else if (onClick) {
       onClick(event)
     }

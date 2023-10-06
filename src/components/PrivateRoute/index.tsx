@@ -1,40 +1,40 @@
-import React, { FC, ComponentType, useEffect } from 'react'
-import { runForceUpdate, useForceUpdate } from 'react-forceupdate'
-import { Route, useLocation } from 'react-router-dom'
+import Message from 'components/Message'
+import { FC, useEffect } from 'react'
+import { redirect, useLocation } from 'react-router-dom'
 
-import { getCurrentUser, isAuthenticated } from 'services/auth'
-import renderContent from './renderContent'
+import { getCurrentUser, isAuthenticated, isLoading } from 'services/auth'
 
 export interface IPrivateRoute {
-  component?: ComponentType<any>;
-  render?: FC<any>;
+  Component?: FC
+  lazy?: string
   [key: string]: any;
 }
 
 const PrivateRouter: FC<IPrivateRoute> = ({
-  component: Component,
-  render: privateRender,
-  ...rest
+  children
 }) => {
 
   const location = useLocation()
 
-  useForceUpdate('PrivateRoute')
-
   useEffect(() => {
     if (!isAuthenticated()) {
-      getCurrentUser().catch(console.log).then(() => {
-        runForceUpdate('PrivateRoute')
-      })
+      getCurrentUser().catch(console.log)
     }
   }, [])
 
-  return (
-    <Route
-      {...rest}
-      render={renderContent(Component, privateRender, location.pathname)}
-    />
-  )
+  console.log(isAuthenticated(), isLoading())
+  if (isAuthenticated()) {
+    return children
+  } else if (isLoading()) {
+    return (
+      <Message loading />
+    )
+  } else {
+    redirect(`/login?redirect=${location.pathname}`)
+    return (
+      null
+    )
+  }
 }
 
 export default PrivateRouter

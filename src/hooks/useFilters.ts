@@ -1,22 +1,23 @@
 import { useCallback } from 'react'
-import { runForceUpdate, useForceUpdate } from 'react-forceupdate'
 
 import { useDebouncedValue } from './useDebounce'
 
 import { IFilter } from '../services/entry'
 import Entity from '../services/entity'
+import { useForceUpdate } from './useForceUpdate'
 
 let filter: IFilter
 let entityToFilter: Entity
 
 interface IUseFilter {
   filter: IFilter,
+  clearFilters: () => void
   setFilter: (filterOrName: IFilter|string, value: any) => void
   debouncedFilter: IFilter
 }
 
 export function useFilter(entity?: Entity): IUseFilter {
-  
+  const forceUpdate = useForceUpdate()
   const [debouncedFilter, setDebouncedFilter] = useDebouncedValue(filter)
 
   if (entity && entity?.getName() !== entityToFilter?.getName()) {
@@ -26,35 +27,35 @@ export function useFilter(entity?: Entity): IUseFilter {
   }
 
   const setFilter = useCallback((filterOrName: IFilter|string, value: any) => {
-    if (filterOrName) {
-      if (typeof filterOrName === 'string') {
-        if (value === '' || value === undefined || value === null) {
-          delete filter[filterOrName]
-          filter = { ...filter }
-        } else {
-          filter = {
-            ...filter,
-            [filterOrName]: value,
-          }
-        }
-        
+    if (typeof filterOrName === 'string') {
+      if (value === '' || value === undefined || value === null) {
+        delete filter[filterOrName]
+        filter = { ...filter }
       } else {
         filter = {
           ...filter,
-          ...filterOrName,
+          [filterOrName]: value,
         }
       }
+      
     } else {
-      filter = {}
+      filter = {
+        ...filter,
+        ...filterOrName,
+      }
     }
-    runForceUpdate('filters')
-  }, [])
+    forceUpdate()
+  }, [forceUpdate])
 
-  useForceUpdate('filters')
+  const clearFilters = useCallback(() => {
+    filter = {}
+    forceUpdate()
+  }, [forceUpdate])
 
   return {
     filter,
     debouncedFilter,
     setFilter,
+    clearFilters,
   }
 }
